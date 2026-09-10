@@ -1,4 +1,4 @@
-import { ArrowUp, Trophy } from "lucide-react";
+import { ArrowUp, Trophy, User } from "lucide-react";
 
 interface IIconsProps {
 	icon: string;
@@ -11,6 +11,8 @@ export default function RenderIcon({ icon }: IIconsProps) {
 			return <Trophy />;
 		case "arrowUp":
 			return <ArrowUp />;
+		case "user":
+			return <User />;
 		default:
 			return null;
 	}
