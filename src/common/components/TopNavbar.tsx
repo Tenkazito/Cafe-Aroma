@@ -20,7 +20,7 @@ export const TopNavbar = () => {
 	return (
 		<nav className="w-full bg-background shadow-sm border-b border-gray-100">
 			<div className="flex items-center justify-between px-6 h-16 max-w-full">
-				{/* Brand */}
+				{/* Marca */}
 				<div className="flex items-center gap-2">
 					<div className="flex h-8 w-8 items-center justify-center rounded-md bg-navy text-white">
 						<RenderIcon icon="coffee" size={18} />
@@ -28,7 +28,7 @@ export const TopNavbar = () => {
 					<p className="font-bold text-navy text-xl">Café Aroma</p>
 				</div>
 
-				{/* Nav links */}
+				{/* Enlaces de navegación */}
 				<ul className="hidden sm:flex items-center gap-1">
 					{NAV_LINKS.map((link) => {
 						const isActive = pathname === link.href;
@@ -50,7 +50,7 @@ export const TopNavbar = () => {
 					})}
 				</ul>
 
-				{/* Right side */}
+				{/* Lado derecho */}
 				<div className="flex items-center gap-3">
 					<div className="flex items-center gap-3">
 						<Avatar size="sm" className="ring-2 ring-gray-200 rounded-full">

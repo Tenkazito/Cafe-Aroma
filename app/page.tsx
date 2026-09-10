@@ -19,7 +19,7 @@ export default function Home() {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const data: Record<string, string> = {};
-		// Convert FormData to plain object
+		// Convertir FormData a un objeto plano
 		formData.forEach((value, key) => {
 			data[key] = value.toString();
 		});
@@ -100,7 +100,7 @@ export default function Home() {
 									{isVisible ? <EyeOff size={18} /> : <Eye size={18} />}
 								</button>
 							</div>
-							{/* <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description> */}
+							{/* <Description>Debe tener al menos 8 caracteres con 1 mayúscula y 1 número</Description> */}
 							<FieldError />
 						</TextField>
 						<div className="flex items-center justify-between">
