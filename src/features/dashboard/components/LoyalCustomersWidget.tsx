@@ -1,6 +1,6 @@
-import { Avatar, Card } from "@heroui/react";
-import { Trophy } from "lucide-react";
+import { Avatar, Card, Chip } from "@heroui/react";
 import { RankBadge } from "@/common/components/RankBadge";
+import RenderIcon from "@/common/components/RenderIcon";
 
 export interface LoyalCustomer {
 	id: string;
@@ -21,7 +21,7 @@ export const LoyalCustomersWidget = ({
 		<Card className="shadow-sm border border-gray-100 rounded-2xl w-full h-full bg-white">
 			<Card.Content className="p-6">
 				<div className="flex items-center gap-2 mb-6">
-					<Trophy className="text-teal" size={24} />
+					<RenderIcon icon="trophy" className="text-teal" size={24} />
 					<h2 className="text-xl font-bold text-navy">Clientes fieles</h2>
 				</div>
 
@@ -35,6 +35,12 @@ export const LoyalCustomersWidget = ({
 								<RankBadge rank={index + 1} />
 								<Avatar size="md" className="shrink-0">
 									<Avatar.Image src={customer.avatar} />
+									<Avatar.Fallback>
+										{customer.name
+											.split(" ")
+											.map((n) => n[0])
+											.join("")}
+									</Avatar.Fallback>
 								</Avatar>
 								<div className="flex flex-col">
 									<span className="font-semibold text-sm text-foreground">
@@ -45,9 +51,12 @@ export const LoyalCustomersWidget = ({
 									</span>
 								</div>
 							</div>
-							<div className="flex items-center justify-center h-8 px-3 rounded-full bg-mint/40 text-teal font-bold text-sm">
+							<Chip
+								size="sm"
+								className="bg-mint/40 text-teal font-bold text-sm px-3"
+							>
 								{customer.score}
-							</div>
+							</Chip>
 						</div>
 					))}
 				</div>

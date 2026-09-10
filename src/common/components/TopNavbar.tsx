@@ -1,26 +1,17 @@
 "use client";
 
 import { Avatar, Button } from "@heroui/react";
-import {
-	ClipboardList,
-	Coffee,
-	Grid,
-	Home,
-	LogOut,
-	Package,
-	Receipt,
-	Users,
-} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import RenderIcon from "@/common/components/RenderIcon";
 
 const NAV_LINKS = [
-	{ name: "Inicio", href: "/dashboard", icon: Home },
-	{ name: "Usuarios", href: "/dashboard/usuarios", icon: Users },
-	{ name: "Categorías", href: "/dashboard/categorias", icon: Grid },
-	{ name: "Productos", href: "/dashboard/productos", icon: Package },
-	{ name: "Pedidos", href: "/dashboard/pedidos", icon: ClipboardList },
-	{ name: "Facturación", href: "/dashboard/facturacion", icon: Receipt },
+	{ name: "Inicio", href: "/dashboard", icon: "home" },
+	{ name: "Usuarios", href: "/dashboard/usuarios", icon: "users" },
+	{ name: "Categorías", href: "/dashboard/categorias", icon: "grid" },
+	{ name: "Productos", href: "/dashboard/productos", icon: "package" },
+	{ name: "Pedidos", href: "/dashboard/pedidos", icon: "clipboardList" },
+	{ name: "Facturación", href: "/dashboard/facturacion", icon: "receipt" },
 ];
 
 export const TopNavbar = () => {
@@ -32,7 +23,7 @@ export const TopNavbar = () => {
 				{/* Brand */}
 				<div className="flex items-center gap-2">
 					<div className="flex h-8 w-8 items-center justify-center rounded-md bg-navy text-white">
-						<Coffee size={18} />
+						<RenderIcon icon="coffee" size={18} />
 					</div>
 					<p className="font-bold text-navy text-xl">Café Aroma</p>
 				</div>
@@ -41,7 +32,6 @@ export const TopNavbar = () => {
 				<ul className="hidden sm:flex items-center gap-1">
 					{NAV_LINKS.map((link) => {
 						const isActive = pathname === link.href;
-						const Icon = link.icon;
 						return (
 							<li key={link.href}>
 								<Link
@@ -52,7 +42,7 @@ export const TopNavbar = () => {
 											: "text-gray-500 hover:text-navy hover:bg-gray-50"
 									}`}
 								>
-									<Icon size={16} />
+									<RenderIcon icon={link.icon} size={16} />
 									{link.name}
 								</Link>
 							</li>
@@ -85,7 +75,7 @@ export const TopNavbar = () => {
 							// lógica de logout aquí
 						}}
 					>
-						<LogOut size={16} />
+						<RenderIcon icon="logOut" size={16} />
 						Salir
 					</Button>
 				</div>

@@ -1,4 +1,3 @@
-import { PiggyBank, ShoppingBag, Wallet } from "lucide-react";
 import type { LoyalCustomer } from "@/features/dashboard/components/LoyalCustomersWidget";
 import type { SalesSummaryItemData } from "@/features/dashboard/components/SalesSummaryWidget";
 import type { TopProduct } from "@/features/dashboard/components/TopProductsWidget";
@@ -60,7 +59,7 @@ export const MOCK_PRODUCTS: TopProduct[] = [
 export const MOCK_SALES_SUMMARY: SalesSummaryItemData[] = [
 	{
 		id: "s1",
-		icon: ShoppingBag,
+		icon: "shoppingBag",
 		value: "42",
 		label: "Ventas realizadas",
 		iconBgColor: "bg-mint/40",
@@ -68,7 +67,7 @@ export const MOCK_SALES_SUMMARY: SalesSummaryItemData[] = [
 	},
 	{
 		id: "s2",
-		icon: Wallet,
+		icon: "wallet",
 		value: "$1,245,000",
 		label: "Ganancias totales",
 		iconBgColor: "bg-blue-50",
@@ -76,7 +75,7 @@ export const MOCK_SALES_SUMMARY: SalesSummaryItemData[] = [
 	},
 	{
 		id: "s3",
-		icon: PiggyBank,
+		icon: "piggyBank",
 		value: "$186,500",
 		label: "Ahorro acumulado",
 		iconBgColor: "bg-orange-50",

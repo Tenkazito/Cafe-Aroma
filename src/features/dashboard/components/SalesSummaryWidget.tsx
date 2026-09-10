@@ -1,11 +1,11 @@
 "use client";
 import { Card, Tabs } from "@heroui/react";
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import RenderIcon from "@/common/components/RenderIcon";
 import { useState } from "react";
 
 export interface SalesSummaryItemData {
 	id: string;
-	icon: LucideIcon;
+	icon: string;
 	value: string | number;
 	label: string;
 	iconBgColor: string;
@@ -61,33 +61,35 @@ export const SalesSummaryWidget = ({ items }: SalesSummaryWidgetProps) => {
 				</div>
 
 				<div className="flex flex-col gap-4 mt-2">
-					{items.map((item) => {
-						const Icon = item.icon;
-						return (
-							<div
-								key={item.id}
-								className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
-							>
-								<div className="flex items-center gap-4">
-									<div
-										className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.iconBgColor}`}
-									>
-										<Icon size={24} className={item.iconColor} />
-									</div>
-									<div className="flex flex-col">
-										<span className="text-2xl font-bold text-foreground">
-											{item.value}
-										</span>
-										<span className="text-sm text-gray-500">{item.label}</span>
-									</div>
+					{items.map((item) => (
+						<div
+							key={item.id}
+							className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
+						>
+							<div className="flex items-center gap-4">
+								<div
+									className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.iconBgColor}`}
+								>
+									<RenderIcon
+										icon={item.icon}
+										size={24}
+										className={item.iconColor}
+									/>
 								</div>
-								<ChevronRight
-									className="text-gray-300 group-hover:text-navy transition-colors"
-									size={20}
-								/>
+								<div className="flex flex-col">
+									<span className="text-2xl font-bold text-foreground">
+										{item.value}
+									</span>
+									<span className="text-sm text-gray-500">{item.label}</span>
+								</div>
 							</div>
-						);
-					})}
+							<RenderIcon
+								icon="chevronRight"
+								size={20}
+								className="text-gray-300 group-hover:text-navy transition-colors"
+							/>
+						</div>
+					))}
 				</div>
 			</Card.Content>
 		</Card>
