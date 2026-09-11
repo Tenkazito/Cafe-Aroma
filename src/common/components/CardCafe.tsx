@@ -16,11 +16,13 @@ export default function CardCafe({
 }: ICardCafeProps) {
 	return (
 		<Card className={`w-100 ${backgroundColor}`}>
-			{icon && <RenderIcon icon={icon} />}
-			<Card.Header>
-				<Card.Title>{value}</Card.Title>
-				{description && <Card.Description>{description}</Card.Description>}
-			</Card.Header>
+			<Card.Content className="p-4">
+				{icon && <RenderIcon icon={icon} />}
+				<Card.Header>
+					<Card.Title>{value}</Card.Title>
+					{description && <Card.Description>{description}</Card.Description>}
+				</Card.Header>
+			</Card.Content>
 		</Card>
 	);
 }
