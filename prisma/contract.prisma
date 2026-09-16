@@ -1,0 +1,82 @@
+
+model usuarios {
+  id                  Int       @id @default(autoincrement())
+  nombre              String
+  apellido            String
+  email               String    @unique
+  contrasena          String
+  rol                 String
+  activo              Boolean?  @default(true)
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+
+  creado_por_id       Int?
+  creado_por          usuarios? @relation("usuarios_creado_por", fields: [creado_por_id], references: [id])
+  actualizado_por_id  Int?
+  actualizado_por     usuarios? @relation("usuarios_actualizado_por", fields: [actualizado_por_id], references: [id])
+
+  creados             usuarios[] @relation("usuarios_creado_por")
+  actualizados        usuarios[] @relation("usuarios_actualizado_por")
+
+  pedidos                    pedidos[]    @relation("pedidos_usuario")
+  categorias_creadas         categorias[] @relation("categorias_creado_por")
+  categorias_actualizadas    categorias[] @relation("categorias_actualizado_por")
+  productos_creados          productos[]  @relation("productos_creado_por")
+  productos_actualizados     productos[]  @relation("productos_actualizado_por")
+  pedidos_creados            pedidos[]    @relation("pedidos_creado_por")
+  pedidos_actualizados       pedidos[]    @relation("pedidos_actualizado_por")
+}
+
+model categorias {
+  id                  Int       @id @default(autoincrement())
+  titulo              String
+  url                 String    @unique
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+
+  creado_por_id       Int?
+  creado_por          usuarios? @relation("categorias_creado_por", fields: [creado_por_id], references: [id])
+  actualizado_por_id  Int?
+  actualizado_por     usuarios? @relation("categorias_actualizado_por", fields: [actualizado_por_id], references: [id])
+}
+
+model productos {
+  id                  Int       @id @default(autoincrement())
+  titulo              String
+  descripcion         String
+  url                 String    @unique
+  precio_compra       Float
+  precio_venta        Float
+  stock               Int
+  imagen              String?
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+
+  creado_por_id       Int?
+  creado_por          usuarios? @relation("productos_creado_por", fields: [creado_por_id], references: [id])
+  actualizado_por_id  Int?
+  actualizado_por     usuarios? @relation("productos_actualizado_por", fields: [actualizado_por_id], references: [id])
+
+  pedidos             pedidos[]
+}
+
+model pedidos {
+  id                  Int       @id @default(autoincrement())
+
+  usuario_id          Int
+  usuario             usuarios  @relation("pedidos_usuario", fields: [usuario_id], references: [id])
+
+  producto_id         Int
+  producto            productos @relation(fields: [producto_id], references: [id])
+
+  cantidad            Int
+  total               Float
+  estado              String
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime  @updatedAt
+
+  creado_por_id       Int?
+  creado_por          usuarios? @relation("pedidos_creado_por", fields: [creado_por_id], references: [id])
+  actualizado_por_id  Int?
+  actualizado_por     usuarios? @relation("pedidos_actualizado_por", fields: [actualizado_por_id], references: [id])
+}
