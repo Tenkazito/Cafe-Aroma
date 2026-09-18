@@ -11,7 +11,18 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false
+		"ignoreUnknown": false,
+		"includes": [
+			"**",
+			"!public/**",
+			"!.claude/skills/**",
+			"!migrations/**",
+			"!skills-lock.json",
+			"!prisma/contract.d.ts",
+			"!prisma/contract.json",
+			"!prisma/ops.json",
+			"!prisma/migration.json"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -20,7 +31,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"preset": "recommended"
+			"preset": "recommended",
+			"suspicious": {
+				"useBiomeIgnoreFolder": "off"
+			}
 		}
 	},
 	"javascript": {

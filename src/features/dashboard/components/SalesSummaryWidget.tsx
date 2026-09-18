@@ -1,7 +1,7 @@
 "use client";
 import { Card, Tabs } from "@heroui/react";
-import RenderIcon from "@/common/components/RenderIcon";
 import { useState } from "react";
+import RenderIcon from "@/common/components/RenderIcon";
 
 export interface SalesSummaryItemData {
 	id: string;

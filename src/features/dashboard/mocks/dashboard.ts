@@ -1,6 +1,6 @@
-import type { LoyalCustomer } from "@/features/dashboard/components/LoyalCustomersWidget";
-import type { SalesSummaryItemData } from "@/features/dashboard/components/SalesSummaryWidget";
-import type { TopProduct } from "@/features/dashboard/components/TopProductsWidget";
+import type { LoyalCustomer } from "../components/LoyalCustomersWidget";
+import type { SalesSummaryItemData } from "../components/SalesSummaryWidget";
+import type { TopProduct } from "../components/TopProductsWidget";
 
 export const MOCK_PRODUCTS: TopProduct[] = [
 	{

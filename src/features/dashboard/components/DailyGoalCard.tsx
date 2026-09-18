@@ -31,8 +31,13 @@ export const DailyGoalCard = ({
 					<ProgressBar
 						size="sm"
 						value={percentage}
-						className="max-w-md track indicator: bg-lemon"
-					/>
+						aria-label={title}
+						className="max-w-md"
+					>
+						<ProgressBar.Track>
+							<ProgressBar.Fill className="bg-lemon" />
+						</ProgressBar.Track>
+					</ProgressBar>
 				</div>
 			</Card.Content>
 		</Card>

@@ -4,6 +4,13 @@ import { Avatar, Button } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import RenderIcon from "@/common/components/RenderIcon";
+import { getInitials } from "@/common/utils/format";
+
+const USER = {
+	name: "María González",
+	role: "Administrador",
+	avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+};
 
 const NAV_LINKS = [
 	{ name: "Inicio", href: "/dashboard", icon: "home" },
@@ -25,7 +32,7 @@ export const TopNavbar = () => {
 					<div className="flex h-8 w-8 items-center justify-center rounded-md bg-navy text-white">
 						<RenderIcon icon="coffee" size={18} />
 					</div>
-					<p className="font-bold text-navy text-xl">Café Aroma</p>
+					<p className="font-bold text-navy text-xl">AromaCafe</p>
 				</div>
 
 				{/* Enlaces de navegación */}
@@ -54,17 +61,12 @@ export const TopNavbar = () => {
 				<div className="flex items-center gap-3">
 					<div className="flex items-center gap-3">
 						<Avatar size="sm" className="ring-2 ring-gray-200 rounded-full">
-							<Avatar.Image
-								src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-								alt="María González"
-							/>
-							<Avatar.Fallback>MG</Avatar.Fallback>
+							<Avatar.Image src={USER.avatar} alt={USER.name} />
+							<Avatar.Fallback>{getInitials(USER.name)}</Avatar.Fallback>
 						</Avatar>
 						<div className="hidden md:flex flex-col text-sm">
-							<span className="font-semibold text-foreground">
-								María González
-							</span>
-							<span className="text-xs text-gray-400">Administrador</span>
+							<span className="font-semibold text-foreground">{USER.name}</span>
+							<span className="text-xs text-gray-400">{USER.role}</span>
 						</div>
 					</div>
 					<div className="w-px h-8 bg-gray-200 mx-2 hidden md:block"></div>

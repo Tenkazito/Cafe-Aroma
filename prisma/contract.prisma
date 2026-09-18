@@ -1,3 +1,4 @@
+// use prisma-8
 
 model usuarios {
   id                  Int       @id @default(autoincrement())
@@ -7,8 +8,8 @@ model usuarios {
   contrasena          String
   rol                 String
   activo              Boolean?  @default(true)
-  fecha_creacion      DateTime  @default(now())
-  fecha_actualizacion DateTime  @updatedAt
+  fecha_creacion      temporal.createdAtString()
+  fecha_actualizacion temporal.updatedAtString()
 
   creado_por_id       Int?
   creado_por          usuarios? @relation("usuarios_creado_por", fields: [creado_por_id], references: [id])
@@ -31,8 +32,8 @@ model categorias {
   id                  Int       @id @default(autoincrement())
   titulo              String
   url                 String    @unique
-  fecha_creacion      DateTime  @default(now())
-  fecha_actualizacion DateTime  @updatedAt
+  fecha_creacion      temporal.createdAtString()
+  fecha_actualizacion temporal.updatedAtString()
 
   creado_por_id       Int?
   creado_por          usuarios? @relation("categorias_creado_por", fields: [creado_por_id], references: [id])
@@ -49,8 +50,8 @@ model productos {
   precio_venta        Float
   stock               Int
   imagen              String?
-  fecha_creacion      DateTime  @default(now())
-  fecha_actualizacion DateTime  @updatedAt
+  fecha_creacion      temporal.createdAtString()
+  fecha_actualizacion temporal.updatedAtString()
 
   creado_por_id       Int?
   creado_por          usuarios? @relation("productos_creado_por", fields: [creado_por_id], references: [id])
@@ -72,8 +73,8 @@ model pedidos {
   cantidad            Int
   total               Float
   estado              String
-  fecha_creacion      DateTime  @default(now())
-  fecha_actualizacion DateTime  @updatedAt
+  fecha_creacion      temporal.createdAtString()
+  fecha_actualizacion temporal.updatedAtString()
 
   creado_por_id       Int?
   creado_por          usuarios? @relation("pedidos_creado_por", fields: [creado_por_id], references: [id])

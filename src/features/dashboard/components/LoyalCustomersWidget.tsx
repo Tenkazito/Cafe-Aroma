@@ -1,6 +1,7 @@
 import { Avatar, Card, Chip } from "@heroui/react";
 import { RankBadge } from "@/common/components/RankBadge";
 import RenderIcon from "@/common/components/RenderIcon";
+import { getInitials } from "@/common/utils/format";
 
 export interface LoyalCustomer {
 	id: string;
@@ -36,10 +37,7 @@ export const LoyalCustomersWidget = ({
 								<Avatar size="md" className="shrink-0">
 									<Avatar.Image src={customer.avatar} />
 									<Avatar.Fallback>
-										{customer.name
-											.split(" ")
-											.map((n) => n[0])
-											.join("")}
+										{getInitials(customer.name)}
 									</Avatar.Fallback>
 								</Avatar>
 								<div className="flex flex-col">

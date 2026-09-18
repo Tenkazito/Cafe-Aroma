@@ -1,5 +1,5 @@
 import { Card } from "@heroui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import Title from "@/common/components/Title";
 
 interface ISectionPanelProps {

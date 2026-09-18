@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface IColumn<T> {
 	header: string;
@@ -12,7 +12,11 @@ interface IDataTableProps<T> {
 	rowKey: (row: T) => string;
 }
 
-export default function DataTable<T>({ columns, data, rowKey }: IDataTableProps<T>) {
+export default function DataTable<T>({
+	columns,
+	data,
+	rowKey,
+}: IDataTableProps<T>) {
 	return (
 		<table className="w-full text-sm">
 			<thead>
@@ -28,7 +32,10 @@ export default function DataTable<T>({ columns, data, rowKey }: IDataTableProps<
 				{data.map((row) => (
 					<tr key={rowKey(row)} className="border-t border-default-100">
 						{columns.map((column) => (
-							<td key={column.header} className={`py-3 ${column.className ?? ""}`}>
+							<td
+								key={column.header}
+								className={`py-3 ${column.className ?? ""}`}
+							>
 								{column.accessor(row)}
 							</td>
 						))}

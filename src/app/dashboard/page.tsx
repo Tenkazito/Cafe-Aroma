@@ -1,16 +1,16 @@
 "use client";
 import { Card } from "@heroui/react";
 import Title from "@/common/components/Title";
-import {
-	MOCK_CUSTOMERS,
-	MOCK_PRODUCTS,
-	MOCK_SALES_SUMMARY,
-} from "@/common/mocks/dashboard";
 import { DailyGoalCard } from "@/features/dashboard/components/DailyGoalCard";
 import { LoyalCustomersWidget } from "@/features/dashboard/components/LoyalCustomersWidget";
 import { SalesSummaryWidget } from "@/features/dashboard/components/SalesSummaryWidget";
 import { StatCard } from "@/features/dashboard/components/StatCard";
 import { TopProductsWidget } from "@/features/dashboard/components/TopProductsWidget";
+import {
+	MOCK_CUSTOMERS,
+	MOCK_PRODUCTS,
+	MOCK_SALES_SUMMARY,
+} from "@/features/dashboard/mocks/dashboard";
 
 export default function DashboardPage() {
 	return (

@@ -13,6 +13,7 @@ import {
 	Package,
 	PiggyBank,
 	Receipt,
+	Search,
 	ShoppingBag,
 	Trophy,
 	Users,
@@ -71,6 +72,8 @@ export default function RenderIcon({ icon, size, className }: IIconsProps) {
 			return <PiggyBank {...props} />;
 		case "chevronRight":
 			return <ChevronRight {...props} />;
+		case "search":
+			return <Search {...props} />;
 		default:
 			return null;
 	}

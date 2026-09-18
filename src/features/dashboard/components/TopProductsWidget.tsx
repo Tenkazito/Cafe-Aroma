@@ -1,6 +1,7 @@
 import { Avatar, Card, Table } from "@heroui/react";
-import RenderIcon from "@/common/components/RenderIcon";
 import { RankBadge } from "@/common/components/RankBadge";
+import RenderIcon from "@/common/components/RenderIcon";
+import { getInitials } from "@/common/utils/format";
 
 export interface TopProduct {
 	id: string;
@@ -30,18 +31,14 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 		<Card className="shadow-sm border border-gray-100 rounded-2xl w-full bg-white">
 			<Card.Content className="p-6">
 				<div className="flex items-center gap-2 mb-6">
-					<RenderIcon
-						icon="trophy"
-						className="text-orange-400"
-						size={24}
-					/>
+					<RenderIcon icon="trophy" className="text-orange-400" size={24} />
 					<h2 className="text-xl font-bold text-navy">
 						Productos más vendidos
 					</h2>
 				</div>
 
-				<Table aria-label="Productos más vendidos">
-					<Table.Content>
+				<Table>
+					<Table.Content aria-label="Productos más vendidos">
 						<Table.Header>
 							{columns.map((col) => (
 								<Table.Column
@@ -62,7 +59,7 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 											<Avatar size="md" className="bg-gray-100 rounded-md">
 												<Avatar.Image src={product.image} />
 												<Avatar.Fallback>
-													{product.name.charAt(0)}
+													{getInitials(product.name, 1)}
 												</Avatar.Fallback>
 											</Avatar>
 										</div>

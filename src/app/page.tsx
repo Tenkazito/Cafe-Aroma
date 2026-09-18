@@ -32,7 +32,7 @@ export default function Home() {
 					size={70}
 					className="border rounded-2xl mb-4 p-2 bg-[#16123f] text-white"
 				/>
-				<h1 className="text-2xl font-bold">Café Aroma</h1>
+				<h1 className="text-2xl font-bold">AromaCafe</h1>
 				<h2 className="text-sm text-neutral-500 mb-6">
 					Sistema de pedidos online
 				</h2>
@@ -123,7 +123,7 @@ export default function Home() {
 					</Form>
 				</div>
 				<h6 className="mt-6 text-neutral-400 text-xs">
-					© 2026 Cafe Aroma - Todos los derechos reservados
+					© 2026 AromaCafe - Todos los derechos reservados
 				</h6>
 			</div>
 		</div>

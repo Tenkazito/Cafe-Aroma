@@ -4,12 +4,20 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "post": {
-      "model": "Post",
+    "categorias": {
+      "model": "categorias",
       "namespace": "public"
     },
-    "user": {
-      "model": "User",
+    "pedidos": {
+      "model": "pedidos",
+      "namespace": "public"
+    },
+    "productos": {
+      "model": "productos",
+      "namespace": "public"
+    },
+    "usuarios": {
+      "model": "usuarios",
       "namespace": "public"
     }
   },
@@ -17,23 +25,30 @@
     "namespaces": {
       "public": {
         "models": {
-          "Post": {
+          "categorias": {
             "fields": {
-              "authorId": {
-                "nullable": false,
+              "actualizado_por_id": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
-              "content": {
+              "creado_por_id": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/text@1",
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
-              "createdAt": {
+              "fecha_actualizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_creacion": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
@@ -47,70 +62,472 @@
                   "kind": "scalar"
                 }
               },
-              "title": {
+              "titulo": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
+              "url": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               }
             },
             "relations": {
-              "author": {
+              "actualizado_por": {
                 "cardinality": "N:1",
-                "nullable": false,
+                "nullable": true,
                 "on": {
                   "localFields": [
-                    "authorId"
+                    "actualizado_por_id"
                   ],
                   "targetFields": [
                     "id"
                   ]
                 },
                 "to": {
-                  "model": "User",
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "creado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "creado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
                   "namespace": "public"
                 }
               }
             },
             "storage": {
               "fields": {
-                "authorId": {
-                  "column": "authorId"
+                "actualizado_por_id": {
+                  "column": "actualizado_por_id"
                 },
-                "content": {
-                  "column": "content"
+                "creado_por_id": {
+                  "column": "creado_por_id"
                 },
-                "createdAt": {
-                  "column": "createdAt"
+                "fecha_actualizacion": {
+                  "column": "fecha_actualizacion"
+                },
+                "fecha_creacion": {
+                  "column": "fecha_creacion"
                 },
                 "id": {
                   "column": "id"
                 },
-                "title": {
-                  "column": "title"
+                "titulo": {
+                  "column": "titulo"
                 },
-                "updatedAt": {
-                  "column": "updatedAt"
+                "url": {
+                  "column": "url"
                 }
               },
               "namespaceId": "public",
-              "table": "post"
+              "table": "categorias"
             }
           },
-          "User": {
+          "pedidos": {
             "fields": {
-              "createdAt": {
+              "actualizado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "cantidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "creado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_actualizacion": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_creacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "producto_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "total": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "usuario_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "actualizado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "actualizado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "creado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "creado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "producto_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "productos",
+                  "namespace": "public"
+                }
+              },
+              "usuario": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "usuario_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "actualizado_por_id": {
+                  "column": "actualizado_por_id"
+                },
+                "cantidad": {
+                  "column": "cantidad"
+                },
+                "creado_por_id": {
+                  "column": "creado_por_id"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "fecha_actualizacion": {
+                  "column": "fecha_actualizacion"
+                },
+                "fecha_creacion": {
+                  "column": "fecha_creacion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "producto_id": {
+                  "column": "producto_id"
+                },
+                "total": {
+                  "column": "total"
+                },
+                "usuario_id": {
+                  "column": "usuario_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "pedidos"
+            }
+          },
+          "productos": {
+            "fields": {
+              "actualizado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "creado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_actualizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_creacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "imagen": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "precio_compra": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "precio_venta": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "stock": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "titulo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "url": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "actualizado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "actualizado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "creado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "creado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "pedidos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "producto_id"
+                  ]
+                },
+                "to": {
+                  "model": "pedidos",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "actualizado_por_id": {
+                  "column": "actualizado_por_id"
+                },
+                "creado_por_id": {
+                  "column": "creado_por_id"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "fecha_actualizacion": {
+                  "column": "fecha_actualizacion"
+                },
+                "fecha_creacion": {
+                  "column": "fecha_creacion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "imagen": {
+                  "column": "imagen"
+                },
+                "precio_compra": {
+                  "column": "precio_compra"
+                },
+                "precio_venta": {
+                  "column": "precio_venta"
+                },
+                "stock": {
+                  "column": "stock"
+                },
+                "titulo": {
+                  "column": "titulo"
+                },
+                "url": {
+                  "column": "url"
+                }
+              },
+              "namespaceId": "public",
+              "table": "productos"
+            }
+          },
+          "usuarios": {
+            "fields": {
+              "activo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "actualizado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "apellido": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "contrasena": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "creado_por_id": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -121,6 +538,20 @@
                   "kind": "scalar"
                 }
               },
+              "fecha_actualizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_creacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -128,22 +559,15 @@
                   "kind": "scalar"
                 }
               },
-              "name": {
-                "nullable": true,
+              "nombre": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
+              "rol": {
                 "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar"
-                }
-              },
-              "username": {
-                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -151,45 +575,212 @@
               }
             },
             "relations": {
-              "posts": {
+              "actualizado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "actualizado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "actualizados": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "authorId"
+                    "actualizado_por_id"
                   ]
                 },
                 "to": {
-                  "model": "Post",
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "categorias_actualizadas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "actualizado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "categorias",
+                  "namespace": "public"
+                }
+              },
+              "categorias_creadas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "creado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "categorias",
+                  "namespace": "public"
+                }
+              },
+              "creado_por": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "creado_por_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "creados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "creado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "pedidos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "usuario_id"
+                  ]
+                },
+                "to": {
+                  "model": "pedidos",
+                  "namespace": "public"
+                }
+              },
+              "pedidos_actualizados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "actualizado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "pedidos",
+                  "namespace": "public"
+                }
+              },
+              "pedidos_creados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "creado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "pedidos",
+                  "namespace": "public"
+                }
+              },
+              "productos_actualizados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "actualizado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "productos",
+                  "namespace": "public"
+                }
+              },
+              "productos_creados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "creado_por_id"
+                  ]
+                },
+                "to": {
+                  "model": "productos",
                   "namespace": "public"
                 }
               }
             },
             "storage": {
               "fields": {
-                "createdAt": {
-                  "column": "createdAt"
+                "activo": {
+                  "column": "activo"
+                },
+                "actualizado_por_id": {
+                  "column": "actualizado_por_id"
+                },
+                "apellido": {
+                  "column": "apellido"
+                },
+                "contrasena": {
+                  "column": "contrasena"
+                },
+                "creado_por_id": {
+                  "column": "creado_por_id"
                 },
                 "email": {
                   "column": "email"
                 },
+                "fecha_actualizacion": {
+                  "column": "fecha_actualizacion"
+                },
+                "fecha_creacion": {
+                  "column": "fecha_creacion"
+                },
                 "id": {
                   "column": "id"
                 },
-                "name": {
-                  "column": "name"
+                "nombre": {
+                  "column": "nombre"
                 },
-                "updatedAt": {
-                  "column": "updatedAt"
-                },
-                "username": {
-                  "column": "username"
+                "rol": {
+                  "column": "rol"
                 }
               },
               "namespaceId": "public",
-              "table": "user"
+              "table": "usuarios"
             }
           }
         }
@@ -201,19 +792,24 @@
       "public": {
         "entries": {
           "table": {
-            "post": {
+            "categorias": {
               "columns": {
-                "authorId": {
+                "actualizado_por_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
-                  "nullable": false
-                },
-                "content": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
                   "nullable": true
                 },
-                "createdAt": {
+                "creado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "fecha_actualizacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fecha_creacion": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
@@ -231,14 +827,14 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
-                "title": {
+                "titulo": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                "url": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 }
               },
@@ -246,27 +842,225 @@
                 {
                   "source": {
                     "columns": [
-                      "authorId"
+                      "creado_por_id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "post"
+                    "tableName": "categorias"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "user"
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "actualizado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categorias"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
                   }
                 }
               ],
               "indexes": [
                 {
                   "columns": [
-                    "authorId"
+                    "actualizado_por_id"
                   ],
-                  "name": "post_authorId_idx_e47547ed",
-                  "prefix": "post_authorId_idx",
+                  "name": "categorias_actualizado_por_id_idx_941f4e34",
+                  "prefix": "categorias_actualizado_por_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "creado_por_id"
+                  ],
+                  "name": "categorias_creado_por_id_idx_9be71d7d",
+                  "prefix": "categorias_creado_por_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "pedidos": {
+              "columns": {
+                "actualizado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "cantidad": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "creado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "fecha_actualizacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fecha_creacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "producto_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "total": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                },
+                "usuario_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "usuario_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedidos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "producto_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedidos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "productos"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "creado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedidos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "actualizado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedidos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "actualizado_por_id"
+                  ],
+                  "name": "pedidos_actualizado_por_id_idx_941f4e34",
+                  "prefix": "pedidos_actualizado_por_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "creado_por_id"
+                  ],
+                  "name": "pedidos_creado_por_id_idx_9be71d7d",
+                  "prefix": "pedidos_creado_por_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "producto_id"
+                  ],
+                  "name": "pedidos_producto_id_idx_52b7577c",
+                  "prefix": "pedidos_producto_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "usuario_id"
+                  ],
+                  "name": "pedidos_usuario_id_idx_65b6616a",
+                  "prefix": "pedidos_usuario_id_idx",
                   "unique": false
                 }
               ],
@@ -277,20 +1071,35 @@
               },
               "uniques": []
             },
-            "user": {
+            "productos": {
               "columns": {
-                "createdAt": {
+                "actualizado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "creado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "fecha_actualizacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fecha_creacion": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
-                  "nullable": false
-                },
-                "email": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
                   "nullable": false
                 },
                 "id": {
@@ -302,24 +1111,224 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
-                "name": {
+                "imagen": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
                 },
-                "updatedAt": {
+                "precio_compra": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                },
+                "precio_venta": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": false
+                },
+                "stock": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "titulo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "url": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "creado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "productos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "actualizado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "productos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "actualizado_por_id"
+                  ],
+                  "name": "productos_actualizado_por_id_idx_941f4e34",
+                  "prefix": "productos_actualizado_por_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "creado_por_id"
+                  ],
+                  "name": "productos_creado_por_id_idx_9be71d7d",
+                  "prefix": "productos_creado_por_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "usuarios": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": true
+                },
+                "actualizado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "apellido": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "contrasena": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "creado_por_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "fecha_actualizacion": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "username": {
+                "fecha_creacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
+                },
+                "rol": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "creado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "actualizado_por_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "actualizado_por_id"
+                  ],
+                  "name": "usuarios_actualizado_por_id_idx_941f4e34",
+                  "prefix": "usuarios_actualizado_por_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "creado_por_id"
+                  ],
+                  "name": "usuarios_creado_por_id_idx_9be71d7d",
+                  "prefix": "usuarios_creado_por_id_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -339,10 +1348,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1e8412e162dbbe69f4bb3bf8d07f0280ae67eaab15c34dcf201e67468315428d"
+    "storageHash": "63c2d8ff61b4b4ad40f8f7e3a0e5d7818fad0e10de4bdb601d8a64d478e6c136"
   },
   "execution": {
-    "executionHash": "4abff323cc88151ef9c9a0ec90122cfee6d46814a118cdb66a9fdd94a4123463",
+    "executionHash": "31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac",
     "mutations": {
       "defaults": [
         {
@@ -355,9 +1364,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "updatedAt",
+            "column": "fecha_actualizacion",
             "namespace": "public",
-            "table": "post"
+            "table": "categorias"
           }
         },
         {
@@ -370,9 +1379,39 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "updatedAt",
+            "column": "fecha_actualizacion",
             "namespace": "public",
-            "table": "user"
+            "table": "pedidos"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "fecha_actualizacion",
+            "namespace": "public",
+            "table": "productos"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "fecha_actualizacion",
+            "namespace": "public",
+            "table": "usuarios"
           }
         }
       ]
