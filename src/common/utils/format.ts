@@ -1,24 +1,28 @@
 /**
- * Formatea un número como precio.
+ * Formatea un número como precio en pesos colombianos: 8500 → "$8.500".
  *
- * Los mocks traen los precios ya formateados ("$8.500"), pero el contrato
- * define `precio_venta` y `total` como Float, así que en cuanto los datos
- * vengan de la base habrá que formatearlos aquí.
+ * Toda la app usa COP (en la diapositiva del cliente aparecían precios en
+ * dólares, pero se unificó la moneda).
  */
-export function formatCurrency(value: number): string {
-	return new Intl.NumberFormat("es-CO", {
-		style: "currency",
-		currency: "COP",
-		maximumFractionDigits: 0,
-	}).format(value);
-}
+export const formatCurrency = (value: number): string => {
+	return (
+		new Intl.NumberFormat("es-CO", {
+			style: "currency",
+			currency: "COP",
+			maximumFractionDigits: 0,
+		})
+			.format(value)
+			// Intl mete un espacio duro entre "$" y el número; las diapositivas lo muestran pegado
+			.replace(/\s/g, "")
+	);
+};
 
 /**
  * Extrae las iniciales de un nombre completo para el fallback de un Avatar.
  *
  * "Laura Patiño" → "LP"
  */
-export function getInitials(name: string, max = 2): string {
+export const getInitials = (name: string, max = 2): string => {
 	return name
 		.trim()
 		.split(/\s+/)
@@ -26,4 +30,4 @@ export function getInitials(name: string, max = 2): string {
 		.map((part) => part.charAt(0))
 		.join("")
 		.toUpperCase();
-}
+};

@@ -1,64 +1,46 @@
-import { Avatar, Card, Chip } from "@heroui/react";
-import { RankBadge } from "@/common/components/RankBadge";
-import RenderIcon from "@/common/components/RenderIcon";
-import { getInitials } from "@/common/utils/format";
+import { RankBadge } from "@/common/components/ui/RankBadge";
+import { SectionCard } from "@/common/components/ui/SectionCard";
+import { UserAvatar } from "@/common/components/ui/UserAvatar";
+import type { LoyalCustomer } from "@/features/dashboard/types";
 
-export interface LoyalCustomer {
-	id: string;
-	avatar: string;
-	name: string;
-	orders: number;
-	score: number;
-}
-
-interface LoyalCustomersWidgetProps {
+type LoyalCustomersWidgetProps = {
+	/** Clientes ya ordenados de más a menos pedidos. */
 	customers: LoyalCustomer[];
-}
+};
 
 export const LoyalCustomersWidget = ({
 	customers,
 }: LoyalCustomersWidgetProps) => {
 	return (
-		<Card className="shadow-sm border border-gray-100 rounded-2xl w-full h-full bg-white">
-			<Card.Content className="p-6">
-				<div className="flex items-center gap-2 mb-6">
-					<RenderIcon icon="trophy" className="text-teal" size={24} />
-					<h2 className="text-xl font-bold text-navy">Clientes fieles</h2>
-				</div>
-
-				<div className="flex flex-col gap-5 mt-2">
-					{customers.map((customer, index) => (
-						<div
-							key={customer.id}
-							className="flex items-center justify-between group"
-						>
-							<div className="flex items-center gap-4">
-								<RankBadge rank={index + 1} />
-								<Avatar size="md" className="shrink-0">
-									<Avatar.Image src={customer.avatar} />
-									<Avatar.Fallback>
-										{getInitials(customer.name)}
-									</Avatar.Fallback>
-								</Avatar>
-								<div className="flex flex-col">
-									<span className="font-semibold text-sm text-foreground">
-										{customer.name}
-									</span>
-									<span className="text-xs text-gray-400">
-										{customer.orders} pedidos en total
-									</span>
-								</div>
-							</div>
-							<Chip
+		<SectionCard title="Clientes fieles" icon="trophy" className="h-full">
+			<ol className="flex flex-col gap-4">
+				{customers.map((customer, index) => (
+					<li
+						key={customer.id}
+						className="flex items-center justify-between gap-3"
+					>
+						<div className="flex items-center gap-3">
+							<RankBadge rank={index + 1} />
+							<UserAvatar
+								name={customer.name}
+								imageUrl={customer.avatarUrl}
 								size="sm"
-								className="bg-mint/40 text-teal font-bold text-sm px-3"
-							>
-								{customer.score}
-							</Chip>
+							/>
+							<div className="flex flex-col">
+								<span className="text-sm font-semibold text-navy">
+									{customer.name}
+								</span>
+								<span className="text-xs text-gray-400">
+									{customer.orderCount} pedidos en total
+								</span>
+							</div>
 						</div>
-					))}
-				</div>
-			</Card.Content>
-		</Card>
+						<span className="rounded-full bg-mint/60 px-2.5 py-0.5 text-xs font-bold text-teal-strong">
+							{customer.orderCount}
+						</span>
+					</li>
+				))}
+			</ol>
+		</SectionCard>
 	);
 };

@@ -1,102 +1,86 @@
-import { Avatar, Card, Table } from "@heroui/react";
-import { RankBadge } from "@/common/components/RankBadge";
-import RenderIcon from "@/common/components/RenderIcon";
-import { getInitials } from "@/common/utils/format";
+import {
+	DataTable,
+	type DataTableColumn,
+} from "@/common/components/ui/DataTable";
+import { ProductThumbnail } from "@/common/components/ui/ProductThumbnail";
+import { RankBadge } from "@/common/components/ui/RankBadge";
+import { SectionCard } from "@/common/components/ui/SectionCard";
+import { formatCurrency } from "@/common/utils/format";
+import type { TopProduct } from "@/features/dashboard/types";
+import { isLowStock } from "@/features/products/lib/isLowStock";
 
-export interface TopProduct {
-	id: string;
-	image: string;
-	name: string;
-	category: string;
-	sold: number;
-	stock: number;
-	isLowStock?: boolean;
-	price: string;
-}
-
-interface TopProductsWidgetProps {
+type TopProductsWidgetProps = {
+	/** Productos ya ordenados de más a menos vendido. */
 	products: TopProduct[];
-}
-
-const columns = [
-	{ id: "producto", name: "Producto" },
-	{ id: "nombre", name: "Nombre" },
-	{ id: "vendidos", name: "Vendidos" },
-	{ id: "stock", name: "Stock" },
-	{ id: "precio", name: "Precio" },
-];
+};
 
 export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
-	return (
-		<Card className="shadow-sm border border-gray-100 rounded-2xl w-full bg-white">
-			<Card.Content className="p-6">
-				<div className="flex items-center gap-2 mb-6">
-					<RenderIcon icon="trophy" className="text-orange-400" size={24} />
-					<h2 className="text-xl font-bold text-navy">
-						Productos más vendidos
-					</h2>
+	const columns: DataTableColumn<TopProduct>[] = [
+		{
+			key: "product",
+			header: "Producto",
+			cell: (product) => (
+				<div className="flex items-center gap-3">
+					<RankBadge rank={products.indexOf(product) + 1} />
+					<ProductThumbnail name={product.name} imageUrl={product.imageUrl} />
 				</div>
+			),
+		},
+		{
+			key: "name",
+			header: "Nombre",
+			cell: (product) => (
+				<div className="flex flex-col">
+					<span className="font-semibold text-navy">{product.name}</span>
+					<span className="text-xs text-gray-400">{product.categoryName}</span>
+				</div>
+			),
+		},
+		{
+			key: "sold",
+			header: "Vendidos",
+			align: "right",
+			cell: (product) => product.unitsSold,
+		},
+		{
+			key: "stock",
+			header: "Stock",
+			align: "right",
+			cell: (product) => (
+				<span
+					className={
+						isLowStock(product.stock) ? "font-semibold text-orange-500" : ""
+					}
+				>
+					{product.stock}
+				</span>
+			),
+		},
+		{
+			key: "price",
+			header: "Precio",
+			align: "right",
+			cell: (product) => (
+				<span className="font-semibold text-navy">
+					{formatCurrency(product.price)}
+				</span>
+			),
+		},
+	];
 
-				<Table>
-					<Table.Content aria-label="Productos más vendidos">
-						<Table.Header>
-							{columns.map((col) => (
-								<Table.Column
-									key={col.id}
-									id={col.id}
-									isRowHeader={col.id === "nombre"}
-								>
-									{col.name}
-								</Table.Column>
-							))}
-						</Table.Header>
-						<Table.Body>
-							{products.map((product, index) => (
-								<Table.Row key={product.id} id={product.id}>
-									<Table.Cell>
-										<div className="flex items-center gap-3">
-											<RankBadge rank={index + 1} />
-											<Avatar size="md" className="bg-gray-100 rounded-md">
-												<Avatar.Image src={product.image} />
-												<Avatar.Fallback>
-													{getInitials(product.name, 1)}
-												</Avatar.Fallback>
-											</Avatar>
-										</div>
-									</Table.Cell>
-									<Table.Cell>
-										<div className="flex flex-col">
-											<span className="font-semibold text-sm text-foreground">
-												{product.name}
-											</span>
-											<span className="text-xs text-gray-400">
-												{product.category}
-											</span>
-										</div>
-									</Table.Cell>
-									<Table.Cell className="text-center text-sm font-semibold text-foreground">
-										{product.sold}
-									</Table.Cell>
-									<Table.Cell className="text-center text-sm font-semibold">
-										<span
-											className={
-												product.isLowStock
-													? "text-orange-500"
-													: "text-foreground"
-											}
-										>
-											{product.stock}
-										</span>
-									</Table.Cell>
-									<Table.Cell className="text-right text-sm font-semibold text-foreground">
-										{product.price}
-									</Table.Cell>
-								</Table.Row>
-							))}
-						</Table.Body>
-					</Table.Content>
-				</Table>
-			</Card.Content>
-		</Card>
+	return (
+		<SectionCard
+			title="Productos más vendidos"
+			icon="trophy"
+			iconClassName="text-orange-400"
+		>
+			<DataTable
+				ariaLabel="Productos más vendidos"
+				variant="plain"
+				columns={columns}
+				rows={products}
+				getRowKey={(product) => product.id}
+			/>
+		</SectionCard>
 	);
 };

@@ -34,21 +34,40 @@ pnpm dev
 
 Abrir [http://localhost:3000](http://localhost:3000).
 
+## Pantallas
+
+| Ruta | Pantalla |
+|---|---|
+| `/login` | Login del cliente |
+| `/inicio`, `/solicitar`, `/mis-pedidos`, `/notificaciones` | Pantallas del cliente |
+| `/admin/login` | Login del administrador |
+| `/admin`, `/admin/usuarios`, `/admin/categorias`, `/admin/productos`, `/admin/pedidos`, `/admin/facturacion` | Panel de administración |
+| `/dev` | Catálogo de componentes (solo con `pnpm dev`) |
+
+Por ahora todo funciona con datos de ejemplo (`src/features/*/mocks/`); los formularios muestran un aviso "(simulado)".
+
 ## Estructura
 
 ```
 src/
 ├── app/                    Rutas (App Router)
-│   ├── page.tsx            Login
-│   └── dashboard/          Panel de administración
+│   ├── (auth)/login/       Login del cliente
+│   ├── (cliente)/          Pantallas del cliente (layout con sidebar)
+│   ├── admin/              Login y panel de administración
+│   └── dev/                Catálogo de componentes
 ├── common/                 Código compartido entre features
-│   └── components/
+│   ├── components/         layout/ · ui/ · form/ · overlay/
+│   ├── hooks/
+│   ├── lib/
+│   ├── types/
+│   └── utils/
 └── features/               Código agrupado por dominio
-    └── dashboard/
-        ├── components/
-        └── mocks/
+    ├── auth/ dashboard/ users/ categories/ products/
+    ├── orders/ billing/ catalog/ notifications/
+    └── showcase/           Componentes de la ruta /dev
 ```
 
+Cada feature tiene `components/`, `mocks/`, `lib/` (funciones puras) y `types.ts`.
 El alias `@/` apunta a `src/`.
 
 ## Scripts
@@ -63,4 +82,5 @@ El alias `@/` apunta a `src/`.
 
 ## Documentación
 
+- [DESIGN.md](DESIGN.md) — sistema de diseño: colores, tipografía, layouts, rutas y componentes
 - [docs/prisma.md](docs/prisma.md) — guía de Prisma 8 (contrato, migraciones, consultas)
