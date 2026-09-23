@@ -1,52 +1,87 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+/*
+ * Tokens de diseño de Café Aroma (ver DESIGN.md).
+ * Solo existe tema claro: las diapositivas no definen modo oscuro.
+ */
 :root {
 	--background: #ffffff;
-	--foreground: #171717;
+	--foreground: #16123f;
 
-	/* 🎨 Paleta de Colores */
+	/* 🎨 Paleta de la marca */
 	--navy: #16123f;
 	--teal: #75c9b7;
 	--lime: #abd699;
 	--lemon: #ffe26a;
 	--mint: #c7ddcc;
-}
 
-/* Automatic system preference (when no manual override class is set) */
-@media (prefers-color-scheme: dark) {
-	:root:not(.light) {
-		--background: #0a0a0a;
-		--foreground: #ededed;
-	}
-}
+	/* Teal oscurecido: el teal original sobre blanco no llega al contraste mínimo para texto */
+	--teal-strong: #2a7f6f;
 
-/* Manual override classes */
-.dark {
-	--background: #0a0a0a;
-	--foreground: #ededed;
-}
+	/* Superficies (fondos de página) */
+	--surface-admin: #eef4f1;
+	--surface-client: #c7ddcc;
+	--surface-field: #e6f0e9;
 
-.light {
-	--background: #ffffff;
-	--foreground: #171717;
+	/*
+	 * Sobrescritura de variables de HeroUI: el color "accent" (botón primary,
+	 * foco, etc.) pasa a ser el navy de la marca.
+	 */
+	--accent: #16123f;
+	--accent-foreground: #ffffff;
+	--focus: #75c9b7;
+	--field-border: #e5e7eb;
+	--field-border-width: 1px;
+	--field-shadow: none;
 }
 
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
+	--font-sans: var(--font-jakarta);
 
 	--color-navy: var(--navy);
 	--color-teal: var(--teal);
+	--color-teal-strong: var(--teal-strong);
 	--color-lime: var(--lime);
 	--color-lemon: var(--lemon);
 	--color-mint: var(--mint);
+
+	--color-surface-admin: var(--surface-admin);
+	--color-surface-client: var(--surface-client);
+	--color-surface-field: var(--surface-field);
 }
 
 body {
 	background: var(--background);
 	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+}
+
+/*
+ * HeroUI dibuja los botones como píldora (rounded-3xl); en las diapositivas son
+ * rectángulos redondeados. Va en la capa "components" para que una clase de
+ * Tailwind puesta en un botón concreto (ej. rounded-full) siga ganando.
+ */
+@layer components {
+	.button {
+		border-radius: var(--radius-xl);
+	}
+}
+
+/* Al imprimir una factura solo se imprime el contenido marcado con .print-area */
+@media print {
+	body * {
+		visibility: hidden;
+	}
+
+	.print-area,
+	.print-area * {
+		visibility: visible;
+	}
+
+	.print-area {
+		position: absolute;
+		inset: 0;
+	}
 }

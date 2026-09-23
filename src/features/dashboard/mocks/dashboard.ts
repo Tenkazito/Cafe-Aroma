@@ -1,122 +1,80 @@
-import type { LoyalCustomer } from "../components/LoyalCustomersWidget";
-import type { SalesSummaryItemData } from "../components/SalesSummaryWidget";
-import type { TopProduct } from "../components/TopProductsWidget";
+import type {
+	DailyGoal,
+	LoyalCustomer,
+	SalesPeriod,
+	SalesSummary,
+	TopProduct,
+} from "@/features/dashboard/types";
+import { MOCK_PRODUCTS } from "@/features/products/mocks/products";
 
-export const MOCK_PRODUCTS: TopProduct[] = [
-	{
-		id: "1",
-		image:
-			"https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=150&auto=format&fit=crop",
-		name: "Latte Clásico",
-		category: "Cafés Calientes",
-		sold: 28,
-		stock: 40,
-		price: "$8.500",
-	},
-	{
-		id: "2",
-		image:
-			"https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=150&auto=format&fit=crop",
-		name: "Frappuccino Caramelo",
-		category: "Bebidas Frías",
-		sold: 22,
-		stock: 25,
-		price: "$12.500",
-	},
-	{
-		id: "3",
-		image:
-			"https://images.unsplash.com/photo-1572442388796-11668a67e53d?q=80&w=150&auto=format&fit=crop",
-		name: "Cappuccino Italiano",
-		category: "Cafés Calientes",
-		sold: 19,
-		stock: 32,
-		price: "$9.000",
-	},
-	{
-		id: "4",
-		image:
-			"https://images.unsplash.com/photo-1607958996333-41aef7caefaa?q=80&w=150&auto=format&fit=crop",
-		name: "Muffin de Arándanos",
-		category: "Postres",
-		sold: 15,
-		stock: 15,
-		isLowStock: true,
-		price: "$5.500",
-	},
-	{
-		id: "5",
-		image:
-			"https://images.unsplash.com/photo-1549903072-7e6e0d234247?q=80&w=150&auto=format&fit=crop",
-		name: "Croissant de Mantequilla",
-		category: "Panadería",
-		sold: 12,
-		stock: 30,
-		price: "$4.500",
-	},
-];
+/** Unidades vendidas por id de producto (el resto de datos sale del mock de productos). */
+const UNITS_SOLD_BY_PRODUCT_ID: Record<number, number> = {
+	1: 28,
+	5: 22,
+	2: 19,
+	7: 15,
+	10: 12,
+};
 
-export const MOCK_SALES_SUMMARY: SalesSummaryItemData[] = [
-	{
-		id: "s1",
-		icon: "shoppingBag",
-		value: "42",
-		label: "Ventas realizadas",
-		iconBgColor: "bg-mint/40",
-		iconColor: "text-teal",
-	},
-	{
-		id: "s2",
-		icon: "wallet",
-		value: "$1,245,000",
-		label: "Ganancias totales",
-		iconBgColor: "bg-blue-50",
-		iconColor: "text-blue-500",
-	},
-	{
-		id: "s3",
-		icon: "piggyBank",
-		value: "$186,500",
-		label: "Ahorro acumulado",
-		iconBgColor: "bg-orange-50",
-		iconColor: "text-orange-400",
-	},
-];
+export const MOCK_TOP_PRODUCTS: TopProduct[] = Object.entries(
+	UNITS_SOLD_BY_PRODUCT_ID,
+)
+	.map(([productId, unitsSold]) => {
+		const product = MOCK_PRODUCTS.find(
+			(candidate) => candidate.id === Number(productId),
+		);
+		if (!product) return null;
 
-export const MOCK_CUSTOMERS: LoyalCustomer[] = [
+		return {
+			id: product.id,
+			name: product.name,
+			categoryName: product.categoryName,
+			imageUrl: product.imageUrl,
+			unitsSold,
+			stock: product.stock,
+			price: product.price,
+		};
+	})
+	.filter((product): product is TopProduct => product !== null)
+	.sort((first, second) => second.unitsSold - first.unitsSold);
+
+export const MOCK_SALES_SUMMARY: Record<SalesPeriod, SalesSummary> = {
+	dia: { salesCount: 42, revenue: 1245000, savings: 186500 },
+	semana: { salesCount: 268, revenue: 7980000, savings: 1150000 },
+	mes: { salesCount: 1104, revenue: 33450000, savings: 4870000 },
+};
+
+export const MOCK_LOYAL_CUSTOMERS: LoyalCustomer[] = [
 	{
-		id: "c1",
-		avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+		id: 1,
 		name: "Laura Patiño",
-		orders: 48,
-		score: 48,
+		avatarUrl: "https://i.pravatar.cc/150?u=laura.patino",
+		orderCount: 48,
 	},
 	{
-		id: "c2",
-		avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+		id: 2,
 		name: "Esteban Ríos",
-		orders: 36,
-		score: 36,
+		avatarUrl: "https://i.pravatar.cc/150?u=esteban.rios",
+		orderCount: 36,
 	},
 	{
-		id: "c3",
-		avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+		id: 3,
 		name: "Valentina Cruz",
-		orders: 29,
-		score: 29,
+		avatarUrl: "https://i.pravatar.cc/150?u=valentina.cruz",
+		orderCount: 29,
 	},
 	{
-		id: "c4",
-		avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+		id: 4,
 		name: "Camilo Ortega",
-		orders: 22,
-		score: 22,
+		avatarUrl: "https://i.pravatar.cc/150?u=camilo.ortega",
+		orderCount: 22,
 	},
 	{
-		id: "c5",
-		avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
+		id: 5,
 		name: "Daniela Mora",
-		orders: 18,
-		score: 18,
+		avatarUrl: "https://i.pravatar.cc/150?u=daniela.mora",
+		orderCount: 18,
 	},
 ];
+
+export const MOCK_DAILY_GOAL: DailyGoal = { current: 2, target: 50 };

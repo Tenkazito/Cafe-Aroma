@@ -1,34 +1,32 @@
+import { Toast } from "@heroui/react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import type { ReactNode } from "react";
 import "./globals.css";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const jakartaSans = Plus_Jakarta_Sans({
+	variable: "--font-jakarta",
 	subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-	title: "AromaCafe",
+	title: "Café Aroma",
 	description: "Sistema de pedidos online",
 };
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+type RootLayoutProps = Readonly<{
+	children: ReactNode;
+}>;
+
+const RootLayout = ({ children }: RootLayoutProps) => {
 	return (
 		<html lang="es" className="light">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
+			<body className={`${jakartaSans.variable} font-sans antialiased`}>
 				{children}
+				<Toast.Provider placement="bottom end" />
 			</body>
 		</html>
 	);
-}
+};
+
+export default RootLayout;

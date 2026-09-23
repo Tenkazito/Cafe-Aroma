@@ -1,97 +1,100 @@
 "use client";
-import { Card, Tabs } from "@heroui/react";
+
+import { Tabs } from "@heroui/react";
 import { useState } from "react";
-import RenderIcon from "@/common/components/RenderIcon";
+import { Icon, type IconName } from "@/common/components/ui/Icon";
+import { SectionCard } from "@/common/components/ui/SectionCard";
+import { formatCurrency } from "@/common/utils/format";
+import type { SalesPeriod, SalesSummary } from "@/features/dashboard/types";
 
-export interface SalesSummaryItemData {
-	id: string;
-	icon: string;
-	value: string | number;
+type SalesSummaryWidgetProps = {
+	summaryByPeriod: Record<SalesPeriod, SalesSummary>;
+};
+
+const PERIOD_TABS: { id: SalesPeriod; label: string }[] = [
+	{ id: "dia", label: "Día" },
+	{ id: "semana", label: "Semana" },
+	{ id: "mes", label: "Mes" },
+];
+
+type SummaryRow = {
+	icon: IconName;
+	iconClasses: string;
+	value: string;
 	label: string;
-	iconBgColor: string;
-	iconColor: string;
-}
+};
 
-interface SalesSummaryWidgetProps {
-	items: SalesSummaryItemData[];
-}
+const buildRows = (summary: SalesSummary): SummaryRow[] => [
+	{
+		icon: "shoppingBag",
+		iconClasses: "bg-emerald-50 text-emerald-600",
+		value: String(summary.salesCount),
+		label: "Ventas realizadas",
+	},
+	{
+		icon: "wallet",
+		iconClasses: "bg-blue-50 text-blue-500",
+		value: formatCurrency(summary.revenue),
+		label: "Ganancias totales",
+	},
+	{
+		icon: "piggyBank",
+		iconClasses: "bg-amber-50 text-amber-500",
+		value: formatCurrency(summary.savings),
+		label: "Ahorro acumulado",
+	},
+];
 
-export const SalesSummaryWidget = ({ items }: SalesSummaryWidgetProps) => {
-	const [selected, setSelected] = useState("dia");
+/** "Resumen de ventas" con pestañas para cambiar entre día, semana y mes. */
+export const SalesSummaryWidget = ({
+	summaryByPeriod,
+}: SalesSummaryWidgetProps) => {
+	const [period, setPeriod] = useState<SalesPeriod>("dia");
+	const rows = buildRows(summaryByPeriod[period]);
 
 	return (
-		<Card className="shadow-sm border border-gray-100 rounded-2xl w-full h-full bg-white">
-			<Card.Content className="p-6">
-				<div className="flex justify-between items-center mb-6">
-					<h2 className="text-xl font-bold text-navy">Resumen de ventas</h2>
-					<Tabs
-						selectedKey={selected}
-						onSelectionChange={(key) => setSelected(key as string)}
-						className="w-fit"
+		<SectionCard
+			title="Resumen de ventas"
+			className="h-full"
+			action={
+				<Tabs
+					selectedKey={period}
+					onSelectionChange={(key) => setPeriod(key as SalesPeriod)}
+				>
+					<Tabs.ListContainer>
+						<Tabs.List aria-label="Periodo del resumen">
+							{PERIOD_TABS.map((tab) => (
+								<Tabs.Tab key={tab.id} id={tab.id} className="text-xs">
+									{tab.label}
+									<Tabs.Indicator />
+								</Tabs.Tab>
+							))}
+						</Tabs.List>
+					</Tabs.ListContainer>
+				</Tabs>
+			}
+		>
+			<ul className="flex flex-col gap-3">
+				{rows.map((row) => (
+					<li
+						key={row.label}
+						className="flex items-center justify-between rounded-2xl border border-gray-100 p-4"
 					>
-						<Tabs.ListContainer>
-							<Tabs.List
-								aria-label="Rango de fechas"
-								className="bg-gray-100 rounded-lg p-1"
+						<div className="flex items-center gap-4">
+							<div
+								className={`flex h-11 w-11 items-center justify-center rounded-xl ${row.iconClasses}`}
 							>
-								<Tabs.Tab
-									id="dia"
-									className="text-sm font-medium data-[selected=true]:text-navy"
-								>
-									Día
-									<Tabs.Indicator className="bg-white shadow-sm rounded-md" />
-								</Tabs.Tab>
-								<Tabs.Tab
-									id="semana"
-									className="text-sm font-medium data-[selected=true]:text-navy"
-								>
-									Semana
-									<Tabs.Indicator className="bg-white shadow-sm rounded-md" />
-								</Tabs.Tab>
-								<Tabs.Tab
-									id="mes"
-									className="text-sm font-medium data-[selected=true]:text-navy"
-								>
-									Mes
-									<Tabs.Indicator className="bg-white shadow-sm rounded-md" />
-								</Tabs.Tab>
-							</Tabs.List>
-						</Tabs.ListContainer>
-					</Tabs>
-				</div>
-
-				<div className="flex flex-col gap-4 mt-2">
-					{items.map((item) => (
-						<div
-							key={item.id}
-							className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
-						>
-							<div className="flex items-center gap-4">
-								<div
-									className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.iconBgColor}`}
-								>
-									<RenderIcon
-										icon={item.icon}
-										size={24}
-										className={item.iconColor}
-									/>
-								</div>
-								<div className="flex flex-col">
-									<span className="text-2xl font-bold text-foreground">
-										{item.value}
-									</span>
-									<span className="text-sm text-gray-500">{item.label}</span>
-								</div>
+								<Icon name={row.icon} />
 							</div>
-							<RenderIcon
-								icon="chevronRight"
-								size={20}
-								className="text-gray-300 group-hover:text-navy transition-colors"
-							/>
+							<div>
+								<p className="text-xl font-bold text-navy">{row.value}</p>
+								<p className="text-xs text-gray-500">{row.label}</p>
+							</div>
 						</div>
-					))}
-				</div>
-			</Card.Content>
-		</Card>
+						<Icon name="arrowRight" size={16} className="text-gray-300" />
+					</li>
+				))}
+			</ul>
+		</SectionCard>
 	);
 };

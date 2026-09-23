@@ -1,45 +1,37 @@
-import { Card, ProgressBar } from "@heroui/react";
+import { ProgressBar } from "@heroui/react";
+import type { DailyGoal } from "@/features/dashboard/types";
 
-interface DailyGoalCardProps {
-	title: string;
-	percentage: number;
-	current: number;
-	target: number;
-}
+type DailyGoalCardProps = {
+	goal: DailyGoal;
+};
 
-export const DailyGoalCard = ({
-	title,
-	percentage,
-	current,
-	target,
-}: DailyGoalCardProps) => {
+/** Tarjeta navy con el avance de pedidos entregados frente a la meta del día. */
+export const DailyGoalCard = ({ goal }: DailyGoalCardProps) => {
+	// Se limita a 100 para que la barra no se desborde si se supera la meta
+	const percentage = Math.min(
+		100,
+		Math.round((goal.current / goal.target) * 100),
+	);
+
 	return (
-		<Card className="bg-navy text-white shadow-none border-none rounded-2xl h-full">
-			<Card.Content className="p-6 flex flex-col justify-between">
-				<div className="flex justify-between items-center mb-4">
-					<p className="text-sm text-gray-300 font-medium">{title}</p>
-					<span className="text-sm font-bold text-white">{percentage}%</span>
-				</div>
-
-				<div>
-					<div className="flex items-baseline gap-1 mb-3">
-						<span className="text-4xl font-bold text-white">{current}</span>
-						<span className="text-sm text-gray-400 font-medium">
-							/ {target}
-						</span>
-					</div>
-					<ProgressBar
-						size="sm"
-						value={percentage}
-						aria-label={title}
-						className="max-w-md"
-					>
-						<ProgressBar.Track>
-							<ProgressBar.Fill className="bg-lemon" />
-						</ProgressBar.Track>
-					</ProgressBar>
-				</div>
-			</Card.Content>
-		</Card>
+		<div className="flex h-full min-h-32 flex-col justify-between rounded-2xl bg-navy p-5 text-white">
+			<div className="flex items-center justify-between">
+				<p className="text-sm text-gray-300">Meta del día</p>
+				<span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-bold">
+					{percentage}%
+				</span>
+			</div>
+			<div>
+				<p className="mb-3 flex items-baseline gap-1">
+					<span className="text-3xl font-bold">{goal.current}</span>
+					<span className="text-sm text-gray-400">/ {goal.target}</span>
+				</p>
+				<ProgressBar size="sm" value={percentage} aria-label="Meta del día">
+					<ProgressBar.Track className="bg-white/15">
+						<ProgressBar.Fill className="bg-lemon" />
+					</ProgressBar.Track>
+				</ProgressBar>
+			</div>
+		</div>
 	);
 };
