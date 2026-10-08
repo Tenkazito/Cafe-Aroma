@@ -5,6 +5,7 @@ import {
 import { RowActions } from "@/common/components/ui/RowActions";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
 import { UserAvatar } from "@/common/components/ui/UserAvatar";
+import { locations } from "@/common/locations";
 import { RoleBadge } from "@/features/users/components/RoleBadge";
 import type { User } from "@/features/users/types";
 
@@ -18,13 +19,13 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 	const columns: DataTableColumn<User>[] = [
 		{
 			key: "id",
-			header: "ID",
+			header: locations.table.id,
 			cell: (user) => `#${user.id}`,
 			className: "text-gray-400",
 		},
 		{
 			key: "name",
-			header: "Nombre",
+			header: locations.table.name,
 			cell: (user) => (
 				<div className="flex items-center gap-3">
 					<UserAvatar
@@ -38,23 +39,23 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 		},
 		{
 			key: "email",
-			header: "Email",
+			header: locations.table.email,
 			cell: (user) => user.email,
 			className: "text-gray-500",
 		},
 		{
 			key: "role",
-			header: "Rol",
+			header: locations.table.role,
 			cell: (user) => <RoleBadge userRole={user.role} />,
 		},
 		{
 			key: "status",
-			header: "Estado",
+			header: locations.table.status,
 			cell: (user) => <StatusBadge isActive={user.isActive} />,
 		},
 		{
 			key: "actions",
-			header: "Acciones",
+			header: locations.table.actions,
 			align: "right",
 			cell: (user) => (
 				<RowActions
@@ -68,11 +69,11 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 
 	return (
 		<DataTable
-			ariaLabel="Usuarios"
+			ariaLabel={locations.users.tableLabel}
 			columns={columns}
 			rows={users}
 			getRowKey={(user) => user.id}
-			emptyMessage="No hay usuarios que coincidan con la búsqueda."
+			emptyMessage={locations.users.empty}
 		/>
 	);
 };

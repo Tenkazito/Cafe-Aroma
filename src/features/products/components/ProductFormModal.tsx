@@ -8,6 +8,7 @@ import { FormTextField } from "@/common/components/form/FormTextField";
 import { ImageUploadField } from "@/common/components/form/ImageUploadField";
 import { FormModal } from "@/common/components/overlay/FormModal";
 import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { locations } from "@/common/locations";
 import type { Product } from "@/features/products/types";
 
 type ProductFormModalProps = {
@@ -36,8 +37,8 @@ export const ProductFormModal = ({
 		// TODO: conectar React Hook Form + Zod y el Server Action (crear / actualizar producto)
 		toast.success(
 			isEditing
-				? "Producto actualizado (simulado)"
-				: "Producto creado (simulado)",
+				? locations.toasts.productUpdated
+				: locations.toasts.productCreated,
 		);
 		onOpenChange(false);
 	};
@@ -46,57 +47,63 @@ export const ProductFormModal = ({
 		<FormModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={isEditing ? "Editar Producto" : "Nuevo Producto"}
-			submitLabel={isEditing ? "Guardar Cambios" : "Crear Producto"}
+			title={
+				isEditing
+					? locations.products.editTitle
+					: locations.products.createTitle
+			}
+			submitLabel={
+				isEditing ? locations.actions.save : locations.products.createSubmit
+			}
 			onSubmit={handleSubmit}
 			size="lg"
 		>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormSelectField
-					label="Categoría"
+					label={locations.products.categoryLabel}
 					name="categoryName"
 					options={categoryOptions}
 					defaultValue={product?.categoryName}
 				/>
 				<FormTextField
-					label="Nombre"
+					label={locations.form.name}
 					name="name"
-					placeholder="Ej: Latte Clásico"
+					placeholder={locations.products.namePlaceholder}
 					defaultValue={product?.name}
 				/>
 			</div>
 			<FormTextAreaField
-				label="Descripción"
+				label={locations.products.descriptionLabel}
 				name="description"
-				placeholder="Describe el producto..."
+				placeholder={locations.products.descriptionPlaceholder}
 				defaultValue={product?.description}
 			/>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormTextField
-					label="Precio (COP)"
+					label={locations.products.priceLabel}
 					name="price"
 					type="number"
 					min={0}
-					placeholder="8500"
+					placeholder={locations.products.pricePlaceholder}
 					defaultValue={product?.price}
 				/>
 				<FormTextField
-					label="Stock"
+					label={locations.products.stockLabel}
 					name="stock"
 					type="number"
 					min={0}
-					placeholder="40"
+					placeholder={locations.products.stockPlaceholder}
 					defaultValue={product?.stock}
 				/>
 				<FormSelectField
-					label="Estado"
+					label={locations.form.status}
 					name="status"
 					options={STATUS_OPTIONS}
-					defaultValue={product && !product.isActive ? "inactivo" : "activo"}
+					defaultValue={String(product?.isActive ?? true)}
 				/>
 			</div>
 			<ImageUploadField
-				label="Imagen del producto"
+				label={locations.products.imageLabel}
 				name="imageUrl"
 				defaultImageUrl={product?.imageUrl}
 			/>

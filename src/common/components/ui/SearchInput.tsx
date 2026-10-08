@@ -1,5 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 	/** `soft`: fondo mint, para las pantallas del cliente. */
@@ -10,7 +11,7 @@ type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 export const SearchInput = ({
 	variant = "default",
 	className = "",
-	placeholder = "Buscar...",
+	placeholder = locations.form.searchPlaceholder,
 	...inputProps
 }: SearchInputProps) => {
 	const variantClasses =

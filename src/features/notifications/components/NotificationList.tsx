@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EmptyState } from "@/common/components/ui/EmptyState";
+import { locations } from "@/common/locations";
 import { NotificationItem } from "@/features/notifications/components/NotificationItem";
 import type { Notification } from "@/features/notifications/types";
 
@@ -25,7 +26,7 @@ export const NotificationList = ({ notifications }: NotificationListProps) => {
 	if (items.length === 0) {
 		return (
 			<div className="rounded-2xl bg-white">
-				<EmptyState icon="bell" title="No tienes notificaciones" />
+				<EmptyState icon="bell" title={locations.notifications.empty} />
 			</div>
 		);
 	}

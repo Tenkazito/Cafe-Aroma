@@ -1,13 +1,31 @@
 // use prisma-8
 
+// Roles del sistema: el administrador gestiona la cafetería y el cliente hace pedidos.
+enum rol_usuario {
+  @@type("pg/text@1")
+  administrador  = "administrador"
+  cliente        = "cliente"
+}
+
+// Ciclo de un pedido: solicitado → pendiente (aceptado) → entregado, o cancelado.
+enum estado_pedido {
+  @@type("pg/text@1")
+  solicitado = "solicitado"
+  pendiente  = "pendiente"
+  entregado  = "entregado"
+  cancelado  = "cancelado"
+}
+
 model usuarios {
-  id                  Int       @id @default(autoincrement())
+  id                  Int         @id @default(autoincrement())
   nombre              String
   apellido            String
-  email               String    @unique
+  email               String      @unique
+  // Nombre de usuario con el que entran los clientes (el personal entra con el correo)
+  usuario             String?     @unique
   contrasena          String
-  rol                 String
-  activo              Boolean?  @default(true)
+  rol                 rol_usuario
+  activo              Boolean     @default(true)
   fecha_creacion      temporal.createdAtString()
   fecha_actualizacion temporal.updatedAtString()
 
@@ -19,19 +37,21 @@ model usuarios {
   creados             usuarios[] @relation("usuarios_creado_por")
   actualizados        usuarios[] @relation("usuarios_actualizado_por")
 
-  pedidos                    pedidos[]    @relation("pedidos_usuario")
-  categorias_creadas         categorias[] @relation("categorias_creado_por")
-  categorias_actualizadas    categorias[] @relation("categorias_actualizado_por")
-  productos_creados          productos[]  @relation("productos_creado_por")
-  productos_actualizados     productos[]  @relation("productos_actualizado_por")
-  pedidos_creados            pedidos[]    @relation("pedidos_creado_por")
-  pedidos_actualizados       pedidos[]    @relation("pedidos_actualizado_por")
+  pedidos                    pedidos[]        @relation("pedidos_usuario")
+  notificaciones             notificaciones[]
+  categorias_creadas         categorias[]     @relation("categorias_creado_por")
+  categorias_actualizadas    categorias[]     @relation("categorias_actualizado_por")
+  productos_creados          productos[]      @relation("productos_creado_por")
+  productos_actualizados     productos[]      @relation("productos_actualizado_por")
+  pedidos_creados            pedidos[]        @relation("pedidos_creado_por")
+  pedidos_actualizados       pedidos[]        @relation("pedidos_actualizado_por")
 }
 
 model categorias {
   id                  Int       @id @default(autoincrement())
   titulo              String
   url                 String    @unique
+  activo              Boolean   @default(true)
   fecha_creacion      temporal.createdAtString()
   fecha_actualizacion temporal.updatedAtString()
 
@@ -39,17 +59,23 @@ model categorias {
   creado_por          usuarios? @relation("categorias_creado_por", fields: [creado_por_id], references: [id])
   actualizado_por_id  Int?
   actualizado_por     usuarios? @relation("categorias_actualizado_por", fields: [actualizado_por_id], references: [id])
+
+  productos           productos[]
 }
 
 model productos {
-  id                  Int       @id @default(autoincrement())
+  id                  Int        @id @default(autoincrement())
+  categoria_id        Int
+  categoria           categorias @relation(fields: [categoria_id], references: [id])
   titulo              String
   descripcion         String
-  url                 String    @unique
-  precio_compra       Float
-  precio_venta        Float
+  url                 String     @unique
+  // Precios en pesos colombianos (sin centavos), por eso Int y no Float
+  precio_compra       Int
+  precio_venta        Int
   stock               Int
   imagen              String?
+  activo              Boolean    @default(true)
   fecha_creacion      temporal.createdAtString()
   fecha_actualizacion temporal.updatedAtString()
 
@@ -58,21 +84,22 @@ model productos {
   actualizado_por_id  Int?
   actualizado_por     usuarios? @relation("productos_actualizado_por", fields: [actualizado_por_id], references: [id])
 
-  pedidos             pedidos[]
+  items               pedido_items[]
+
+  @@index([categoria_id])
 }
 
+// Cabecera del pedido. Los productos van en pedido_items (un pedido puede tener varios).
 model pedidos {
-  id                  Int       @id @default(autoincrement())
+  id                  Int           @id @default(autoincrement())
 
   usuario_id          Int
-  usuario             usuarios  @relation("pedidos_usuario", fields: [usuario_id], references: [id])
+  usuario             usuarios      @relation("pedidos_usuario", fields: [usuario_id], references: [id])
 
-  producto_id         Int
-  producto            productos @relation(fields: [producto_id], references: [id])
-
-  cantidad            Int
-  total               Float
-  estado              String
+  direccion           String
+  estado              estado_pedido @default(solicitado)
+  // Suma de cantidad × precio_unitario de los items, guardada al crear el pedido
+  total               Int
   fecha_creacion      temporal.createdAtString()
   fecha_actualizacion temporal.updatedAtString()
 
@@ -80,4 +107,40 @@ model pedidos {
   creado_por          usuarios? @relation("pedidos_creado_por", fields: [creado_por_id], references: [id])
   actualizado_por_id  Int?
   actualizado_por     usuarios? @relation("pedidos_actualizado_por", fields: [actualizado_por_id], references: [id])
+
+  items               pedido_items[]
+
+  @@index([usuario_id])
+  @@index([estado])
+}
+
+model pedido_items {
+  id              Int       @id @default(autoincrement())
+
+  pedido_id       Int
+  // Si se borra el pedido, sus items no tienen sentido sin él
+  pedido          pedidos   @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+
+  producto_id     Int
+  producto        productos @relation(fields: [producto_id], references: [id])
+
+  cantidad        Int
+  // Precio al momento de la compra: si el producto cambia de precio, el pedido no cambia
+  precio_unitario Int
+
+  @@unique([pedido_id, producto_id])
+}
+
+model notificaciones {
+  id             Int      @id @default(autoincrement())
+
+  usuario_id     Int
+  usuario        usuarios @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  titulo         String
+  mensaje        String
+  leida          Boolean  @default(false)
+  fecha_creacion temporal.createdAtString()
+
+  @@index([usuario_id])
 }

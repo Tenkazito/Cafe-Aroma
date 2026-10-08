@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { locations } from "@/common/locations";
 
 export type DataTableColumn<T> = {
 	/** Identificador único de la columna (se usa como key de React). */
@@ -33,7 +34,7 @@ export const DataTable = <T,>({
 	columns,
 	rows,
 	getRowKey,
-	emptyMessage = "No hay registros para mostrar.",
+	emptyMessage = locations.emptyStates.noRecords,
 	variant = "card",
 	ariaLabel,
 }: DataTableProps<T>) => {

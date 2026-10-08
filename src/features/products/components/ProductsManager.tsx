@@ -8,6 +8,7 @@ import { Icon } from "@/common/components/ui/Icon";
 import { PageHeader } from "@/common/components/ui/PageHeader";
 import { SearchInput } from "@/common/components/ui/SearchInput";
 import { useCrudModals } from "@/common/hooks/useCrudModals";
+import { locations } from "@/common/locations";
 import { ProductFormModal } from "@/features/products/components/ProductFormModal";
 import { ProductsTable } from "@/features/products/components/ProductsTable";
 import { filterProducts } from "@/features/products/lib/filterProducts";
@@ -29,27 +30,29 @@ export const ProductsManager = ({
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina el producto
-		toast.success(`${modals.itemToDelete?.name} eliminado (simulado)`);
+		toast.success(
+			locations.toasts.productDeleted(modals.itemToDelete?.name ?? ""),
+		);
 	};
 
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Productos"
-				description="Catálogo de productos de la cafetería"
+				title={locations.products.title}
+				description={locations.products.description}
 				icon="package"
 				action={
 					<Button onPress={modals.openCreate}>
 						<Icon name="plus" size={18} />
-						Nuevo Producto
+						{locations.products.newButton}
 					</Button>
 				}
 			/>
 
 			<FilterBar title={null} columns={2}>
 				<SearchInput
-					aria-label="Buscar producto"
-					placeholder="Buscar producto o categoría..."
+					aria-label={locations.products.searchLabel}
+					placeholder={locations.products.searchPlaceholder}
 					value={search}
 					onChange={(event) => setSearch(event.target.value)}
 				/>
@@ -72,15 +75,16 @@ export const ProductsManager = ({
 			<ConfirmDialog
 				isOpen={modals.isDeleteOpen}
 				onOpenChange={modals.setDeleteOpen}
-				title="Eliminar Producto"
+				title={locations.products.deleteTitle}
 				tone="danger"
-				confirmLabel="Eliminar"
+				confirmLabel={locations.actions.delete}
 				onConfirm={handleDelete}
 				message={
 					<>
-						¿Estás seguro de que deseas eliminar el producto{" "}
-						<strong className="text-navy">{modals.itemToDelete?.name}</strong>?
-						Esta acción no se puede deshacer.
+						{locations.products.deleteMessage.before}
+						<strong className="text-navy">{modals.itemToDelete?.name}</strong>
+						{locations.products.deleteMessage.after}{" "}
+						{locations.confirm.irreversible}
 					</>
 				}
 			/>

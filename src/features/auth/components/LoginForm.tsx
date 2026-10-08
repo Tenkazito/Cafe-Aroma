@@ -9,6 +9,7 @@ import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import type { FieldVariant } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type LoginFormProps = {
 	/** `email` para el admin, `username` para el cliente. */
@@ -26,16 +27,16 @@ type LoginFormProps = {
 const IDENTIFIER_FIELDS = {
 	email: {
 		name: "email",
-		label: "Correo electrónico",
+		label: locations.form.email,
 		type: "email",
-		placeholder: "usuario@cafearoma.co",
+		placeholder: locations.form.emailPlaceholder,
 		icon: "mail",
 	},
 	username: {
 		name: "username",
-		label: "Usuario",
+		label: locations.auth.customer.usernameLabel,
 		type: "text",
-		placeholder: "tu_usuario",
+		placeholder: locations.auth.customer.usernamePlaceholder,
 		icon: "user",
 	},
 } as const;
@@ -54,7 +55,7 @@ export const LoginForm = ({
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		// TODO: conectar React Hook Form + Zod y el Server Action de inicio de sesión
-		toast.success("Sesión iniciada (simulado)");
+		toast.success(locations.toasts.loginDone);
 		router.push(redirectTo);
 	};
 
@@ -70,7 +71,7 @@ export const LoginForm = ({
 				autoComplete={identifier}
 			/>
 			<FormPasswordField
-				label="Contraseña"
+				label={locations.form.password}
 				name="password"
 				variant={fieldVariant}
 				withLockIcon
@@ -78,12 +79,12 @@ export const LoginForm = ({
 			/>
 
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<FormCheckbox label="Recordarme" name="rememberMe" />
+				<FormCheckbox label={locations.auth.rememberMe} name="rememberMe" />
 				<Link
 					href="#"
 					className="text-sm font-medium text-teal-strong hover:underline"
 				>
-					¿Olvidaste tu contraseña?
+					{locations.auth.forgotPassword}
 				</Link>
 			</div>
 

@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import { type FormEvent, type ReactNode, useId } from "react";
 import { AppModal } from "@/common/components/overlay/AppModal";
+import { locations } from "@/common/locations";
 
 type FormModalProps = {
 	isOpen: boolean;
@@ -41,7 +42,7 @@ export const FormModal = ({
 			footer={
 				<>
 					<Button variant="outline" onPress={() => onOpenChange(false)}>
-						Cancelar
+						{locations.actions.cancel}
 					</Button>
 					<Button type="submit" form={formId}>
 						{submitLabel}

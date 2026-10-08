@@ -5,6 +5,7 @@ import {
 import { ProductThumbnail } from "@/common/components/ui/ProductThumbnail";
 import { RowActions } from "@/common/components/ui/RowActions";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { isLowStock } from "@/features/products/lib/isLowStock";
 import type { Product } from "@/features/products/types";
@@ -23,19 +24,19 @@ export const ProductsTable = ({
 	const columns: DataTableColumn<Product>[] = [
 		{
 			key: "id",
-			header: "ID",
+			header: locations.table.id,
 			cell: (product) => `#${product.id}`,
 			className: "text-gray-400",
 		},
 		{
 			key: "category",
-			header: "Categoría",
+			header: locations.table.category,
 			cell: (product) => product.categoryName,
 			className: "text-gray-500",
 		},
 		{
 			key: "name",
-			header: "Nombre",
+			header: locations.table.name,
 			cell: (product) => (
 				<div className="flex items-center gap-3">
 					<ProductThumbnail name={product.name} imageUrl={product.imageUrl} />
@@ -45,7 +46,7 @@ export const ProductsTable = ({
 		},
 		{
 			key: "price",
-			header: "Precio",
+			header: locations.table.price,
 			align: "right",
 			cell: (product) => (
 				<span className="font-semibold text-navy">
@@ -55,7 +56,7 @@ export const ProductsTable = ({
 		},
 		{
 			key: "stock",
-			header: "Stock",
+			header: locations.table.stock,
 			align: "right",
 			cell: (product) => (
 				<span
@@ -69,12 +70,12 @@ export const ProductsTable = ({
 		},
 		{
 			key: "status",
-			header: "Estado",
+			header: locations.table.status,
 			cell: (product) => <StatusBadge isActive={product.isActive} />,
 		},
 		{
 			key: "actions",
-			header: "Acciones",
+			header: locations.table.actions,
 			align: "right",
 			cell: (product) => (
 				<RowActions
@@ -88,11 +89,11 @@ export const ProductsTable = ({
 
 	return (
 		<DataTable
-			ariaLabel="Productos"
+			ariaLabel={locations.products.tableLabel}
 			columns={columns}
 			rows={products}
 			getRowKey={(product) => product.id}
-			emptyMessage="No hay productos que coincidan con la búsqueda."
+			emptyMessage={locations.products.empty}
 		/>
 	);
 };

@@ -1,11 +1,17 @@
 "use client";
 
 import { toast } from "@heroui/react";
-import type { FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { FormModal } from "@/common/components/overlay/FormModal";
 import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { locations } from "@/common/locations";
+import {
+	type CategoryFormValues,
+	categorySchema,
+} from "@/features/categories/schema";
 import type { Category } from "@/features/categories/types";
 
 type CategoryFormModalProps = {
@@ -22,13 +28,27 @@ export const CategoryFormModal = ({
 }: CategoryFormModalProps) => {
 	const isEditing = Boolean(category);
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		// TODO: conectar React Hook Form + Zod y el Server Action (crear / actualizar categoría)
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<CategoryFormValues>({
+		resolver: zodResolver(categorySchema),
+		// Se leen una sola vez al montar; el Manager remonta el modal con key={formKey}
+		defaultValues: {
+			name: category?.name ?? "",
+			isActive: category?.isActive ?? true,
+		},
+	});
+
+	// Solo se llama si Zod validó todo bien
+	const onSubmit = (values: CategoryFormValues) => {
+		// TODO: llamar al Server Action (createCategory / updateCategory) con `values`
+		console.log(values);
 		toast.success(
 			isEditing
-				? "Categoría actualizada (simulado)"
-				: "Categoría creada (simulado)",
+				? locations.toasts.categoryUpdated
+				: locations.toasts.categoryCreated,
 		);
 		onOpenChange(false);
 	};
@@ -37,22 +57,32 @@ export const CategoryFormModal = ({
 		<FormModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={isEditing ? "Editar Categoría" : "Nueva Categoría"}
-			submitLabel={isEditing ? "Guardar Cambios" : "Crear Categoría"}
-			onSubmit={handleSubmit}
+			title={
+				isEditing
+					? locations.categories.editTitle
+					: locations.categories.createTitle
+			}
+			submitLabel={
+				isEditing ? locations.actions.save : locations.categories.createSubmit
+			}
+			onSubmit={handleSubmit(onSubmit)}
 			size="sm"
 		>
 			<FormTextField
-				label="Nombre"
-				name="name"
-				placeholder="Ej: Cafés Calientes"
-				defaultValue={category?.name}
+				label={locations.form.name}
+				placeholder={locations.categories.namePlaceholder}
+				{...register("name")}
+				errorMessage={errors.name?.message}
 			/>
 			<FormSelectField
-				label="Estado"
-				name="status"
+				label={locations.form.status}
 				options={STATUS_OPTIONS}
-				defaultValue={category && !category.isActive ? "inactivo" : "activo"}
+				// El <select> entrega texto ("true"/"false"), pero RHF también pasa por aquí el
+				// valor inicial, que ya es booleano. String() cubre los dos casos.
+				{...register("isActive", {
+					setValueAs: (value: string | boolean) => String(value) === "true",
+				})}
+				errorMessage={errors.isActive?.message}
 			/>
 		</FormModal>
 	);

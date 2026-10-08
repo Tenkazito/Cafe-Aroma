@@ -1,3 +1,4 @@
+import { locations } from "@/common/locations";
 import { getOrderTotal } from "@/features/orders/lib/orderTotals";
 import type { Order } from "@/features/orders/types";
 
@@ -11,7 +12,7 @@ export const getBilledTotal = (invoices: Order[]): number =>
 
 /** Datos fiscales del encabezado de la factura. */
 export const COMPANY_INFO = {
-	name: "Café Aroma",
-	taxId: "NIT: 900.123.456-7",
-	channel: "Pedidos Online",
+	name: locations.brand.name,
+	taxId: locations.billing.taxId,
+	channel: locations.billing.channel,
 };

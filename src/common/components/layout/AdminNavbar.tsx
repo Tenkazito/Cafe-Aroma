@@ -7,6 +7,7 @@ import { BrandLogo } from "@/common/components/layout/BrandLogo";
 import { UserBadge } from "@/common/components/layout/UserBadge";
 import { Icon } from "@/common/components/ui/Icon";
 import { isNavItemActive } from "@/common/lib/navigation";
+import { locations } from "@/common/locations";
 import type { NavItem, SessionUser } from "@/common/types/navigation";
 
 type AdminNavbarProps = {
@@ -52,7 +53,7 @@ export const AdminNavbar = ({ items, user, logoutHref }: AdminNavbarProps) => {
 					<button
 						type="button"
 						onClick={() => setIsMenuOpen((current) => !current)}
-						aria-label="Abrir menú"
+						aria-label={locations.navigation.openMenu}
 						aria-expanded={isMenuOpen}
 						className="rounded-lg p-2 text-navy hover:bg-gray-100 lg:hidden"
 					>
@@ -72,7 +73,9 @@ export const AdminNavbar = ({ items, user, logoutHref }: AdminNavbarProps) => {
 						className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600"
 					>
 						<Icon name="logOut" size={16} />
-						<span className="hidden sm:inline">Salir</span>
+						<span className="hidden sm:inline">
+							{locations.navigation.exit}
+						</span>
 					</Link>
 				</div>
 			</div>

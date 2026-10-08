@@ -1,33 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { locations } from "@/common/locations";
 import { AuthCard } from "@/features/auth/components/AuthCard";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 
-export const metadata: Metadata = { title: "Iniciar sesión · Café Aroma" };
+export const metadata: Metadata = { title: locations.pageTitles.login };
 
 const CustomerLoginPage = () => {
 	return (
 		<AuthCard
 			variant="client"
-			subtitle="Inicia sesión para realizar y seguir tus pedidos"
-			title="Bienvenido"
-			description="Ingresa tus datos para continuar"
+			subtitle={locations.auth.customer.subtitle}
+			title={locations.auth.customer.title}
+			description={locations.auth.customer.description}
 		>
 			<LoginForm
 				identifier="username"
-				submitLabel="Iniciar Sesión"
+				submitLabel={locations.auth.customer.submit}
 				showSubmitIcon
 				redirectTo="/inicio"
 				fieldVariant="soft"
 				footer={
 					<p className="text-center text-sm text-gray-500">
-						¿No tienes cuenta?{" "}
+						{locations.auth.customer.noAccount}{" "}
 						{/* TODO: crear la pantalla /registro (no está en las diapositivas) */}
 						<Link
 							href="#"
 							className="font-semibold text-teal-strong hover:underline"
 						>
-							Regístrate
+							{locations.auth.customer.register}
 						</Link>
 					</p>
 				}

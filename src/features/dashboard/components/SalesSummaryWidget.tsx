@@ -4,6 +4,7 @@ import { Tabs } from "@heroui/react";
 import { useState } from "react";
 import { Icon, type IconName } from "@/common/components/ui/Icon";
 import { SectionCard } from "@/common/components/ui/SectionCard";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import type { SalesPeriod, SalesSummary } from "@/features/dashboard/types";
 
@@ -12,9 +13,9 @@ type SalesSummaryWidgetProps = {
 };
 
 const PERIOD_TABS: { id: SalesPeriod; label: string }[] = [
-	{ id: "dia", label: "Día" },
-	{ id: "semana", label: "Semana" },
-	{ id: "mes", label: "Mes" },
+	{ id: "dia", label: locations.dashboard.periods.dia },
+	{ id: "semana", label: locations.dashboard.periods.semana },
+	{ id: "mes", label: locations.dashboard.periods.mes },
 ];
 
 type SummaryRow = {
@@ -29,19 +30,19 @@ const buildRows = (summary: SalesSummary): SummaryRow[] => [
 		icon: "shoppingBag",
 		iconClasses: "bg-emerald-50 text-emerald-600",
 		value: String(summary.salesCount),
-		label: "Ventas realizadas",
+		label: locations.dashboard.salesDone,
 	},
 	{
 		icon: "wallet",
 		iconClasses: "bg-blue-50 text-blue-500",
 		value: formatCurrency(summary.revenue),
-		label: "Ganancias totales",
+		label: locations.dashboard.totalRevenue,
 	},
 	{
 		icon: "piggyBank",
 		iconClasses: "bg-amber-50 text-amber-500",
 		value: formatCurrency(summary.savings),
-		label: "Ahorro acumulado",
+		label: locations.dashboard.accumulatedSavings,
 	},
 ];
 
@@ -54,7 +55,7 @@ export const SalesSummaryWidget = ({
 
 	return (
 		<SectionCard
-			title="Resumen de ventas"
+			title={locations.dashboard.salesSummary}
 			className="h-full"
 			action={
 				<Tabs
@@ -62,7 +63,7 @@ export const SalesSummaryWidget = ({
 					onSelectionChange={(key) => setPeriod(key as SalesPeriod)}
 				>
 					<Tabs.ListContainer>
-						<Tabs.List aria-label="Periodo del resumen">
+						<Tabs.List aria-label={locations.dashboard.salesPeriodLabel}>
 							{PERIOD_TABS.map((tab) => (
 								<Tabs.Tab key={tab.id} id={tab.id} className="text-xs">
 									{tab.label}

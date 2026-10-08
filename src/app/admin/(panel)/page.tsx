@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { locations } from "@/common/locations";
 import { DailyTotalsPanel } from "@/features/dashboard/components/DailyTotalsPanel";
 import { LoyalCustomersWidget } from "@/features/dashboard/components/LoyalCustomersWidget";
 import { SalesSummaryWidget } from "@/features/dashboard/components/SalesSummaryWidget";
@@ -12,7 +13,7 @@ import {
 import { countOrdersByStatus } from "@/features/orders/lib/countOrdersByStatus";
 import { MOCK_ORDERS } from "@/features/orders/mocks/orders";
 
-export const metadata: Metadata = { title: "Inicio · Admin Café Aroma" };
+export const metadata: Metadata = { title: locations.pageTitles.adminHome };
 
 const AdminDashboardPage = () => {
 	return (

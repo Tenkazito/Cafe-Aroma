@@ -35,7 +35,7 @@ const BRAND_COLORS: Swatch[] = [
 		name: "lemon",
 		className: "bg-lemon",
 		hex: "#ffe26a",
-		usage: "Meta del día, etiqueta Top, rol Mensajero",
+		usage: "Meta del día, etiqueta Top",
 	},
 	{
 		name: "mint",

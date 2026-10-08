@@ -2,6 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type QuantityStepperProps = {
 	quantity: number;
@@ -26,7 +27,7 @@ export const QuantityStepper = ({
 				variant="outline"
 				className="bg-white"
 				onPress={onDecrement}
-				aria-label={`Quitar una unidad de ${itemName}`}
+				aria-label={locations.catalog.removeOne(itemName)}
 			>
 				<Icon name="minus" size={14} />
 			</Button>
@@ -40,7 +41,7 @@ export const QuantityStepper = ({
 				isIconOnly
 				size="sm"
 				onPress={onIncrement}
-				aria-label={`Agregar una unidad de ${itemName}`}
+				aria-label={locations.catalog.addOne(itemName)}
 			>
 				<Icon name="plus" size={14} />
 			</Button>

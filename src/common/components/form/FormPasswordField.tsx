@@ -7,6 +7,7 @@ import {
 	getFieldClasses,
 } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type FormPasswordFieldProps = Omit<
 	InputHTMLAttributes<HTMLInputElement>,
@@ -60,7 +61,11 @@ export const FormPasswordField = ({
 				<button
 					type="button"
 					onClick={() => setIsVisible((current) => !current)}
-					aria-label={isVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
+					aria-label={
+						isVisible
+							? locations.form.hidePassword
+							: locations.form.showPassword
+					}
 					className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-navy"
 				>
 					<Icon name={isVisible ? "eyeOff" : "eye"} size={18} />

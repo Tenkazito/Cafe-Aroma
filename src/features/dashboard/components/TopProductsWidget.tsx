@@ -5,6 +5,7 @@ import {
 import { ProductThumbnail } from "@/common/components/ui/ProductThumbnail";
 import { RankBadge } from "@/common/components/ui/RankBadge";
 import { SectionCard } from "@/common/components/ui/SectionCard";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import type { TopProduct } from "@/features/dashboard/types";
 import { isLowStock } from "@/features/products/lib/isLowStock";
@@ -18,7 +19,7 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 	const columns: DataTableColumn<TopProduct>[] = [
 		{
 			key: "product",
-			header: "Producto",
+			header: locations.table.product,
 			cell: (product) => (
 				<div className="flex items-center gap-3">
 					<RankBadge rank={products.indexOf(product) + 1} />
@@ -28,7 +29,7 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 		},
 		{
 			key: "name",
-			header: "Nombre",
+			header: locations.table.name,
 			cell: (product) => (
 				<div className="flex flex-col">
 					<span className="font-semibold text-navy">{product.name}</span>
@@ -38,13 +39,13 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 		},
 		{
 			key: "sold",
-			header: "Vendidos",
+			header: locations.table.sold,
 			align: "right",
 			cell: (product) => product.unitsSold,
 		},
 		{
 			key: "stock",
-			header: "Stock",
+			header: locations.table.stock,
 			align: "right",
 			cell: (product) => (
 				<span
@@ -58,7 +59,7 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 		},
 		{
 			key: "price",
-			header: "Precio",
+			header: locations.table.price,
 			align: "right",
 			cell: (product) => (
 				<span className="font-semibold text-navy">
@@ -70,12 +71,12 @@ export const TopProductsWidget = ({ products }: TopProductsWidgetProps) => {
 
 	return (
 		<SectionCard
-			title="Productos más vendidos"
+			title={locations.dashboard.topProducts}
 			icon="trophy"
 			iconClassName="text-orange-400"
 		>
 			<DataTable
-				ariaLabel="Productos más vendidos"
+				ariaLabel={locations.dashboard.topProducts}
 				variant="plain"
 				columns={columns}
 				rows={products}

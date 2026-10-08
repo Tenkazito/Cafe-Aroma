@@ -24,8 +24,7 @@ export const UsersShowcase = () => {
 				>
 					<div className="flex gap-2">
 						<RoleBadge userRole="administrador" />
-						<RoleBadge userRole="administrativo" />
-						<RoleBadge userRole="mensajero" />
+						<RoleBadge userRole="cliente" />
 					</div>
 				</ComponentPreview>
 

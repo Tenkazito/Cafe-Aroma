@@ -4,6 +4,7 @@ import Image from "next/image";
 import { type ChangeEvent, useId, useState } from "react";
 import { getFieldClasses } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type ImageUploadFieldProps = {
 	label: string;
@@ -43,7 +44,7 @@ export const ImageUploadField = ({
 					<div className="relative shrink-0">
 						<Image
 							src={imageUrl}
-							alt="Vista previa del producto"
+							alt={locations.form.imagePreviewAlt}
 							width={88}
 							height={88}
 							unoptimized
@@ -52,7 +53,7 @@ export const ImageUploadField = ({
 						<button
 							type="button"
 							onClick={() => setImageUrl("")}
-							aria-label="Quitar imagen"
+							aria-label={locations.form.removeImage}
 							className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white"
 						>
 							<Icon name="x" size={12} />
@@ -65,7 +66,7 @@ export const ImageUploadField = ({
 					className="flex min-h-22 flex-1 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-200 text-sm text-gray-400 transition-colors hover:border-teal hover:text-teal-strong"
 				>
 					<Icon name="upload" size={20} />
-					Haz clic para subir una imagen
+					{locations.form.uploadImage}
 					<input
 						id={fileInputId}
 						type="file"
@@ -77,7 +78,7 @@ export const ImageUploadField = ({
 			</div>
 
 			<label htmlFor={urlInputId} className="sr-only">
-				URL de la imagen
+				{locations.form.imageUrl}
 			</label>
 			<input
 				id={urlInputId}

@@ -8,6 +8,14 @@
       "model": "categorias",
       "namespace": "public"
     },
+    "notificaciones": {
+      "model": "notificaciones",
+      "namespace": "public"
+    },
+    "pedido_items": {
+      "model": "pedido_items",
+      "namespace": "public"
+    },
     "pedidos": {
       "model": "pedidos",
       "namespace": "public"
@@ -24,9 +32,52 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "estado_pedido": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "solicitado",
+                "value": "solicitado"
+              },
+              {
+                "name": "pendiente",
+                "value": "pendiente"
+              },
+              {
+                "name": "entregado",
+                "value": "entregado"
+              },
+              {
+                "name": "cancelado",
+                "value": "cancelado"
+              }
+            ]
+          },
+          "rol_usuario": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "administrador",
+                "value": "administrador"
+              },
+              {
+                "name": "cliente",
+                "value": "cliente"
+              }
+            ]
+          }
+        },
         "models": {
           "categorias": {
             "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "actualizado_por_id": {
                 "nullable": true,
                 "type": {
@@ -109,10 +160,28 @@
                   "model": "usuarios",
                   "namespace": "public"
                 }
+              },
+              "productos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "categoria_id"
+                  ]
+                },
+                "to": {
+                  "model": "productos",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
               "fields": {
+                "activo": {
+                  "column": "activo"
+                },
                 "actualizado_por_id": {
                   "column": "actualizado_por_id"
                 },
@@ -139,17 +208,192 @@
               "table": "categorias"
             }
           },
-          "pedidos": {
+          "notificaciones": {
             "fields": {
-              "actualizado_por_id": {
-                "nullable": true,
+              "fecha_creacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
+              "leida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "mensaje": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "titulo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "usuario_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "usuario": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "usuario_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "usuarios",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "fecha_creacion": {
+                  "column": "fecha_creacion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "leida": {
+                  "column": "leida"
+                },
+                "mensaje": {
+                  "column": "mensaje"
+                },
+                "titulo": {
+                  "column": "titulo"
+                },
+                "usuario_id": {
+                  "column": "usuario_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "notificaciones"
+            }
+          },
+          "pedido_items": {
+            "fields": {
               "cantidad": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pedido_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "precio_unitario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "producto_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "pedido": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "pedido_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "pedidos",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "producto_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "productos",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "cantidad": {
+                  "column": "cantidad"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "pedido_id": {
+                  "column": "pedido_id"
+                },
+                "precio_unitario": {
+                  "column": "precio_unitario"
+                },
+                "producto_id": {
+                  "column": "producto_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "pedido_items"
+            }
+          },
+          "pedidos": {
+            "fields": {
+              "actualizado_por_id": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -162,11 +406,24 @@
                   "kind": "scalar"
                 }
               },
+              "direccion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "estado": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_pedido",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "fecha_actualizacion": {
@@ -190,17 +447,10 @@
                   "kind": "scalar"
                 }
               },
-              "producto_id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "total": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/float8@1",
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -245,19 +495,18 @@
                   "namespace": "public"
                 }
               },
-              "producto": {
-                "cardinality": "N:1",
-                "nullable": false,
+              "items": {
+                "cardinality": "1:N",
                 "on": {
                   "localFields": [
-                    "producto_id"
+                    "id"
                   ],
                   "targetFields": [
-                    "id"
+                    "pedido_id"
                   ]
                 },
                 "to": {
-                  "model": "productos",
+                  "model": "pedido_items",
                   "namespace": "public"
                 }
               },
@@ -283,11 +532,11 @@
                 "actualizado_por_id": {
                   "column": "actualizado_por_id"
                 },
-                "cantidad": {
-                  "column": "cantidad"
-                },
                 "creado_por_id": {
                   "column": "creado_por_id"
+                },
+                "direccion": {
+                  "column": "direccion"
                 },
                 "estado": {
                   "column": "estado"
@@ -300,9 +549,6 @@
                 },
                 "id": {
                   "column": "id"
-                },
-                "producto_id": {
-                  "column": "producto_id"
                 },
                 "total": {
                   "column": "total"
@@ -317,8 +563,22 @@
           },
           "productos": {
             "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "actualizado_por_id": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "categoria_id": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -369,14 +629,14 @@
               "precio_compra": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/float8@1",
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
               "precio_venta": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/float8@1",
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -419,6 +679,22 @@
                   "namespace": "public"
                 }
               },
+              "categoria": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "categoria_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categorias",
+                  "namespace": "public"
+                }
+              },
               "creado_por": {
                 "cardinality": "N:1",
                 "nullable": true,
@@ -435,7 +711,7 @@
                   "namespace": "public"
                 }
               },
-              "pedidos": {
+              "items": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -446,15 +722,21 @@
                   ]
                 },
                 "to": {
-                  "model": "pedidos",
+                  "model": "pedido_items",
                   "namespace": "public"
                 }
               }
             },
             "storage": {
               "fields": {
+                "activo": {
+                  "column": "activo"
+                },
                 "actualizado_por_id": {
                   "column": "actualizado_por_id"
+                },
+                "categoria_id": {
+                  "column": "categoria_id"
                 },
                 "creado_por_id": {
                   "column": "creado_por_id"
@@ -497,7 +779,7 @@
           "usuarios": {
             "fields": {
               "activo": {
-                "nullable": true,
+                "nullable": false,
                 "type": {
                   "codecId": "pg/bool@1",
                   "kind": "scalar"
@@ -568,6 +850,19 @@
               },
               "rol": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "rol_usuario",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "usuario": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -664,6 +959,21 @@
                 },
                 "to": {
                   "model": "usuarios",
+                  "namespace": "public"
+                }
+              },
+              "notificaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "usuario_id"
+                  ]
+                },
+                "to": {
+                  "model": "notificaciones",
                   "namespace": "public"
                 }
               },
@@ -777,6 +1087,9 @@
                 },
                 "rol": {
                   "column": "rol"
+                },
+                "usuario": {
+                  "column": "usuario"
                 }
               },
               "namespaceId": "public",
@@ -794,6 +1107,15 @@
           "table": {
             "categorias": {
               "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "actualizado_por_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -903,27 +1225,224 @@
                 }
               ]
             },
+            "notificaciones": {
+              "columns": {
+                "fecha_creacion": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "leida": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "mensaje": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "titulo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "usuario_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "usuario_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "notificaciones"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "usuario_id"
+                  ],
+                  "name": "notificaciones_usuario_id_idx_65b6616a",
+                  "prefix": "notificaciones_usuario_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "pedido_items": {
+              "columns": {
+                "cantidad": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "pedido_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "precio_unitario": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "producto_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "pedido_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedido_items"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedidos"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "producto_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pedido_items"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "productos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "pedido_id"
+                  ],
+                  "name": "pedido_items_pedido_id_idx_57130803",
+                  "prefix": "pedido_items_pedido_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "producto_id"
+                  ],
+                  "name": "pedido_items_producto_id_idx_52b7577c",
+                  "prefix": "pedido_items_producto_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "pedido_id",
+                    "producto_id"
+                  ]
+                }
+              ]
+            },
             "pedidos": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('solicitado', 'pendiente', 'entregado', 'cancelado')",
+                  "name": "pedidos_estado_check_7fb4f971",
+                  "prefix": "pedidos_estado_check"
+                }
+              ],
               "columns": {
                 "actualizado_por_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
                 },
-                "cantidad": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                },
                 "creado_por_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
                 },
-                "estado": {
+                "direccion": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "solicitado"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_pedido",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "fecha_actualizacion": {
                   "codecId": "pg/timestamptz-string@1",
@@ -948,14 +1467,9 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
-                "producto_id": {
+                "total": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
-                  "nullable": false
-                },
-                "total": {
-                  "codecId": "pg/float8@1",
-                  "nativeType": "float8",
                   "nullable": false
                 },
                 "usuario_id": {
@@ -979,22 +1493,6 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "usuarios"
-                  }
-                },
-                {
-                  "source": {
-                    "columns": [
-                      "producto_id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "pedidos"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "productos"
                   }
                 },
                 {
@@ -1049,10 +1547,10 @@
                 },
                 {
                   "columns": [
-                    "producto_id"
+                    "estado"
                   ],
-                  "name": "pedidos_producto_id_idx_52b7577c",
-                  "prefix": "pedidos_producto_id_idx",
+                  "name": "pedidos_estado_idx_c74e5888",
+                  "prefix": "pedidos_estado_idx",
                   "unique": false
                 },
                 {
@@ -1073,10 +1571,24 @@
             },
             "productos": {
               "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "actualizado_por_id": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "categoria_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
                 },
                 "creado_por_id": {
                   "codecId": "pg/int4@1",
@@ -1117,13 +1629,13 @@
                   "nullable": true
                 },
                 "precio_compra": {
-                  "codecId": "pg/float8@1",
-                  "nativeType": "float8",
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "precio_venta": {
-                  "codecId": "pg/float8@1",
-                  "nativeType": "float8",
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "stock": {
@@ -1143,6 +1655,22 @@
                 }
               },
               "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "categoria_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "productos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categorias"
+                  }
+                },
                 {
                   "source": {
                     "columns": [
@@ -1187,6 +1715,14 @@
                 },
                 {
                   "columns": [
+                    "categoria_id"
+                  ],
+                  "name": "productos_categoria_id_idx_6ad70c39",
+                  "prefix": "productos_categoria_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
                     "creado_por_id"
                   ],
                   "name": "productos_creado_por_id_idx_9be71d7d",
@@ -1208,6 +1744,13 @@
               ]
             },
             "usuarios": {
+              "checks": [
+                {
+                  "expression": "\"rol\" IN ('administrador', 'cliente')",
+                  "name": "usuarios_rol_check_5dfe6daf",
+                  "prefix": "usuarios_rol_check"
+                }
+              ],
               "columns": {
                 "activo": {
                   "codecId": "pg/bool@1",
@@ -1216,7 +1759,7 @@
                     "value": true
                   },
                   "nativeType": "bool",
-                  "nullable": true
+                  "nullable": false
                 },
                 "actualizado_por_id": {
                   "codecId": "pg/int4@1",
@@ -1274,7 +1817,18 @@
                 "rol": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "rol_usuario",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "usuario": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -1339,7 +1893,30 @@
                   "columns": [
                     "email"
                   ]
+                },
+                {
+                  "columns": [
+                    "usuario"
+                  ]
                 }
+              ]
+            }
+          },
+          "valueSet": {
+            "estado_pedido": {
+              "kind": "valueSet",
+              "values": [
+                "solicitado",
+                "pendiente",
+                "entregado",
+                "cancelado"
+              ]
+            },
+            "rol_usuario": {
+              "kind": "valueSet",
+              "values": [
+                "administrador",
+                "cliente"
               ]
             }
           }
@@ -1348,7 +1925,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "63c2d8ff61b4b4ad40f8f7e3a0e5d7818fad0e10de4bdb601d8a64d478e6c136"
+    "storageHash": "8d07a01e657a1fbe63661c7433f9ac0c69dd382dd65c51f91a69d6ff79c347a2"
   },
   "execution": {
     "executionHash": "31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac",

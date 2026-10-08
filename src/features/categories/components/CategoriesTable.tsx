@@ -4,6 +4,7 @@ import {
 } from "@/common/components/ui/DataTable";
 import { RowActions } from "@/common/components/ui/RowActions";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
+import { locations } from "@/common/locations";
 import type { Category } from "@/features/categories/types";
 
 type CategoriesTableProps = {
@@ -20,25 +21,25 @@ export const CategoriesTable = ({
 	const columns: DataTableColumn<Category>[] = [
 		{
 			key: "id",
-			header: "ID",
+			header: locations.table.id,
 			cell: (category) => `#${category.id}`,
 			className: "text-gray-400",
 		},
 		{
 			key: "name",
-			header: "Nombre",
+			header: locations.table.name,
 			cell: (category) => (
 				<span className="font-medium text-navy">{category.name}</span>
 			),
 		},
 		{
 			key: "status",
-			header: "Estado",
+			header: locations.table.status,
 			cell: (category) => <StatusBadge isActive={category.isActive} />,
 		},
 		{
 			key: "actions",
-			header: "Acciones",
+			header: locations.table.actions,
 			align: "right",
 			cell: (category) => (
 				<RowActions
@@ -52,11 +53,11 @@ export const CategoriesTable = ({
 
 	return (
 		<DataTable
-			ariaLabel="Categorías"
+			ariaLabel={locations.categories.tableLabel}
 			columns={columns}
 			rows={categories}
 			getRowKey={(category) => category.id}
-			emptyMessage="No hay categorías que coincidan con la búsqueda."
+			emptyMessage={locations.categories.empty}
 		/>
 	);
 };

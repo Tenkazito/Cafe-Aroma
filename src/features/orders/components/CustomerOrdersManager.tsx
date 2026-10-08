@@ -4,6 +4,7 @@ import { toast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PageHeader } from "@/common/components/ui/PageHeader";
+import { locations } from "@/common/locations";
 import { CustomerOrdersTable } from "@/features/orders/components/CustomerOrdersTable";
 import { OrderFilters } from "@/features/orders/components/OrderFilters";
 import { filterCustomerOrders } from "@/features/orders/lib/filterCustomerOrders";
@@ -24,15 +25,15 @@ export const CustomerOrdersManager = ({
 
 	const handleReorder = (order: CustomerOrder) => {
 		// TODO: copiar los productos de la orden al carrito antes de ir a Solicitar
-		toast.info(`Repitiendo la orden ${order.code} (simulado)`);
+		toast.info(locations.toasts.reordering(order.code));
 		router.push("/solicitar");
 	};
 
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Últimos Pedidos"
-				description="Consulta el historial de tus pedidos y vuelve a realizarlos."
+				title={locations.customerOrders.title}
+				description={locations.customerOrders.description}
 			/>
 			<OrderFilters
 				title={null}

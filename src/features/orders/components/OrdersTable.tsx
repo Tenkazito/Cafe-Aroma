@@ -6,6 +6,7 @@ import {
 	type DataTableColumn,
 } from "@/common/components/ui/DataTable";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { OrderStatusBadge } from "@/features/orders/components/OrderStatusBadge";
 import {
@@ -31,8 +32,8 @@ export const OrdersTable = ({
 	onView,
 	onAccept,
 	onReject,
-	viewLabel = "Ver",
-	optionsHeader = "Opciones",
+	viewLabel = locations.actions.view,
+	optionsHeader = locations.table.options,
 }: OrdersTableProps) => {
 	const renderOptions = (order: Order) => {
 		// Solo los pedidos recién solicitados se pueden aceptar o rechazar
@@ -49,7 +50,7 @@ export const OrdersTable = ({
 							onPress={() => onAccept(order)}
 						>
 							<Icon name="check" size={14} />
-							Aceptar
+							{locations.actions.accept}
 						</Button>
 						<Button
 							size="sm"
@@ -58,7 +59,7 @@ export const OrdersTable = ({
 							onPress={() => onReject(order)}
 						>
 							<Icon name="x" size={14} />
-							Rechazar
+							{locations.actions.reject}
 						</Button>
 					</>
 				)}
@@ -67,7 +68,10 @@ export const OrdersTable = ({
 					variant="ghost"
 					className="text-gray-500"
 					onPress={() => onView(order)}
-					aria-label={`${viewLabel} pedido ${formatOrderId(order.id)}`}
+					aria-label={locations.orders.viewOrder(
+						viewLabel,
+						formatOrderId(order.id),
+					)}
 				>
 					<Icon name="eye" size={14} />
 					{viewLabel}
@@ -79,27 +83,27 @@ export const OrdersTable = ({
 	const columns: DataTableColumn<Order>[] = [
 		{
 			key: "id",
-			header: "ID Orden",
+			header: locations.table.orderId,
 			cell: (order) => (
 				<span className="font-bold text-navy">{formatOrderId(order.id)}</span>
 			),
 		},
 		{
 			key: "date",
-			header: "Fecha",
+			header: locations.table.date,
 			cell: (order) => order.createdAt,
 			className: "text-gray-500",
 		},
 		{
 			key: "customer",
-			header: "Cliente",
+			header: locations.table.customer,
 			cell: (order) => (
 				<span className="font-medium text-navy">{order.customerName}</span>
 			),
 		},
 		{
 			key: "address",
-			header: "Ubicación",
+			header: locations.table.location,
 			cell: (order) => (
 				<span className="flex max-w-56 items-center gap-1.5 text-gray-500">
 					<Icon name="mapPin" size={14} className="shrink-0 text-gray-400" />
@@ -111,7 +115,7 @@ export const OrdersTable = ({
 		},
 		{
 			key: "total",
-			header: "Valor",
+			header: locations.table.value,
 			align: "right",
 			cell: (order) => (
 				<span className="font-semibold text-navy">
@@ -121,7 +125,7 @@ export const OrdersTable = ({
 		},
 		{
 			key: "status",
-			header: "Estado",
+			header: locations.table.status,
 			cell: (order) => <OrderStatusBadge status={order.status} />,
 		},
 		{
@@ -134,11 +138,11 @@ export const OrdersTable = ({
 
 	return (
 		<DataTable
-			ariaLabel="Pedidos"
+			ariaLabel={locations.orders.tableLabel}
 			columns={columns}
 			rows={orders}
 			getRowKey={(order) => order.id}
-			emptyMessage="No hay pedidos con esos filtros."
+			emptyMessage={locations.orders.empty}
 		/>
 	);
 };

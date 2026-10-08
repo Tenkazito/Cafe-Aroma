@@ -7,6 +7,7 @@ import {
 	type DataTableColumn,
 } from "@/common/components/ui/DataTable";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { COMPANY_INFO } from "@/features/billing/lib/invoices";
 import {
@@ -25,27 +26,27 @@ type InvoiceModalProps = {
 const ITEM_COLUMNS: DataTableColumn<OrderItem>[] = [
 	{
 		key: "product",
-		header: "Producto",
+		header: locations.table.product,
 		cell: (item) => (
 			<span className="font-medium text-navy">{item.productName}</span>
 		),
 	},
 	{
 		key: "quantity",
-		header: "Cantidad",
+		header: locations.table.quantity,
 		align: "center",
 		cell: (item) => item.quantity,
 	},
 	{
 		key: "unitPrice",
-		header: "Precio unit.",
+		header: locations.table.unitPrice,
 		align: "right",
 		cell: (item) => formatCurrency(item.unitPrice),
 		className: "text-gray-500",
 	},
 	{
 		key: "subtotal",
-		header: "Subtotal",
+		header: locations.table.subtotal,
 		align: "right",
 		cell: (item) => (
 			<span className="font-semibold text-navy">
@@ -69,28 +70,26 @@ export const InvoiceModal = ({
 		<AppModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={`Factura ${invoiceNumber}`}
+			title={locations.billing.invoiceTitle(invoiceNumber)}
 			size="lg"
 			footer={
 				<>
 					<Button variant="outline" onPress={() => onOpenChange(false)}>
-						Cerrar
+						{locations.actions.close}
 					</Button>
 					<Button
 						variant="outline"
 						// TODO: llamar al servicio de correo cuando exista el backend
 						onPress={() =>
-							toast.info(
-								`Factura ${invoiceNumber} enviada por correo (simulado)`,
-							)
+							toast.info(locations.toasts.invoiceSent(invoiceNumber))
 						}
 					>
 						<Icon name="mail" size={16} />
-						Enviar por correo
+						{locations.billing.sendByEmail}
 					</Button>
 					<Button onPress={() => window.print()}>
 						<Icon name="printer" size={16} />
-						Imprimir factura
+						{locations.billing.print}
 					</Button>
 				</>
 			}
@@ -118,13 +117,13 @@ export const InvoiceModal = ({
 				<div className="grid grid-cols-1 gap-4 rounded-xl bg-gray-50 p-4 sm:grid-cols-2">
 					<div>
 						<p className="text-xs font-semibold text-gray-400 uppercase">
-							Cliente
+							{locations.table.customer}
 						</p>
 						<p className="font-semibold text-navy">{invoice.customerName}</p>
 					</div>
 					<div>
 						<p className="text-xs font-semibold text-gray-400 uppercase">
-							Ubicación de entrega
+							{locations.billing.deliveryLocation}
 						</p>
 						<p className="flex items-center gap-1.5 text-sm text-gray-600">
 							<Icon name="mapPin" size={14} className="shrink-0" />
@@ -135,10 +134,10 @@ export const InvoiceModal = ({
 
 				<div>
 					<p className="mb-2 text-xs font-semibold text-gray-400 uppercase">
-						Detalle de productos
+						{locations.billing.productDetail}
 					</p>
 					<DataTable
-						ariaLabel={`Productos de la factura ${invoiceNumber}`}
+						ariaLabel={locations.billing.invoiceTableLabel(invoiceNumber)}
 						variant="plain"
 						columns={ITEM_COLUMNS}
 						rows={invoice.items}
@@ -147,7 +146,9 @@ export const InvoiceModal = ({
 				</div>
 
 				<div className="flex items-center justify-between rounded-xl bg-navy p-5 text-white">
-					<span className="text-sm text-gray-300">Total a pagar</span>
+					<span className="text-sm text-gray-300">
+						{locations.billing.totalToPay}
+					</span>
 					<span className="text-2xl font-bold">
 						{formatCurrency(getOrderTotal(invoice))}
 					</span>

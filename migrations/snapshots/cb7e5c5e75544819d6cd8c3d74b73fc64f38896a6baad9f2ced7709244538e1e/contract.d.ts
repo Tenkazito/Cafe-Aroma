@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'8d07a01e657a1fbe63661c7433f9ac0c69dd382dd65c51f91a69d6ff79c347a2'>;
+  StorageHashBase<'cb7e5c5e75544819d6cd8c3d74b73fc64f38896a6baad9f2ced7709244538e1e'>;
 export type ExecutionHash =
   ExecutionHashBase<'31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac'>;
 export type ProfileHash =
@@ -301,7 +301,7 @@ export type FieldOutputTypes = {
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly usuario: CodecTypes['pg/text@1']['output'] | null;
       readonly contrasena: CodecTypes['pg/text@1']['output'];
-      readonly rol: 'administrador' | 'cliente';
+      readonly rol: 'administrador' | 'administrativo' | 'mensajero' | 'cliente';
       readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -371,7 +371,7 @@ export type FieldInputTypes = {
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly usuario: CodecTypes['pg/text@1']['input'] | null;
       readonly contrasena: CodecTypes['pg/text@1']['input'];
-      readonly rol: 'administrador' | 'cliente';
+      readonly rol: 'administrador' | 'administrativo' | 'mensajero' | 'cliente';
       readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -445,7 +445,7 @@ export type StorageColumnTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly nombre: CodecTypes['pg/text@1']['output'];
-      readonly rol: 'administrador' | 'cliente';
+      readonly rol: 'administrador' | 'administrativo' | 'mensajero' | 'cliente';
       readonly usuario: CodecTypes['pg/text@1']['output'] | null;
     };
   };
@@ -515,7 +515,7 @@ export type StorageColumnInputTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly nombre: CodecTypes['pg/text@1']['input'];
-      readonly rol: 'administrador' | 'cliente';
+      readonly rol: 'administrador' | 'administrativo' | 'mensajero' | 'cliente';
       readonly usuario: CodecTypes['pg/text@1']['input'] | null;
     };
   };
@@ -529,7 +529,7 @@ export namespace Models {
     email: CodecTypes['pg/text@1']['output'];
     usuario: CodecTypes['pg/text@1']['output'] | null;
     contrasena: CodecTypes['pg/text@1']['output'];
-    rol: 'administrador' | 'cliente';
+    rol: 'administrador' | 'administrativo' | 'mensajero' | 'cliente';
     activo: CodecTypes['pg/bool@1']['output'];
     fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
     fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -1293,7 +1293,7 @@ type ContractBase = Omit<
             };
             readonly rol_usuario: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['administrador', 'cliente'];
+              readonly values: readonly ['administrador', 'administrativo', 'mensajero', 'cliente'];
             };
           };
         };
@@ -2000,6 +2000,8 @@ type ContractBase = Omit<
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
               { readonly name: 'administrador'; readonly value: 'administrador' },
+              { readonly name: 'administrativo'; readonly value: 'administrativo' },
+              { readonly name: 'mensajero'; readonly value: 'mensajero' },
               { readonly name: 'cliente'; readonly value: 'cliente' },
             ];
           };

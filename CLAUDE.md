@@ -86,6 +86,7 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 - **Comenta el "por qué", no el "qué":** evita `// suma 1 al contador`; usa comentarios que expliquen decisiones no obvias (ej. `// se resta 1 porque el índice del array empieza en 0 pero el usuario lo ve empezando en 1`).
 - **JSDoc obligatorio en `actions/`, `queries/` y `services/`:** toda función exportada ahí debe llevar un comentario JSDoc corto explicando qué hace, qué recibe y qué retorna.
 - **Funciones cortas:** si una función supera ~40-50 líneas, divídela en funciones auxiliares con nombres descriptivos en vez de dejar un bloque largo.
+- **Textos en `src/common/locations.ts`:** todo texto visible de la interfaz (títulos, botones, placeholders, `aria-label`, mensajes de error y toasts) se escribe en el objeto `locations`, agrupado por temas (`locations.errors.manyCharacters(50)`, `locations.users.title`), y los componentes lo importan. No se escriben textos a mano en los componentes. Los datos de `mocks/` y los textos de `/dev` quedan fuera.
 - **Nombres explícitos:** prohibidas las abreviaciones crípticas (`usr`, `prd`, `tmp`); usa `user`, `product`, `temporaryValue`.
 - **Evita anidamiento profundo:** prefiere *early returns* a `if/else` anidados varios niveles.
 

@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import type { CatalogProduct } from "@/features/catalog/types";
 
@@ -37,12 +38,12 @@ export const CatalogProductCard = ({
 				{!isCompact && product.isFeatured && (
 					<span className="absolute top-2 left-2 flex items-center gap-1 rounded-md bg-lemon px-2 py-0.5 text-xs font-bold text-navy">
 						<Icon name="star" size={12} />
-						Top
+						{locations.catalog.topBadge}
 					</span>
 				)}
 				{product.isSoldOut && (
 					<span className="absolute top-2 right-2 rounded-md bg-navy px-2 py-0.5 text-xs font-bold text-white">
-						Agotado
+						{locations.catalog.soldOut}
 					</span>
 				)}
 			</div>
@@ -64,7 +65,7 @@ export const CatalogProductCard = ({
 							size="sm"
 							isDisabled={product.isSoldOut}
 							onPress={() => onAdd(product)}
-							aria-label={`Agregar ${product.name}`}
+							aria-label={locations.catalog.addProduct(product.name)}
 						>
 							<Icon name="plus" size={16} />
 						</Button>
@@ -73,10 +74,10 @@ export const CatalogProductCard = ({
 							size="sm"
 							isDisabled={product.isSoldOut}
 							onPress={() => onAdd(product)}
-							aria-label={`Agregar ${product.name}`}
+							aria-label={locations.catalog.addProduct(product.name)}
 						>
 							<Icon name="plus" size={14} />
-							Agregar
+							{locations.actions.add}
 						</Button>
 					)}
 				</div>

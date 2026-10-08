@@ -1,5 +1,6 @@
 import { SectionCard } from "@/common/components/ui/SectionCard";
 import { StatCard } from "@/common/components/ui/StatCard";
+import { locations } from "@/common/locations";
 import { DailyGoalCard } from "@/features/dashboard/components/DailyGoalCard";
 import type { DailyGoal } from "@/features/dashboard/types";
 import type { OrderStatusCounts } from "@/features/orders/types";
@@ -12,28 +13,28 @@ type DailyTotalsPanelProps = {
 /** Sección "Totales del día": pedidos por estado + meta del día. */
 export const DailyTotalsPanel = ({ counts, goal }: DailyTotalsPanelProps) => {
 	return (
-		<SectionCard title="Totales del día" icon="trendingUp">
+		<SectionCard title={locations.dashboard.dailyTotals} icon="trendingUp">
 			<div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
 				<StatCard
-					label="Entregados"
+					label={locations.dashboard.delivered}
 					value={counts.entregado}
 					icon="checkCircle"
 					tone="success"
 				/>
 				<StatCard
-					label="Pendientes"
+					label={locations.dashboard.pending}
 					value={counts.pendiente}
 					icon="clock"
 					tone="info"
 				/>
 				<StatCard
-					label="Cancelados"
+					label={locations.dashboard.cancelled}
 					value={counts.cancelado}
 					icon="xCircle"
 					tone="danger"
 				/>
 				<StatCard
-					label="Total"
+					label={locations.dashboard.total}
 					value={counts.total}
 					icon="shoppingBag"
 					tone="neutral"

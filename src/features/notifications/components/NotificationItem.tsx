@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import type { Notification } from "@/features/notifications/types";
 
 type NotificationItemProps = {
@@ -36,7 +37,7 @@ export const NotificationItem = ({
 					<button
 						type="button"
 						onClick={() => onMarkAsRead(notification.id)}
-						aria-label={`Marcar "${notification.title}" como leída`}
+						aria-label={locations.notifications.markAsRead(notification.title)}
 						className="flex h-6 w-6 items-center justify-center rounded-full bg-teal text-navy hover:bg-teal/80"
 					>
 						<Icon name="check" size={14} />

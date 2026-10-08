@@ -2,6 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { EmptyState } from "@/common/components/ui/EmptyState";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { CartItemRow } from "@/features/catalog/components/CartItemRow";
 import type { CartItem } from "@/features/catalog/types";
@@ -28,16 +29,18 @@ export const CartSummary = ({
 
 	return (
 		<aside
-			aria-label="Resumen del pedido"
+			aria-label={locations.catalog.cartLabel}
 			className="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm"
 		>
-			<h2 className="text-lg font-bold text-navy">Resumen del Pedido</h2>
+			<h2 className="text-lg font-bold text-navy">
+				{locations.catalog.cartTitle}
+			</h2>
 
 			{isEmpty ? (
 				<EmptyState
 					icon="coffee"
-					title="Tu pedido está vacío"
-					description="Agrega productos del catálogo"
+					title={locations.catalog.cartEmptyTitle}
+					description={locations.catalog.cartEmptyDescription}
 				/>
 			) : (
 				<ul className="flex flex-col gap-3">
@@ -54,11 +57,11 @@ export const CartSummary = ({
 
 			<dl className="flex flex-col gap-1 border-t border-gray-100 pt-4">
 				<div className="flex items-center justify-between text-sm text-gray-500">
-					<dt>Cantidad de productos</dt>
+					<dt>{locations.catalog.productCount}</dt>
 					<dd className="font-semibold text-navy">{itemCount}</dd>
 				</div>
 				<div className="flex items-center justify-between">
-					<dt className="text-sm text-gray-500">Total</dt>
+					<dt className="text-sm text-gray-500">{locations.catalog.total}</dt>
 					<dd className="text-2xl font-bold text-navy">
 						{formatCurrency(total)}
 					</dd>
@@ -72,7 +75,7 @@ export const CartSummary = ({
 				onPress={onCheckout}
 				className="bg-teal font-bold text-navy"
 			>
-				Finalizar Pedido
+				{locations.catalog.checkout}
 			</Button>
 		</aside>
 	);

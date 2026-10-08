@@ -31,7 +31,7 @@ Definidos en `src/app/globals.css` (`:root` + `@theme`), usables como clases de 
 | `teal` | `#75c9b7` | Acentos, llamada a la acción del cliente ("Solicitar ahora", "Finalizar Pedido"), badges |
 | `teal-strong` | `#2a7f6f` | **Texto** y enlaces teal. El teal original sobre blanco no llega al contraste mínimo (≈1.9:1) |
 | `lime` | `#abd699` | Acento secundario (poco uso) |
-| `lemon` | `#ffe26a` | Barra de meta del día, etiqueta "Top", rol Mensajero |
+| `lemon` | `#ffe26a` | Barra de meta del día, etiqueta "Top" |
 | `mint` | `#c7ddcc` | Fondo de las pantallas del cliente |
 
 ### Superficies
@@ -55,8 +55,7 @@ para el mismo estado, aunque en las diapositivas variaban un poco).
 | Pedido **Entregado** | finalizado y facturable | `success` (verde) |
 | Pedido **Cancelado** | rechazado | `danger` (rojo) |
 | Rol **Administrador** | | `navy` (lavanda) |
-| Rol **Administrativo** | | `teal` |
-| Rol **Mensajero** | | `lemon` |
+| Rol **Cliente** | | `teal` |
 | **Activo / Inactivo** | usuarios, categorías, productos | `success` / `neutral`, con punto |
 | **Stock bajo** | stock ≤ 15 (`LOW_STOCK_THRESHOLD`) | texto `orange-500` |
 
@@ -157,7 +156,7 @@ src/app/
 | `overlay/` | `AppModal` (base), `FormModal`, `ConfirmDialog` |
 
 Hooks y utilidades: `common/hooks/useCrudModals.ts`, `common/utils/format.ts`,
-`common/lib/navigation.ts`, `common/lib/statusOptions.ts`, `common/lib/env.ts`.
+`common/lib/navigation.ts`, `common/lib/statusOptions.ts`, `common/lib/env.ts`, `common/locations.ts` (todos los textos).
 
 ### Por feature — `src/features/<feature>/`
 
@@ -253,6 +252,8 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
 - Código, carpetas y features en **inglés** (`features/orders`, `OrdersTable`).
 - Textos de la interfaz y **URLs en español** (`/admin/pedidos`, `/mis-pedidos`).
 - Admin con prefijo `/admin`; cliente sin prefijo.
+- **Todos los textos de la interfaz viven en `src/common/locations.ts`** (objeto `locations`, separado por temas: `locations.actions`, `locations.errors`, `locations.users`...). Los componentes no llevan texto escrito a mano: si un texto cambia o se repite, se edita en un solo lugar. Los textos con datos son funciones (`locations.errors.manyCharacters(50)`) y los que llevan negrita se guardan en partes (`before`, `after`). Quedan fuera los datos de `mocks/` y los textos de `/dev`.
+- Roles: solo `administrador` y `cliente`.
 
 ---
 
