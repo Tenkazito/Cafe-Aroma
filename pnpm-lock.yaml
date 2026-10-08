@@ -406,7 +406,7 @@ packages:
   '@effect/sql-d1@4.0.0-rc.112':
     resolution: {integrity: sha512-Wxdr6aU3pBHqhyBiybzbHmEK7qZ2w4iy0IxBgJHe9BLleYzCxObOaBQI9qq/VZSqEvc0IaOBMpbk2zh3dlPNSQ==}
     peerDependencies:
-      effect: ^4.0.0-rc.112
+      effect: 4.0.0-rc.112
 
   '@effect/sql-d1@4.0.0-rc.115':
     resolution: {integrity: sha512-o2JkGjN02NBMxwDtJbwcC4teyMiOApqN085fdVMid4FUC6ixj/WyKyPpe51QGOMQQTTl2BkXccA/IwDIywGXlA==}
@@ -416,7 +416,7 @@ packages:
   '@effect/sql-sqlite-do@4.0.0-rc.112':
     resolution: {integrity: sha512-PewNVasimmhrdxYbNU91O0YlCcalIHOoF0H5XAWXrmzcEQrKM7kVCyb5h0gmJAZjBM4ZgWRvPY0PUOfbNmWchQ==}
     peerDependencies:
-      effect: 4.0.0-rc.112
+      effect: ^4.0.0-rc.112
 
   '@effect/sql-sqlite-do@4.0.0-rc.115':
     resolution: {integrity: sha512-7lH9h+w4DW2tI+dus4hEac5mSCy1wgiT+uw/VvjR8YhNDemd3zEFY03NkbD81ipfOpnu2QA1YwgM58ExyPlhug==}

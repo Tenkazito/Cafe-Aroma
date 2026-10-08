@@ -1,15 +1,18 @@
 "use client";
 
 import { Button, toast } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useForm } from "react-hook-form";
 import { FormCheckbox } from "@/common/components/form/FormCheckbox";
 import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import type { FieldVariant } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
 import { locations } from "@/common/locations";
+import { type LoginFormValues, loginSchema } from "@/features/auth/schema";
 
 type LoginFormProps = {
 	/** `email` para el admin, `username` para el cliente. */
@@ -51,19 +54,27 @@ export const LoginForm = ({
 }: LoginFormProps) => {
 	const router = useRouter();
 	const identifierField = IDENTIFIER_FIELDS[identifier];
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<LoginFormValues>({
+		resolver: zodResolver(loginSchema(identifier)),
+		defaultValues: { identifier: "", password: "", rememberMe: false },
+	});
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const onSubmit = (_values: LoginFormValues) => {
 		// TODO: conectar React Hook Form + Zod y el Server Action de inicio de sesión
 		toast.success(locations.toasts.loginDone);
 		router.push(redirectTo);
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 			<FormTextField
 				label={identifierField.label}
-				name={identifierField.name}
+				{...register("identifier")}
+				errorMessage={errors.identifier?.message}
 				type={identifierField.type}
 				placeholder={identifierField.placeholder}
 				icon={identifierField.icon}
@@ -72,14 +83,18 @@ export const LoginForm = ({
 			/>
 			<FormPasswordField
 				label={locations.form.password}
-				name="password"
+				{...register("password")}
+				errorMessage={errors.password?.message}
 				variant={fieldVariant}
 				withLockIcon
 				autoComplete="current-password"
 			/>
 
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<FormCheckbox label={locations.auth.rememberMe} name="rememberMe" />
+				<FormCheckbox
+					label={locations.auth.rememberMe}
+					{...register("rememberMe")}
+				/>
 				<Link
 					href="#"
 					className="text-sm font-medium text-teal-strong hover:underline"

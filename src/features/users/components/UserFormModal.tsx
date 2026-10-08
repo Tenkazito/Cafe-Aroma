@@ -1,7 +1,8 @@
 "use client";
 
 import { toast } from "@heroui/react";
-import type { FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
@@ -9,6 +10,7 @@ import { FormModal } from "@/common/components/overlay/FormModal";
 import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
 import { locations } from "@/common/locations";
 import { USER_ROLE_OPTIONS } from "@/features/users/lib/userRoles";
+import { type UserFormValues, userSchema } from "@/features/users/schema";
 import type { User } from "@/features/users/types";
 
 type UserFormModalProps = {
@@ -24,10 +26,24 @@ export const UserFormModal = ({
 	user,
 }: UserFormModalProps) => {
 	const isEditing = Boolean(user);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<UserFormValues>({
+		resolver: zodResolver(userSchema(isEditing)),
+		defaultValues: {
+			fullName: user?.fullName ?? "",
+			email: user?.email ?? "",
+			role: user?.role ?? "cliente",
+			status: String(user?.isActive ?? true) as "true" | "false",
+			password: "",
+			confirmPassword: "",
+		},
+	});
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		// TODO: conectar React Hook Form + Zod y el Server Action (crear / actualizar usuario)
+	const onSubmit = (values: UserFormValues) => {
+		console.log(values);
 		toast.success(
 			isEditing ? locations.toasts.userUpdated : locations.toasts.userCreated,
 		);
@@ -44,43 +60,45 @@ export const UserFormModal = ({
 			submitLabel={
 				isEditing ? locations.actions.save : locations.users.createSubmit
 			}
-			onSubmit={handleSubmit}
+			onSubmit={handleSubmit(onSubmit)}
 		>
 			<FormTextField
 				label={locations.users.fullName}
-				name="fullName"
 				placeholder={locations.users.fullNamePlaceholder}
-				defaultValue={user?.fullName}
+				{...register("fullName")}
+				errorMessage={errors.fullName?.message}
 			/>
 			<FormTextField
 				label={locations.form.email}
-				name="email"
 				type="email"
 				placeholder={locations.form.emailPlaceholder}
-				defaultValue={user?.email}
+				{...register("email")}
+				errorMessage={errors.email?.message}
 			/>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormSelectField
 					label={locations.users.roleLabel}
-					name="role"
 					options={USER_ROLE_OPTIONS}
-					defaultValue={user?.role ?? "cliente"}
+					{...register("role")}
+					errorMessage={errors.role?.message}
 				/>
 				<FormSelectField
 					label={locations.form.status}
-					name="status"
 					options={STATUS_OPTIONS}
-					defaultValue={String(user?.isActive ?? true)}
+					{...register("status")}
+					errorMessage={errors.status?.message}
 				/>
 				<FormPasswordField
 					label={locations.form.password}
-					name="password"
 					autoComplete="new-password"
+					{...register("password")}
+					errorMessage={errors.password?.message}
 				/>
 				<FormPasswordField
 					label={locations.form.confirmPassword}
-					name="confirmPassword"
 					autoComplete="new-password"
+					{...register("confirmPassword")}
+					errorMessage={errors.confirmPassword?.message}
 				/>
 			</div>
 		</FormModal>
