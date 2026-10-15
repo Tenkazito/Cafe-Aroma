@@ -13,7 +13,7 @@ const AdminPanelLayout = ({ children }: AdminPanelLayoutProps) => {
 			<AdminNavbar
 				items={ADMIN_NAV_ITEMS}
 				user={MOCK_ADMIN_USER}
-				logoutHref="/admin/login"
+				logoutHref="/login"
 			/>
 			<main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">{children}</main>
 		</div>

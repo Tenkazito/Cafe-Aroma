@@ -7,6 +7,7 @@ import { StatusBadge } from "@/common/components/ui/StatusBadge";
 import { UserAvatar } from "@/common/components/ui/UserAvatar";
 import { locations } from "@/common/locations";
 import { RoleBadge } from "@/features/users/components/RoleBadge";
+import { getFullName } from "@/features/users/lib/getFullName";
 import type { User } from "@/features/users/types";
 
 type UsersTableProps = {
@@ -29,11 +30,11 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 			cell: (user) => (
 				<div className="flex items-center gap-3">
 					<UserAvatar
-						name={user.fullName}
+						name={getFullName(user)}
 						imageUrl={user.avatarUrl}
 						size="sm"
 					/>
-					<span className="font-semibold text-navy">{user.fullName}</span>
+					<span className="font-semibold text-navy">{getFullName(user)}</span>
 				</div>
 			),
 		},
@@ -59,7 +60,7 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 			align: "right",
 			cell: (user) => (
 				<RowActions
-					itemName={user.fullName}
+					itemName={getFullName(user)}
 					onEdit={() => onEdit(user)}
 					onDelete={() => onDelete(user)}
 				/>

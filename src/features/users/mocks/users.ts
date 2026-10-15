@@ -3,7 +3,8 @@ import type { User } from "@/features/users/types";
 export const MOCK_USERS: User[] = [
 	{
 		id: 1,
-		fullName: "María González",
+		firstName: "María",
+		lastName: "González",
 		email: "maria.gonzalez@cafearoma.co",
 		role: "administrador",
 		isActive: true,
@@ -11,7 +12,8 @@ export const MOCK_USERS: User[] = [
 	},
 	{
 		id: 2,
-		fullName: "Carlos Restrepo",
+		firstName: "Carlos",
+		lastName: "Restrepo",
 		email: "carlos.restrepo@cafearoma.co",
 		role: "administrador",
 		isActive: true,
@@ -19,7 +21,8 @@ export const MOCK_USERS: User[] = [
 	},
 	{
 		id: 3,
-		fullName: "Andrea Torres",
+		firstName: "Andrea",
+		lastName: "Torres",
 		email: "andrea.torres@cafearoma.co",
 		role: "administrador",
 		isActive: false,
@@ -27,7 +30,8 @@ export const MOCK_USERS: User[] = [
 	},
 	{
 		id: 4,
-		fullName: "Juan Moreno",
+		firstName: "Juan",
+		lastName: "Moreno",
 		email: "juan.moreno@cafearoma.co",
 		role: "cliente",
 		isActive: true,
@@ -35,7 +39,8 @@ export const MOCK_USERS: User[] = [
 	},
 	{
 		id: 5,
-		fullName: "Sofía Vargas",
+		firstName: "Sofía",
+		lastName: "Vargas",
 		email: "sofia.vargas@cafearoma.co",
 		role: "cliente",
 		isActive: true,
@@ -43,7 +48,8 @@ export const MOCK_USERS: User[] = [
 	},
 	{
 		id: 6,
-		fullName: "Diego Pineda",
+		firstName: "Diego",
+		lastName: "Pineda",
 		email: "diego.pineda@cafearoma.co",
 		role: "cliente",
 		isActive: false,

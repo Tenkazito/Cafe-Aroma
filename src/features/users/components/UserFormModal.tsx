@@ -7,7 +7,7 @@ import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { FormModal } from "@/common/components/overlay/FormModal";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
 import { USER_ROLE_OPTIONS } from "@/features/users/lib/userRoles";
 import { type UserFormValues, userSchema } from "@/features/users/schema";
@@ -33,17 +33,22 @@ export const UserFormModal = ({
 	} = useForm<UserFormValues>({
 		resolver: zodResolver(userSchema(isEditing)),
 		defaultValues: {
-			fullName: user?.fullName ?? "",
+			firstName: user?.firstName ?? "",
+			lastName: user?.lastName ?? "",
 			email: user?.email ?? "",
 			role: user?.role ?? "cliente",
-			status: String(user?.isActive ?? true) as "true" | "false",
+			isActive: user?.isActive ?? true,
 			password: "",
 			confirmPassword: "",
 		},
 	});
 
 	const onSubmit = (values: UserFormValues) => {
-		console.log(values);
+		// TODO: llamar al Server Action (createUser / updateUser) con `values`
+		console.log(isEditing ? "Editar usuario" : "Crear usuario", {
+			id: user?.id,
+			...values,
+		});
 		toast.success(
 			isEditing ? locations.toasts.userUpdated : locations.toasts.userCreated,
 		);
@@ -62,12 +67,20 @@ export const UserFormModal = ({
 			}
 			onSubmit={handleSubmit(onSubmit)}
 		>
-			<FormTextField
-				label={locations.users.fullName}
-				placeholder={locations.users.fullNamePlaceholder}
-				{...register("fullName")}
-				errorMessage={errors.fullName?.message}
-			/>
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+				<FormTextField
+					label={locations.users.firstName}
+					placeholder={locations.users.firstNamePlaceholder}
+					{...register("firstName")}
+					errorMessage={errors.firstName?.message}
+				/>
+				<FormTextField
+					label={locations.users.lastName}
+					placeholder={locations.users.lastNamePlaceholder}
+					{...register("lastName")}
+					errorMessage={errors.lastName?.message}
+				/>
+			</div>
 			<FormTextField
 				label={locations.form.email}
 				type="email"
@@ -85,12 +98,15 @@ export const UserFormModal = ({
 				<FormSelectField
 					label={locations.form.status}
 					options={STATUS_OPTIONS}
-					{...register("status")}
-					errorMessage={errors.status?.message}
+					{...register("isActive", booleanSelectOptions)}
+					errorMessage={errors.isActive?.message}
 				/>
 				<FormPasswordField
 					label={locations.form.password}
 					autoComplete="new-password"
+					placeholder={
+						isEditing ? locations.users.passwordEditPlaceholder : undefined
+					}
 					{...register("password")}
 					errorMessage={errors.password?.message}
 				/>

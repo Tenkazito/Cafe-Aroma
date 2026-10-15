@@ -8,7 +8,7 @@ import { FormTextAreaField } from "@/common/components/form/FormTextAreaField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { ImageUploadField } from "@/common/components/form/ImageUploadField";
 import { FormModal } from "@/common/components/overlay/FormModal";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
 import {
 	type ProductFormValues,
@@ -49,13 +49,17 @@ export const ProductFormModal = ({
 			description: product?.description ?? "",
 			price: product?.price,
 			stock: product?.stock,
-			status: String(product?.isActive ?? true) as "true" | "false",
+			isActive: product?.isActive ?? true,
 			imageUrl: product?.imageUrl ?? "",
 		},
 	});
 
 	const onSubmit = (values: ProductFormValues) => {
-		console.log(values);
+		// TODO: llamar al Server Action (createProduct / updateProduct) con `values`
+		console.log(isEditing ? "Editar producto" : "Crear producto", {
+			id: product?.id,
+			...values,
+		});
 		toast.success(
 			isEditing
 				? locations.toasts.productUpdated
@@ -82,6 +86,7 @@ export const ProductFormModal = ({
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormSelectField
 					label={locations.products.categoryLabel}
+					placeholder={locations.products.categoryPlaceholder}
 					options={categoryOptions}
 					{...register("categoryName")}
 					errorMessage={errors.categoryName?.message}
@@ -104,7 +109,7 @@ export const ProductFormModal = ({
 					label={locations.products.priceLabel}
 					type="number"
 					min={0}
-					step="any"
+					step="1"
 					placeholder={locations.products.pricePlaceholder}
 					{...register("price", { valueAsNumber: true })}
 					errorMessage={errors.price?.message}
@@ -121,8 +126,8 @@ export const ProductFormModal = ({
 				<FormSelectField
 					label={locations.form.status}
 					options={STATUS_OPTIONS}
-					{...register("status")}
-					errorMessage={errors.status?.message}
+					{...register("isActive", booleanSelectOptions)}
+					errorMessage={errors.isActive?.message}
 				/>
 			</div>
 			<Controller

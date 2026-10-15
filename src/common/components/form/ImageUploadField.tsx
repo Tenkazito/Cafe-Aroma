@@ -99,7 +99,7 @@ export const ImageUploadField = ({
 				onChange={(event) => updateImageUrl(event.target.value)}
 				aria-invalid={Boolean(errorMessage)}
 				placeholder="https://..."
-				className={`h-10 text-xs ${getFieldClasses("default", false)}`}
+				className={`h-10 text-xs ${getFieldClasses("default", Boolean(errorMessage))}`}
 			/>
 			{errorMessage && (
 				<span className="text-xs text-red-600">{errorMessage}</span>

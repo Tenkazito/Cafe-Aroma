@@ -38,7 +38,7 @@ Definidos en `src/app/globals.css` (`:root` + `@theme`), usables como clases de 
 
 | Token | Hex | Uso |
 |---|---|---|
-| `surface-admin` | `#eef4f1` | Fondo del panel de administración y del login admin |
+| `surface-admin` | `#eef4f1` | Fondo del panel de administración |
 | `surface-client` | `#c7ddcc` | Fondo de las pantallas del cliente |
 | `surface-field` | `#e6f0e9` | Campos, filas del carrito y notificaciones no leídas del cliente |
 | blanco | `#ffffff` | Tarjetas, tablas y modales |
@@ -114,9 +114,8 @@ Los enlaces de ambos menús están en `src/common/lib/navigation.ts`.
 ```text
 src/app/
 ├── page.tsx                         /                  → redirige a /login
-├── (auth)/login/page.tsx            /login             Login del cliente (usuario)
+├── (auth)/login/page.tsx            /login             Login único (correo); redirige según el rol
 ├── admin/
-│   ├── login/page.tsx               /admin/login       Login del admin (correo)
 │   └── (panel)/                     (grupo con AdminNavbar)
 │       ├── layout.tsx
 │       ├── page.tsx                 /admin             Dashboard
@@ -156,7 +155,7 @@ src/app/
 | `overlay/` | `AppModal` (base), `FormModal`, `ConfirmDialog` |
 
 Hooks y utilidades: `common/hooks/useCrudModals.ts`, `common/utils/format.ts`,
-`common/lib/navigation.ts`, `common/lib/statusOptions.ts`, `common/lib/env.ts`, `common/locations.ts` (todos los textos).
+`common/lib/navigation.ts`, `common/lib/formFields.ts`, `common/lib/env.ts`, `common/locations.ts` (todos los textos).
 
 ### Por feature — `src/features/<feature>/`
 

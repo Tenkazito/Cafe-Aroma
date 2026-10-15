@@ -30,6 +30,7 @@ export const ProductsManager = ({
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina el producto
+		console.log("Eliminar producto", { id: modals.itemToDelete?.id });
 		toast.success(
 			locations.toasts.productDeleted(modals.itemToDelete?.name ?? ""),
 		);

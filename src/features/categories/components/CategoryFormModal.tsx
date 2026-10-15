@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { FormModal } from "@/common/components/overlay/FormModal";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
 import {
 	type CategoryFormValues,
@@ -44,7 +44,10 @@ export const CategoryFormModal = ({
 	// Solo se llama si Zod validó todo bien
 	const onSubmit = (values: CategoryFormValues) => {
 		// TODO: llamar al Server Action (createCategory / updateCategory) con `values`
-		console.log(values);
+		console.log(isEditing ? "Editar categoría" : "Crear categoría", {
+			id: category?.id,
+			...values,
+		});
 		toast.success(
 			isEditing
 				? locations.toasts.categoryUpdated
@@ -77,11 +80,7 @@ export const CategoryFormModal = ({
 			<FormSelectField
 				label={locations.form.status}
 				options={STATUS_OPTIONS}
-				// El <select> entrega texto ("true"/"false"), pero RHF también pasa por aquí el
-				// valor inicial, que ya es booleano. String() cubre los dos casos.
-				{...register("isActive", {
-					setValueAs: (value: string | boolean) => String(value) === "true",
-				})}
+				{...register("isActive", booleanSelectOptions)}
 				errorMessage={errors.isActive?.message}
 			/>
 		</FormModal>

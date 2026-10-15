@@ -15,10 +15,8 @@ const CustomerLoginPage = () => {
 			description={locations.auth.customer.description}
 		>
 			<LoginForm
-				identifier="username"
 				submitLabel={locations.auth.customer.submit}
 				showSubmitIcon
-				redirectTo="/inicio"
 				fieldVariant="soft"
 				footer={
 					<p className="text-center text-sm text-gray-500">

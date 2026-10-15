@@ -25,6 +25,7 @@ export const CustomerOrdersManager = ({
 
 	const handleReorder = (order: CustomerOrder) => {
 		// TODO: copiar los productos de la orden al carrito antes de ir a Solicitar
+		console.log("Volver a pedir", { orderCode: order.code });
 		toast.info(locations.toasts.reordering(order.code));
 		router.push("/solicitar");
 	};

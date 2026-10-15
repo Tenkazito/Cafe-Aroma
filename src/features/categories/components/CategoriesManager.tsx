@@ -26,6 +26,7 @@ export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina la categoría
+		console.log("Eliminar categoría", { id: modals.itemToDelete?.id });
 		toast.success(
 			locations.toasts.categoryDeleted(modals.itemToDelete?.name ?? ""),
 		);

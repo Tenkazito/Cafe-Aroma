@@ -10,6 +10,7 @@ import { RoleBadge } from "@/features/users/components/RoleBadge";
 import { UserFormModal } from "@/features/users/components/UserFormModal";
 import { UsersManager } from "@/features/users/components/UsersManager";
 import { UsersTable } from "@/features/users/components/UsersTable";
+import { getFullName } from "@/features/users/lib/getFullName";
 import { MOCK_USERS } from "@/features/users/mocks/users";
 
 export const UsersShowcase = () => {
@@ -41,8 +42,8 @@ export const UsersShowcase = () => {
 				>
 					<UsersTable
 						users={MOCK_USERS.slice(0, 3)}
-						onEdit={(user) => toast.info(`Editar ${user.fullName}`)}
-						onDelete={(user) => toast.info(`Eliminar ${user.fullName}`)}
+						onEdit={(user) => toast.info(`Editar ${getFullName(user)}`)}
+						onDelete={(user) => toast.info(`Eliminar ${getFullName(user)}`)}
 					/>
 				</ComponentPreview>
 

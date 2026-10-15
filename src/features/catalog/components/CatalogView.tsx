@@ -14,6 +14,7 @@ import {
 	ALL_CATEGORIES,
 	filterCatalog,
 } from "@/features/catalog/lib/filterCatalog";
+import type { CheckoutFormValues } from "@/features/catalog/schema";
 import type { CatalogProduct } from "@/features/catalog/types";
 
 type CatalogViewProps = {
@@ -30,8 +31,16 @@ export const CatalogView = ({ products, categories }: CatalogViewProps) => {
 	const featuredProducts = products.filter((product) => product.isFeatured);
 	const visibleProducts = filterCatalog(products, category, search);
 
-	const handleCheckout = () => {
-		// TODO: llamar al Server Action que crea el pedido con los productos del carrito
+	const handleCheckout = ({ address }: CheckoutFormValues) => {
+		// TODO: llamar al Server Action que crea el pedido. Solo se envían id y cantidad:
+		// el precio y el total los calcula el servidor para que no se puedan alterar desde el navegador
+		console.log("Crear pedido", {
+			address,
+			items: cart.items.map(({ productId, quantity }) => ({
+				productId,
+				quantity,
+			})),
+		});
 		toast.success(locations.toasts.orderSent(cart.itemCount));
 		cart.clear();
 	};

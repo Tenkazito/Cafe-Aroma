@@ -46,6 +46,18 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 
 	const orderLabel = selectedOrder ? formatOrderId(selectedOrder.id) : "";
 
+	const handleAccept = () => {
+		// TODO: llamar al Server Action que cambia el estado a "pendiente"
+		console.log("Aceptar pedido", { id: selectedOrder?.id });
+		toast.success(locations.toasts.orderAccepted(orderLabel));
+	};
+
+	const handleReject = () => {
+		// TODO: llamar al Server Action que cambia el estado a "cancelado"
+		console.log("Rechazar pedido", { id: selectedOrder?.id });
+		toast.danger(locations.toasts.orderRejected(orderLabel));
+	};
+
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
@@ -74,10 +86,7 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 				onOpenChange={handleOpenChange}
 				title={locations.orders.acceptTitle}
 				confirmLabel={locations.actions.accept}
-				// TODO: llamar al Server Action que cambia el estado a "pendiente"
-				onConfirm={() =>
-					toast.success(locations.toasts.orderAccepted(orderLabel))
-				}
+				onConfirm={handleAccept}
 				message={
 					<>
 						{locations.orders.acceptMessage.intro}
@@ -101,10 +110,7 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 				title={locations.orders.rejectTitle}
 				tone="danger"
 				confirmLabel={locations.actions.reject}
-				// TODO: llamar al Server Action que cambia el estado a "cancelado"
-				onConfirm={() =>
-					toast.danger(locations.toasts.orderRejected(orderLabel))
-				}
+				onConfirm={handleReject}
 				message={
 					<>
 						{locations.orders.rejectMessage.intro}

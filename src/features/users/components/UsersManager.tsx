@@ -12,6 +12,7 @@ import { locations } from "@/common/locations";
 import { UserFormModal } from "@/features/users/components/UserFormModal";
 import { UsersTable } from "@/features/users/components/UsersTable";
 import { filterUsers } from "@/features/users/lib/filterUsers";
+import { getFullName } from "@/features/users/lib/getFullName";
 import type { User } from "@/features/users/types";
 
 type UsersManagerProps = {
@@ -26,8 +27,11 @@ export const UsersManager = ({ users }: UsersManagerProps) => {
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina el usuario
+		console.log("Eliminar usuario", { id: modals.itemToDelete?.id });
 		toast.success(
-			locations.toasts.userDeleted(modals.itemToDelete?.fullName ?? ""),
+			locations.toasts.userDeleted(
+				modals.itemToDelete ? getFullName(modals.itemToDelete) : "",
+			),
 		);
 	};
 
@@ -78,7 +82,7 @@ export const UsersManager = ({ users }: UsersManagerProps) => {
 					<>
 						{locations.users.deleteMessage.before}
 						<strong className="text-navy">
-							{modals.itemToDelete?.fullName}
+							{modals.itemToDelete && getFullName(modals.itemToDelete)}
 						</strong>
 						{locations.users.deleteMessage.after}{" "}
 						{locations.confirm.irreversible}

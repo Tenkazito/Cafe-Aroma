@@ -80,9 +80,10 @@ export const InvoiceModal = ({
 					<Button
 						variant="outline"
 						// TODO: llamar al servicio de correo cuando exista el backend
-						onPress={() =>
-							toast.info(locations.toasts.invoiceSent(invoiceNumber))
-						}
+						onPress={() => {
+							console.log("Enviar factura", { orderId: invoice.id });
+							toast.info(locations.toasts.invoiceSent(invoiceNumber));
+						}}
 					>
 						<Icon name="mail" size={16} />
 						{locations.billing.sendByEmail}

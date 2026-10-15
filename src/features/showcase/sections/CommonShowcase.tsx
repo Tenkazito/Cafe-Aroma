@@ -31,8 +31,8 @@ import { SectionCard } from "@/common/components/ui/SectionCard";
 import { StatCard, type StatTone } from "@/common/components/ui/StatCard";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
 import { UserAvatar } from "@/common/components/ui/UserAvatar";
+import { STATUS_OPTIONS } from "@/common/lib/formFields";
 import { ADMIN_NAV_ITEMS, CLIENT_NAV_ITEMS } from "@/common/lib/navigation";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
 import {
 	MOCK_ADMIN_USER,
 	MOCK_CUSTOMER_USER,
@@ -116,7 +116,7 @@ const LayoutGroup = () => (
 			<AdminNavbar
 				items={ADMIN_NAV_ITEMS}
 				user={MOCK_ADMIN_USER}
-				logoutHref="/admin/login"
+				logoutHref="/login"
 			/>
 		</ComponentPreview>
 
