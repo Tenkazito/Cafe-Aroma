@@ -11,8 +11,8 @@ Para ver cada componente en vivo, corre `pnpm dev` y abre **http://localhost:300
   el **admin** gestiona catálogo, pedidos y facturación.
 - Alcance actual: **maquetación** fiel a las diapositivas, con **datos de ejemplo estáticos**
   (`src/features/*/mocks/`). Los formularios y acciones solo muestran un toast "(simulado)".
-- Pendiente (lo construye el equipo): backend (`queries/` y `actions/` con Prisma),
-  validación con Zod + React Hook Form y pruebas con Vitest. Cada punto a conectar está
+- Pendiente (lo construye el equipo): backend (API REST por capas en `src/app/api/`),
+  conexión de los formularios con la API y pruebas con Vitest. Cada punto a conectar está
   marcado en el código con un comentario `// TODO:`.
 - Solo existe **tema claro** (las diapositivas no definen modo oscuro).
 
@@ -213,8 +213,8 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
   </FormModal>
   ```
 
-- El schema de Zod irá en `features/<feature>/schema.ts` y el envío en un Server Action
-  de `features/<feature>/actions/`.
+- El schema de Zod está en `features/<feature>/schema.ts` y el envío se hace a la API
+  (`src/app/api/<recurso>`) con `apiFetch`, dentro de un `try/catch`.
 
 ### Feedback
 
@@ -230,7 +230,7 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
 - El catálogo del cliente se **deriva** de los productos del admin (solo activos, stock 0 = agotado),
   y los totales de pedidos siempre se **calculan** desde sus productos (`getOrderTotal`).
 - Moneda: **COP** en toda la app (`formatCurrency`), aunque la diapositiva del cliente mostraba dólares.
-- Cuando exista el backend, se reemplaza el import del mock por una función de `queries/`.
+- Cuando exista el backend, se reemplaza el import del mock por los datos que devuelve la API.
 
 ---
 

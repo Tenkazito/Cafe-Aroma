@@ -31,7 +31,7 @@ export const CategoryFormModal = ({
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<CategoryFormValues>({
 		resolver: zodResolver(categorySchema),
 		// Se leen una sola vez al montar; el Manager remonta el modal con key={formKey}
@@ -43,17 +43,24 @@ export const CategoryFormModal = ({
 
 	// Solo se llama si Zod validó todo bien
 	const onSubmit = (values: CategoryFormValues) => {
-		// TODO: llamar al Server Action (createCategory / updateCategory) con `values`
-		console.log(isEditing ? "Editar categoría" : "Crear categoría", {
+		try {
+			const method = "POST";
+			const url = "/api/category";
+
+			console.log(isEditing ? "Editar categoría" : "Crear categoría", {
 			id: category?.id,
 			...values,
-		});
-		toast.success(
-			isEditing
-				? locations.toasts.categoryUpdated
-				: locations.toasts.categoryCreated,
-		);
-		onOpenChange(false);
+			});
+			toast.success(
+				isEditing
+					? locations.toasts.categoryUpdated
+					: locations.toasts.categoryCreated,
+			);
+			onOpenChange(false);
+		} catch (error) {
+			
+		}
+		
 	};
 
 	return (
@@ -69,6 +76,7 @@ export const CategoryFormModal = ({
 				isEditing ? locations.actions.save : locations.categories.createSubmit
 			}
 			onSubmit={handleSubmit(onSubmit)}
+			isSubmitting={isSubmitting}
 			size="sm"
 		>
 			<FormTextField
