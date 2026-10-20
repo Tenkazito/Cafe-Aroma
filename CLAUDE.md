@@ -19,7 +19,7 @@ El código generado debe adherirse a los principios SOLID aplicados a React y Ty
 - **Open/Closed (OCP):** Crea componentes extensibles mediante `props` (ej. usando `children` o polimorfismo) sin tener que modificar su código interno.
 - **Liskov Substitution (LSP):** Extiende interfaces estándar de HTML cuando crees componentes base de UI (ej. un botón custom debe aceptar todos los atributos de un `<button>` nativo).
 - **Interface Segregation (ISP):** Crea interfaces de TypeScript pequeñas y específicas. No le pases a un componente un objeto `Usuario` completo si solo necesita el `avatar` y el `nombre`.
-- **Dependency Inversion (DIP):** Abstrae la lógica externa (como llamadas a APIs de terceros) en servicios aislados. El backend se organiza en una **arquitectura por capas dentro de `src/app/api/`** (ver sección 3), de modo que cada capa dependa solo de la siguiente.
+- **Dependency Inversion (DIP):** Abstrae la lógica externa (como llamadas a APIs de terceros) en servicios aislados. El backend se organiza en una **arquitectura por capas dentro de cada feature** (`domain`, `application`, `infrastructure`, `presentation`; ver sección 3), de modo que cada capa dependa solo de la siguiente y el dominio no dependa de la base de datos.
 
 ## 3. Arquitectura de Archivos (Modular y Escalable)
 Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`), módulos de negocio aislados (`features`), base de datos (`prisma`) y pruebas (`tests`):
@@ -32,7 +32,7 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 ┃ ┗ 📄 seed.ts               # Datos de prueba. Se ejecuta con `pnpm db:seed`.
 ┣ 📂 src/
 ┃ ┣ 📂 app/                  # RUTAS (page.tsx, layout.tsx). Actúan como orquestadores.
-┃ ┃ ┗ 📂 api/                # 🔌 BACKEND: API REST con Route Handlers, organizada por capas
+┃ ┃ ┗ 📂 api/                # 🔌 Puerta de entrada de la API REST: solo los route.ts, que llaman al controller
 ┃ ┃   ┣ 📂 categories/
 ┃ ┃   ┃ ┣ 📄 route.ts        # /api/categories      → GET (listar), POST (crear)
 ┃ ┃   ┃ ┗ 📂 [id]/
@@ -57,8 +57,12 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 ┃   ┃ ┣ 📂 mocks/            # Datos de ejemplo estáticos mientras no existe el backend
 ┃   ┃ ┣ 📄 types.ts          # Tipos del dominio
 ┃   ┃ ┗ 📄 schema.ts         # Validaciones Zod del dominio (las usan el formulario y la API)
-┃   ┗ 📂 products/           # Ejemplo: Dominio de productos
-┃     ┣ 📂 components/
+┃   ┗ 📂 categories/         # Ejemplo: feature con su backend por capas
+┃     ┣ 📂 components/       # UI (frontend)
+┃     ┣ 📂 domain/           # 🧱 category.entity.ts → la entidad con nombres del código (name, no titulo)
+┃     ┣ 📂 application/      # ⚙️ Lógica de negocio / casos de uso (se define en clase)
+┃     ┣ 📂 infrastructure/   # 🗄️ prisma-category.repository.ts → único que habla con Prisma y traduce columnas ↔ entidad
+┃     ┣ 📂 presentation/     # 📨 category.controller.ts → recibe la petición HTTP y devuelve la respuesta
 ┃     ┗ 📄 schema.ts
 ┣ 📂 tests/                  # 🧪 PRUEBAS (Vitest). Espeja la jerarquía de src/
 ┃ ┣ 📂 common/
@@ -72,15 +76,31 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 ```
 
 **Notas sobre la estructura:**
-- **El backend es una API REST en `src/app/api/`** (decisión del curso). Toda la lógica de servidor y el acceso a la base de datos viven ahí; el frontend no habla con Prisma, solo llama a la API.
-  - **Un recurso por carpeta**, en plural y en inglés (`categories`, `products`), con dos niveles: la colección (`route.ts` → listar y crear) y el elemento (`[id]/route.ts` → ver, editar y eliminar). Los recursos de solo lectura (`dashboard`, `billing`, `catalog`) solo exportan `GET`.
-  - **Arquitectura por capas:** las capas del backend (y sus carpetas) viven dentro de `src/app/api/`. **Las capas exactas se definen en clase**; hasta entonces no inventes capas ni carpetas nuevas: pregunta antes de crearlas. Cuando se definan, documéntalas aquí.
-  - **`route.ts` se mantiene delgado:** recibe la petición, delega en las capas y devuelve la respuesta. No pongas lógica de negocio ni consultas a Prisma directamente en él.
+- **El backend es una API REST** (decisión del curso). Las URLs viven en `src/app/api/` y la lógica, por capas, dentro de cada feature. El frontend no habla con Prisma, solo llama a la API.
+  - **Un recurso por carpeta en `src/app/api/`**, en plural y en inglés (`categories`, `products`), con dos niveles: la colección (`route.ts` → listar y crear) y el elemento (`[id]/route.ts` → ver, editar y eliminar). Los recursos de solo lectura (`dashboard`, `billing`, `catalog`) solo exportan `GET`.
+  - **`route.ts` se mantiene delgado:** solo exporta `GET`, `POST`, etc. y llama a la función correspondiente del controller. No lleva lógica de negocio ni consultas a Prisma.
+- **Arquitectura por capas (vista en clase)**, dentro de cada feature. Una petición recorre las capas en este orden:
+
+  ```text
+  src/app/api/<recurso>/route.ts  →  presentation  →  application  →  infrastructure  →  Prisma
+                                        (controller)     (negocio)       (repository)
+  ```
+
+  | Capa | Archivo | Responsabilidad |
+  |---|---|---|
+  | `domain/` | `<recurso>.entity.ts` | Tipo de la entidad con los nombres del código en inglés y camelCase (`name`, `createdAt`), no los de la base (`titulo`, `fecha_creacion`). No importa nada de las otras capas ni de Prisma. |
+  | `application/` | (se define en clase) | Lógica de negocio. Hasta que se vea en clase, no crees archivos aquí: pregunta. |
+  | `infrastructure/` | `prisma-<recurso>.repository.ts` | **Único lugar que usa Prisma.** Hace las consultas y traduce las columnas de la base a la entidad del dominio (y al revés). |
+  | `presentation/` | `<recurso>.controller.ts` | Recibe el `Request`, valida el body con el schema de Zod, llama a las capas de abajo y arma el `NextResponse`. |
+
+  - **Nombres de archivo:** las capas usan el formato `<recurso>.<tipo>.ts` en singular (`category.entity.ts`, `prisma-category.repository.ts`, `category.controller.ts`). Es una excepción a propósito a los nombres en camelCase del resto del proyecto, para ver de un vistazo a qué capa pertenece cada archivo.
+  - **Features sin tabla propia** (`auth`, `billing`, `dashboard`, `catalog`) tienen las 4 carpetas pero, por ahora, solo el controller: leen datos de otras features.
+  - Las carpetas vacías llevan un `.gitkeep` para que git las suba al repo.
+  - Los errores del backend se registran con `logger` (`src/common/utils/logger.ts`), que usa `console.error`.
 - **El frontend llama a la API con `apiFetch`** (`src/common/utils/api.ts`), nunca con `fetch` suelto: así todas las peticiones comparten headers, formato JSON y manejo de errores (ver sección 6).
-- No se adopta arquitectura hexagonal (domain/ports/adapters); es una decisión deliberada de simplicidad.
 - `prisma/` vive en la raíz (no dentro de `src/`) porque es donde la CLI de Prisma lo espera por defecto.
 - Las rutas viven en `src/app/` (el alias `@/` apunta a `src/`). Next.js exige que el middleware esté al mismo nivel que la carpeta `app/`, por eso va en `src/middleware.ts` (en Next 16 este archivo se renombró a `proxy.ts`; usa el nombre que pida la versión instalada). Debe quedarse delgado (solo lectura de cookies/headers y redirects); toda la lógica de verificación vive en `src/features/auth/lib/`, para poder testearla sin depender del runtime de Next.js.
-- `tests/` está separado de `src/` y replica su jerarquía de carpetas: un archivo en `src/app/api/products/route.ts` tiene su prueba en `tests/app/api/products/route.test.ts`.
+- `tests/` está separado de `src/` y replica su jerarquía de carpetas: un archivo en `src/features/categories/infrastructure/prisma-category.repository.ts` tiene su prueba en `tests/features/categories/infrastructure/prisma-category.repository.test.ts`.
 
 ## 4. Convenciones de Código
 - **Variables y Lógica:** Usa camelCase para variables genéricas, estados y funciones lógicas o de utilidad (ej. `const getUserData = () => {}`).
@@ -91,7 +111,7 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 
 ### 4.1 Legibilidad (para que puedas leer y modificar el código tú mismo)
 - **Comenta el "por qué", no el "qué":** evita `// suma 1 al contador`; usa comentarios que expliquen decisiones no obvias (ej. `// se resta 1 porque el índice del array empieza en 0 pero el usuario lo ve empezando en 1`).
-- **JSDoc obligatorio en el backend (`src/app/api/` y todas sus capas), en `common/services/` y en `common/utils/api.ts`:** toda función exportada ahí (incluidos los `GET`, `POST`, etc. de cada `route.ts`) debe llevar un comentario JSDoc corto explicando qué hace, qué recibe y qué retorna.
+- **JSDoc obligatorio en el backend (los `route.ts` de `src/app/api/` y las capas `application/`, `infrastructure/` y `presentation/` de cada feature), en `common/services/` y en `common/utils/`:** toda función exportada ahí (incluidos los `GET`, `POST`, etc. de cada `route.ts`) debe llevar un comentario JSDoc corto explicando qué hace, qué recibe y qué retorna.
 - **Funciones cortas:** si una función supera ~40-50 líneas, divídela en funciones auxiliares con nombres descriptivos en vez de dejar un bloque largo.
 - **Textos en `src/common/locations.ts`:** todo texto visible de la interfaz (títulos, botones, placeholders, `aria-label`, mensajes de error y toasts) se escribe en el objeto `locations`, agrupado por temas (`locations.errors.manyCharacters(50)`, `locations.users.title`), y los componentes lo importan. No se escriben textos a mano en los componentes. Los datos de `mocks/` y los textos de `/dev` quedan fuera.
 - **Nombres explícitos:** prohibidas las abreviaciones crípticas (`usr`, `prd`, `tmp`); usa `user`, `product`, `temporaryValue`.
@@ -112,7 +132,7 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 ## 7. Base de Datos: Prisma + NeonDB
 - **Un solo `schema.prisma`:** todos los modelos viven en `prisma/schema.prisma`. No se usa el schema multi-archivo; es innecesario para el tamaño de estos proyectos y mantiene todo el modelo de datos visible en un solo lugar.
 - **Nombrado de modelos:** PascalCase singular (`model User`, `model Product`), campos en camelCase, igual que el resto del código TypeScript.
-- **Acceso a datos:** el cliente de la base de datos solo se usa dentro del backend (`src/app/api/`), en la capa que se defina para ello (ver sección 3). Ningún componente ni archivo de `features/` lo importa.
+- **Acceso a datos:** el cliente de la base de datos solo se usa en la capa `infrastructure/` de cada feature (los repositorios, ver sección 3). Ningún componente, controller ni otra capa lo importa.
 - **Cliente en singleton:** `src/common/lib/prisma.ts` exporta una única instancia de `PrismaClient`, reutilizada en toda la app para evitar agotar las conexiones de NeonDB en desarrollo (hot-reload) y en entornos serverless.
 - **Dos URLs de conexión (importante en NeonDB):**
   - `DATABASE_URL`: la conexión *pooled* de Neon (con `-pooler` en el host). Se usa en runtime, para las queries normales de la app.
@@ -137,6 +157,6 @@ Sigue estrictamente esta estructura. Se divide en lógica compartida (`common`),
 - Toda la lógica real de verificación de sesión (validar token, consultar rol, etc.) vive en `src/features/auth/lib/`, como funciones puras o casi puras que `middleware.ts` importa y usa. Así esa lógica se puede testear de forma aislada sin depender del runtime especial de Next.js Middleware (Edge Runtime).
 
 ## 10. Testing (Vitest)
-- Las pruebas viven en `tests/` en la raíz, replicando la misma jerarquía de carpetas que `src/` (ej. `src/app/api/products/route.ts` → `tests/app/api/products/route.test.ts`).
-- **Prioridad de qué testear:** primero lógica de negocio (las capas del backend en `src/app/api/`, `services/` y `lib/`), que es donde vive el riesgo real. Los componentes de UI puramente visuales son de menor prioridad.
+- Las pruebas viven en `tests/` en la raíz, replicando la misma jerarquía de carpetas que `src/` (ej. `src/features/categories/presentation/category.controller.ts` → `tests/features/categories/presentation/category.controller.test.ts`).
+- **Prioridad de qué testear:** primero lógica de negocio (las capas `application/`, `infrastructure/` y `presentation/` de cada feature, `services/` y `lib/`), que es donde vive el riesgo real. Los componentes de UI puramente visuales son de menor prioridad.
 - Comando estándar: `pnpm test`.
