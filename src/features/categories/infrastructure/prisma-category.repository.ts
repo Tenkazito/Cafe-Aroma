@@ -1,43 +1,88 @@
+import { db } from "@/common/lib/db";
 import { logger } from "@/common/utils/logger";
+import type { ICreate, IUpdate } from "../domain/category.entity";
+
+const categorias = () => db.orm.public.categorias;
 
 export class PrismaCategoryRepository {
-    list() {
-        try {
+	async list() {
+		try {
+			const query = await categorias()
+				.select("id", "titulo", "url", "fecha_creacion", "activo")
+				.all();
 
-        } catch (error) {
-            logger({error: error as Error, module: "PrismaCategoryRepository:list"})
-        }
-    }
+			return query.map((item) => ({
+				...item,
+				active: item.activo ? "Activo" : "Inactivo",
+			}));
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "PrismaCategoryRepository:list",
+			});
+			return [];
+		}
+	}
 
-    getById() {
-        try {
+	async getById(id: number) {
+		try {
+			return await categorias()
+				.select("id", "titulo", "url", "fecha_creacion", "activo")
+				.where({ id })
+				.first();
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "PrismaCategoryRepository:getById",
+			});
+			return null;
+		}
+	}
 
-        } catch (error) {
-            logger({error: error as Error, module: "PrismaCategoryRepository:getById"})
-        }
-    }
-    
-    create() {
-        try {
+	async create(data: ICreate) {
+		try {
+			await categorias().create({
+				titulo: data.titulo,
+				url: data.url,
+			});
 
-        } catch (error) {
-            logger({error: error as Error, module: "PrismaCategoryRepository:create"})
-        }
-    }
-    
-    update() {
-        try {
+			return true;
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "PrismaCategoryRepository:create",
+			});
+			return false;
+		}
+	}
 
-        } catch (error) {
-            logger({error: error as Error, module: "PrismaCategoryRepository:update"})
-        }
-    }
-    
-    delete() {
-        try {
+	async update(data: IUpdate) {
+		try {
+			await categorias()
+				.where({ id: data.id })
+				.update({ titulo: data.titulo, url: data.url });
 
-        } catch (error) {
-            logger({error: error as Error, module: "PrismaCategoryRepository:delete"})
-        }
-    }
-} 
+			return true;
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "PrismaCategoryRepository:update",
+			});
+			return false;
+		}
+	}
+
+	async delete(id: number) {
+		try {
+			await categorias().where({ id }).update({ activo: false });
+
+			return true;
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "PrismaCategoryRepository:delete",
+			});
+			return false;
+		}
+	}
+}

@@ -4,3 +4,14 @@ export type Category = {
 	slug: string;
 	createdAt: Date;
 };
+
+export interface ICreate {
+	titulo: string;
+	url: string;
+}
+
+export interface IUpdate {
+	id: number;
+	titulo: string;
+	url: string;
+}
