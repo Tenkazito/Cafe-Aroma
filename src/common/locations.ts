@@ -163,6 +163,7 @@ export const locations = {
 		categoryCreated: "Categoría creada (simulado)",
 		categoryUpdated: "Categoría actualizada (simulado)",
 		categoryDeleted: (name: string) => `${name} eliminada (simulado)`,
+		categoryError: "No se pudo guardar la categoría",
 		productCreated: "Producto creado (simulado)",
 		productUpdated: "Producto actualizado (simulado)",
 		productDeleted: (name: string) => `${name} eliminado (simulado)`,

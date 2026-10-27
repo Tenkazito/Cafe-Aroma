@@ -8,6 +8,8 @@ import { FormTextField } from "@/common/components/form/FormTextField";
 import { FormModal } from "@/common/components/overlay/FormModal";
 import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
+import { apiFetch } from "@/common/utils/api";
+import { logger } from "@/common/utils/logger";
 import {
 	type CategoryFormValues,
 	categorySchema,
@@ -42,25 +44,36 @@ export const CategoryFormModal = ({
 	});
 
 	// Solo se llama si Zod validó todo bien
-	const onSubmit = (values: CategoryFormValues) => {
+	const onSubmit = async (data: CategoryFormValues) => {
 		try {
-			const method = "POST";
-			const url = "/api/category";
+			const method = isEditing ? "PUT" : "POST";
+			const url = isEditing
+				? `/api/categories/${category?.id}`
+				: "/api/categories";
 
-			console.log(isEditing ? "Editar categoría" : "Crear categoría", {
-			id: category?.id,
-			...values,
+			const res = await apiFetch<{ success: boolean }>(url, {
+				method,
+				body: data,
 			});
-			toast.success(
-				isEditing
-					? locations.toasts.categoryUpdated
-					: locations.toasts.categoryCreated,
-			);
+
+			if (res.success) {
+				toast.success(
+					isEditing
+						? locations.toasts.categoryUpdated
+						: locations.toasts.categoryCreated,
+				);
+			} else {
+				toast.danger(locations.toasts.categoryError);
+			}
+
 			onOpenChange(false);
 		} catch (error) {
-			
+			logger({
+				error: error as Error,
+				module: "CategoryFormModal:onSubmit",
+			});
+			toast.danger(locations.toasts.categoryError);
 		}
-		
 	};
 
 	return (

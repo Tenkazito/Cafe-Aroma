@@ -16,7 +16,7 @@ export const listCategories = async (request: Request) => {
 
 export const createCategory = async (request: Request) => {
 	try {
-		return NextResponse.json({ data: [] });
+		return NextResponse.json({ success: true });
 	} catch (error) {
 		logger({ error: error as Error, module: "createCategory", request });
 		return NextResponse.json({
