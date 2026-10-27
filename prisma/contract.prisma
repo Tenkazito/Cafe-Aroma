@@ -70,8 +70,6 @@ model productos {
   titulo              String
   descripcion         String
   url                 String     @unique
-  // Precios en pesos colombianos (sin centavos), por eso Int y no Float
-  precio_compra       Int
   precio_venta        Int
   stock               Int
   imagen              String?

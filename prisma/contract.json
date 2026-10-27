@@ -626,13 +626,6 @@
                   "kind": "scalar"
                 }
               },
-              "precio_compra": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "precio_venta": {
                 "nullable": false,
                 "type": {
@@ -755,9 +748,6 @@
                 },
                 "imagen": {
                   "column": "imagen"
-                },
-                "precio_compra": {
-                  "column": "precio_compra"
                 },
                 "precio_venta": {
                   "column": "precio_venta"
@@ -1628,11 +1618,6 @@
                   "nativeType": "text",
                   "nullable": true
                 },
-                "precio_compra": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                },
                 "precio_venta": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -1925,7 +1910,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "8d07a01e657a1fbe63661c7433f9ac0c69dd382dd65c51f91a69d6ff79c347a2"
+    "storageHash": "2af42bebdf3510131ae86167074a68f8619922942226e0a9bd1898e1afc74ab6"
   },
   "execution": {
     "executionHash": "31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac",

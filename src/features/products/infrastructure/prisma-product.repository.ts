@@ -43,6 +43,7 @@ export class PrismaProductRepository{
             await product().create({
                 titulo: data.titulo,
 				url: data.url,
+                descripcion: data.descripcion,
                 categoria_id: data.categoryId,
                 precio_venta: data.precio_venta,
                 stock: data.stock
@@ -60,7 +61,7 @@ export class PrismaProductRepository{
          try {
             await product()
 				.where({ id: data.id })
-				.update({ titulo: data.titulo, url: data.url,categoria_id: data.categoryId, precio_venta: data.precio_venta, stock: data.stock });
+				.update({ titulo: data.titulo, url: data.url, descripcion: data.descripcion, categoria_id: data.categoryId, precio_venta: data.precio_venta, stock: data.stock });
 
 			return true;
         } catch (error) {

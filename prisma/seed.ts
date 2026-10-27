@@ -445,8 +445,6 @@ const seedProducts = async (
 			titulo: product.titulo,
 			descripcion: product.descripcion,
 			url: slugify(product.titulo),
-			// Costo aproximado del 40% del precio de venta
-			precio_compra: Math.round(product.precio_venta * 0.4),
 			precio_venta: product.precio_venta,
 			stock: product.stock,
 			imagen: product.imagen,

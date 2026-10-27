@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'8d07a01e657a1fbe63661c7433f9ac0c69dd382dd65c51f91a69d6ff79c347a2'>;
+  StorageHashBase<'2af42bebdf3510131ae86167074a68f8619922942226e0a9bd1898e1afc74ab6'>;
 export type ExecutionHash =
   ExecutionHashBase<'31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac'>;
 export type ProfileHash =
@@ -284,7 +284,6 @@ export type FieldOutputTypes = {
       readonly titulo: CodecTypes['pg/text@1']['output'];
       readonly descripcion: CodecTypes['pg/text@1']['output'];
       readonly url: CodecTypes['pg/text@1']['output'];
-      readonly precio_compra: CodecTypes['pg/int4@1']['output'];
       readonly precio_venta: CodecTypes['pg/int4@1']['output'];
       readonly stock: CodecTypes['pg/int4@1']['output'];
       readonly imagen: CodecTypes['pg/text@1']['output'] | null;
@@ -354,7 +353,6 @@ export type FieldInputTypes = {
       readonly titulo: CodecTypes['pg/text@1']['input'];
       readonly descripcion: CodecTypes['pg/text@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
-      readonly precio_compra: CodecTypes['pg/int4@1']['input'];
       readonly precio_venta: CodecTypes['pg/int4@1']['input'];
       readonly stock: CodecTypes['pg/int4@1']['input'];
       readonly imagen: CodecTypes['pg/text@1']['input'] | null;
@@ -428,7 +426,6 @@ export type StorageColumnTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly imagen: CodecTypes['pg/text@1']['output'] | null;
-      readonly precio_compra: CodecTypes['pg/int4@1']['output'];
       readonly precio_venta: CodecTypes['pg/int4@1']['output'];
       readonly stock: CodecTypes['pg/int4@1']['output'];
       readonly titulo: CodecTypes['pg/text@1']['output'];
@@ -498,7 +495,6 @@ export type StorageColumnInputTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly imagen: CodecTypes['pg/text@1']['input'] | null;
-      readonly precio_compra: CodecTypes['pg/int4@1']['input'];
       readonly precio_venta: CodecTypes['pg/int4@1']['input'];
       readonly stock: CodecTypes['pg/int4@1']['input'];
       readonly titulo: CodecTypes['pg/text@1']['input'];
@@ -581,7 +577,6 @@ export namespace Models {
     titulo: CodecTypes['pg/text@1']['output'];
     descripcion: CodecTypes['pg/text@1']['output'];
     url: CodecTypes['pg/text@1']['output'];
-    precio_compra: CodecTypes['pg/int4@1']['output'];
     precio_venta: CodecTypes['pg/int4@1']['output'];
     stock: CodecTypes['pg/int4@1']['output'];
     imagen: CodecTypes['pg/text@1']['output'] | null;
@@ -1053,11 +1048,6 @@ type ContractBase = Omit<
                 readonly url: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly precio_compra: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
                 readonly precio_venta: {
@@ -1669,10 +1659,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly precio_compra: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly precio_venta: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -1770,7 +1756,6 @@ type ContractBase = Omit<
                 readonly titulo: { readonly column: 'titulo' };
                 readonly descripcion: { readonly column: 'descripcion' };
                 readonly url: { readonly column: 'url' };
-                readonly precio_compra: { readonly column: 'precio_compra' };
                 readonly precio_venta: { readonly column: 'precio_venta' };
                 readonly stock: { readonly column: 'stock' };
                 readonly imagen: { readonly column: 'imagen' };
