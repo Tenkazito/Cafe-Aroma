@@ -166,6 +166,7 @@ export const locations = {
 		categoryError: "No se pudo guardar la categoría",
 		productCreated: "Producto creado (simulado)",
 		productUpdated: "Producto actualizado (simulado)",
+		productError: "No se pudo guardar el producto",
 		productDeleted: (name: string) => `${name} eliminado (simulado)`,
 		orderAccepted: (orderId: string) => `Pedido ${orderId} aceptado (simulado)`,
 		orderRejected: (orderId: string) =>

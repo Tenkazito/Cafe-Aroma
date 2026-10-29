@@ -16,7 +16,7 @@ export const listProduct = async (request: Request) => {
 
 export const createProduct = async (request: Request) => {
     try {
-        return NextResponse.json({ data: [] });
+        return NextResponse.json({ success: true });
     } catch (error) {
         logger({ error: error as Error, module: "createProduct", request });
         return NextResponse.json({
@@ -28,7 +28,7 @@ export const createProduct = async (request: Request) => {
 
 export const updateProduct = async (request: Request) => {
     try {
-        return NextResponse.json({ data: [] });
+        return NextResponse.json({ success: true });
     } catch (error) {
         logger({ error: error as Error, module: "updateProduct", request });
         return NextResponse.json({

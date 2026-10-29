@@ -1,5 +1,4 @@
 "use client";
-
 import { toast } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -10,6 +9,8 @@ import { ImageUploadField } from "@/common/components/form/ImageUploadField";
 import { FormModal } from "@/common/components/overlay/FormModal";
 import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
+import { apiFetch } from "@/common/utils/api";
+import { logger } from "@/common/utils/logger";
 import {
 	type ProductFormValues,
 	productSchema,
@@ -40,7 +41,7 @@ export const ProductFormModal = ({
 		register,
 		handleSubmit,
 		control,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<ProductFormValues>({
 		resolver: zodResolver(productSchema),
 		defaultValues: {
@@ -54,18 +55,36 @@ export const ProductFormModal = ({
 		},
 	});
 
-	const onSubmit = (values: ProductFormValues) => {
-		// TODO: llamar al Server Action (createProduct / updateProduct) con `values`
-		console.log(isEditing ? "Editar producto" : "Crear producto", {
-			id: product?.id,
-			...values,
-		});
-		toast.success(
-			isEditing
-				? locations.toasts.productUpdated
-				: locations.toasts.productCreated,
-		);
-		onOpenChange(false);
+	const onSubmit = async (data: ProductFormValues) => {
+		try {
+			const method = isEditing ? "PUT" : "POST";
+			const url = isEditing
+				? `/api/products/${product?.id}`
+				: "/api/products";
+
+			const res = await apiFetch<{ success: boolean }>(url, {
+				method,
+				body: data,
+			});
+
+			if (res.success) {
+				toast.success(
+					isEditing
+						? locations.toasts.productUpdated
+						: locations.toasts.productCreated,
+				);
+			} else {
+				toast.danger(locations.toasts.productError);
+			}
+
+			onOpenChange(false);
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "ProductFormModal:onSubmit",
+			});
+			toast.danger(locations.toasts.productError);
+		}
 	};
 
 	return (
@@ -81,6 +100,7 @@ export const ProductFormModal = ({
 				isEditing ? locations.actions.save : locations.products.createSubmit
 			}
 			onSubmit={handleSubmit(onSubmit)}
+			isSubmitting={isSubmitting}
 			size="lg"
 		>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
