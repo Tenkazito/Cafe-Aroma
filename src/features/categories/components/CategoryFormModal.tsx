@@ -13,13 +13,13 @@ import {
 	type CategoryFormValues,
 	categorySchema,
 } from "@/features/categories/schema";
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
 type CategoryFormModalProps = {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	/** Si llega una categoría el modal edita; si no, crea una nueva. */
-	category?: Category;
+	category?: CategorySummary;
 };
 
 export const CategoryFormModal = ({

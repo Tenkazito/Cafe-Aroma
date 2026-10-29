@@ -12,16 +12,16 @@ import { locations } from "@/common/locations";
 import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { CategoryFormModal } from "@/features/categories/components/CategoryFormModal";
 import { filterCategories } from "@/features/categories/lib/filterCategories";
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
 type CategoriesManagerProps = {
-	categories: Category[];
+	categories: CategorySummary[];
 };
 
 /** Pantalla Categorías: búsqueda, tabla y modales de crear / editar / eliminar. */
 export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
 	const [search, setSearch] = useState("");
-	const modals = useCrudModals<Category>();
+	const modals = useCrudModals<CategorySummary>();
 	const visibleCategories = filterCategories(categories, search);
 
 	const handleDelete = () => {

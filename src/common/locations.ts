@@ -146,6 +146,7 @@ export const locations = {
 		invalidEmail: "Ingresa un correo válido",
 		passwordsDontMatch: "Las contraseñas no coinciden",
 		invalidNumber: "Ingresa un número válido",
+		invalidData: "Datos inválidos",
 		negativeNumber: "El valor no puede ser negativo",
 		wholeNumber: "Ingresa un número entero",
 		minValue: (min: number) => `El valor mínimo es ${min}`,

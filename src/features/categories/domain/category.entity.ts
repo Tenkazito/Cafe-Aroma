@@ -1,17 +1,19 @@
+// Nombres del código; el repositorio los traduce a las columnas de `categorias`
 export type Category = {
 	id: number;
 	name: string;
 	slug: string;
-	createdAt: Date;
+	isActive: boolean;
+	createdAt: string;
 };
 
 export interface ICreate {
-	titulo: string;
+	name: string;
 	url: string;
 }
 
 export interface IUpdate {
 	id: number;
-	titulo: string;
-	url: string;
+	name: string;
+	slug: string;
 }

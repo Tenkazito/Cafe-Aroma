@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { locations } from "@/common/locations";
 import { logger } from "@/common/utils/logger";
+import { categorySchema } from "@/features/categories/schema";
+import { categoryContainer } from "../categories.container";
 
 export const listCategories = async (request: Request) => {
 	try {
@@ -16,6 +18,21 @@ export const listCategories = async (request: Request) => {
 
 export const createCategory = async (request: Request) => {
 	try {
+		const bodyData = await request.json();
+		const validation = categorySchema.safeParse(bodyData);
+		console.log(validation);
+
+		if (!validation.success) {
+			return NextResponse.json({
+				status: 400,
+				message: locations.errors.invalidData,
+			});
+		}
+
+		const status = await categoryContainer.createCategory.execute(
+			validation.data.name,
+		);
+
 		return NextResponse.json({ success: true });
 	} catch (error) {
 		logger({ error: error as Error, module: "createCategory", request });

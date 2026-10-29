@@ -1,13 +1,16 @@
 import { db } from "@/common/lib/db";
 import { logger } from "@/common/utils/logger";
-import type { ICreate, IUpdate } from "../domain/category.entity";
+import type {
+	ICreate,
+	IUpdate,
+} from "@/features/categories/domain/category.entity";
 
-const categorias = () => db.orm.public.categorias;
+const categoriesTable = () => db.orm.public.categorias;
 
 export class PrismaCategoryRepository {
 	async list() {
 		try {
-			const query = await categorias()
+			const query = await categoriesTable()
 				.select("id", "titulo", "url", "fecha_creacion", "activo")
 				.all();
 
@@ -26,7 +29,7 @@ export class PrismaCategoryRepository {
 
 	async getById(id: number) {
 		try {
-			return await categorias()
+			return await categoriesTable()
 				.select("id", "titulo", "url", "fecha_creacion", "activo")
 				.where({ id })
 				.first();
@@ -41,8 +44,8 @@ export class PrismaCategoryRepository {
 
 	async create(data: ICreate) {
 		try {
-			await categorias().create({
-				titulo: data.titulo,
+			await categoriesTable().create({
+				titulo: data.name,
 				url: data.url,
 			});
 
@@ -58,9 +61,9 @@ export class PrismaCategoryRepository {
 
 	async update(data: IUpdate) {
 		try {
-			await categorias()
+			await categoriesTable()
 				.where({ id: data.id })
-				.update({ titulo: data.titulo, url: data.url });
+				.update({ titulo: data.name, url: data.slug });
 
 			return true;
 		} catch (error) {
@@ -74,7 +77,7 @@ export class PrismaCategoryRepository {
 
 	async delete(id: number) {
 		try {
-			await categorias().where({ id }).update({ activo: false });
+			await categoriesTable().where({ id }).update({ activo: false });
 
 			return true;
 		} catch (error) {

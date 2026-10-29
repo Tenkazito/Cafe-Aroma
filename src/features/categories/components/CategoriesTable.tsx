@@ -5,12 +5,12 @@ import {
 import { RowActions } from "@/common/components/ui/RowActions";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
 import { locations } from "@/common/locations";
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
 type CategoriesTableProps = {
-	categories: Category[];
-	onEdit: (category: Category) => void;
-	onDelete: (category: Category) => void;
+	categories: CategorySummary[];
+	onEdit: (category: CategorySummary) => void;
+	onDelete: (category: CategorySummary) => void;
 };
 
 export const CategoriesTable = ({
@@ -18,7 +18,7 @@ export const CategoriesTable = ({
 	onEdit,
 	onDelete,
 }: CategoriesTableProps) => {
-	const columns: DataTableColumn<Category>[] = [
+	const columns: DataTableColumn<CategorySummary>[] = [
 		{
 			key: "id",
 			header: locations.table.id,
