@@ -4,11 +4,13 @@ import type {
 	ICreate,
 	IUpdate,
 } from "@/features/categories/domain/category.entity";
+import type { Category } from "../domain/category.entity";
+import type { CategoryRepository } from "../domain/category.repository";
 
 const categoriesTable = () => db.orm.public.categorias;
 
-export class PrismaCategoryRepository {
-	async list() {
+export class PrismaCategoryRepository implements CategoryRepository {
+	async list(): Promise<Category[] | boolean> {
 		try {
 			const query = await categoriesTable()
 				.select("id", "titulo", "url", "fecha_creacion", "activo")
@@ -16,7 +18,9 @@ export class PrismaCategoryRepository {
 
 			return query.map((item) => ({
 				...item,
-				active: item.activo ? "Activo" : "Inactivo",
+				name: item.titulo,
+				isActive: item.activo ? "Activo" : "Inactivo",
+				createdAt: item.fecha_creacion,
 			}));
 		} catch (error) {
 			logger({
@@ -27,12 +31,21 @@ export class PrismaCategoryRepository {
 		}
 	}
 
-	async getById(id: number) {
+	async getById(id: number): Promise<Category | null> {
 		try {
-			return await categoriesTable()
+			const row = await categoriesTable()
 				.select("id", "titulo", "url", "fecha_creacion", "activo")
 				.where({ id })
 				.first();
+
+			if (!row) return null;
+
+			return {
+				...row,
+				name: row.titulo,
+				isActive: row.activo ? "Activo" : "Inactivo",
+				createdAt: row.fecha_creacion,
+			};
 		} catch (error) {
 			logger({
 				error: error as Error,
@@ -42,14 +55,14 @@ export class PrismaCategoryRepository {
 		}
 	}
 
-	async create(data: ICreate) {
+	async create(data: ICreate): Promise<boolean> {
 		try {
-			await categoriesTable().create({
+			const query = await categoriesTable().create({
 				titulo: data.name,
 				url: data.url,
 			});
 
-			return true;
+			return !!query?.id;
 		} catch (error) {
 			logger({
 				error: error as Error,

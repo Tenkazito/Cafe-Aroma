@@ -5,5 +5,5 @@ export interface CategoryRepository {
 	create(data: ICreate): Promise<boolean>;
 	update(data: IUpdate): Promise<boolean>;
 	delete(id: number): Promise<boolean>;
-	getById(id: number): Promise<Category | boolean>;
+	getById(id: number): Promise<Category | null>;
 }

@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 /**
  * Todos los textos de la interfaz de Café Aroma, agrupados por tema.
  *
@@ -153,6 +155,13 @@ export const locations = {
 		invalidUrl: "Ingresa una URL válida (https://...)",
 		duplicateEmail: "Ya existe una cuenta con ese correo",
 		internal: "Error interno del servidor",
+		notFound: "No se han encontrado resultados",
+	},
+
+	/** Respuestas genéricas de la API (`src/app/api/`). */
+	messages: {
+		created: "Registro creado correctamente",
+		notCreated: "No se pudo crear el registro",
 	},
 
 	/** Avisos (toasts). El "(simulado)" se quita cuando exista el backend. */

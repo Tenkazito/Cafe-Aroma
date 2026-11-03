@@ -2,8 +2,8 @@
 export type Category = {
 	id: number;
 	name: string;
-	slug: string;
-	isActive: boolean;
+	url: string;
+	isActive: string;
 	createdAt: string;
 };
 

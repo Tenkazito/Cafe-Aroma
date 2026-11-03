@@ -1,4 +1,4 @@
-import type { CategoryRepository } from "../domain/Category.repository";
+import type { CategoryRepository } from "../domain/category.repository";
 import type { ICreate } from "../domain/category.entity";
 
 export class CreateUseCase {
