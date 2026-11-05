@@ -1,89 +1,98 @@
 "use client";
 
 import { Button, toast } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useForm } from "react-hook-form";
 import { FormCheckbox } from "@/common/components/form/FormCheckbox";
 import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import type { FieldVariant } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
+import { findMockLoginUser } from "@/features/auth/lib/findMockLoginUser";
+import { getHomePathForRole } from "@/features/auth/lib/getHomePathForRole";
+import { type LoginFormValues, loginSchema } from "@/features/auth/schema";
 
 type LoginFormProps = {
-	/** `email` para el admin, `username` para el cliente. */
-	identifier: "email" | "username";
 	submitLabel: string;
 	/** Muestra la taza de café dentro del botón (diseño del cliente). */
 	showSubmitIcon?: boolean;
-	/** A dónde ir después de "iniciar sesión" (por ahora no se valida nada). */
-	redirectTo: string;
 	fieldVariant?: FieldVariant;
 	/** Contenido bajo el botón (ej. "¿No tienes cuenta? Regístrate"). */
 	footer?: ReactNode;
 };
 
-const IDENTIFIER_FIELDS = {
-	email: {
-		name: "email",
-		label: "Correo electrónico",
-		type: "email",
-		placeholder: "usuario@cafearoma.co",
-		icon: "mail",
-	},
-	username: {
-		name: "username",
-		label: "Usuario",
-		type: "text",
-		placeholder: "tu_usuario",
-		icon: "user",
-	},
-} as const;
-
+/**
+ * Login único: administradores y clientes entran por aquí, y el rol del
+ * usuario decide a qué pantalla va (ver `getHomePathForRole`).
+ */
 export const LoginForm = ({
-	identifier,
 	submitLabel,
 	showSubmitIcon = false,
-	redirectTo,
 	fieldVariant = "default",
 	footer,
 }: LoginFormProps) => {
 	const router = useRouter();
-	const identifierField = IDENTIFIER_FIELDS[identifier];
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<LoginFormValues>({
+		resolver: zodResolver(loginSchema),
+		defaultValues: { email: "", password: "", rememberMe: false },
+	});
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		// TODO: conectar React Hook Form + Zod y el Server Action de inicio de sesión
-		toast.success("Sesión iniciada (simulado)");
-		router.push(redirectTo);
+	const onSubmit = (values: LoginFormValues) => {
+		console.log("Iniciar sesión", values);
+		const result = findMockLoginUser(values.email);
+
+		if (result.status === "invalidCredentials") {
+			toast.danger(locations.auth.invalidCredentials);
+			return;
+		}
+		if (result.status === "inactive") {
+			toast.danger(locations.auth.inactiveAccount);
+			return;
+		}
+
+		toast.success(locations.toasts.loginDone);
+		router.push(getHomePathForRole(result.user.role));
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 			<FormTextField
-				label={identifierField.label}
-				name={identifierField.name}
-				type={identifierField.type}
-				placeholder={identifierField.placeholder}
-				icon={identifierField.icon}
+				label={locations.form.email}
+				type="email"
+				placeholder={locations.form.emailPlaceholder}
+				icon="mail"
 				variant={fieldVariant}
-				autoComplete={identifier}
+				autoComplete="email"
+				{...register("email")}
+				errorMessage={errors.email?.message}
 			/>
 			<FormPasswordField
-				label="Contraseña"
-				name="password"
+				label={locations.form.password}
 				variant={fieldVariant}
 				withLockIcon
 				autoComplete="current-password"
+				{...register("password")}
+				errorMessage={errors.password?.message}
 			/>
 
 			<div className="flex flex-wrap items-center justify-between gap-2">
-				<FormCheckbox label="Recordarme" name="rememberMe" />
+				<FormCheckbox
+					label={locations.auth.rememberMe}
+					{...register("rememberMe")}
+				/>
 				<Link
 					href="#"
 					className="text-sm font-medium text-teal-strong hover:underline"
 				>
-					¿Olvidaste tu contraseña?
+					{locations.auth.forgotPassword}
 				</Link>
 			</div>
 

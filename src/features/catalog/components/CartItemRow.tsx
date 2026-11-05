@@ -1,4 +1,5 @@
 import { ProductThumbnail } from "@/common/components/ui/ProductThumbnail";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { QuantityStepper } from "@/features/catalog/components/QuantityStepper";
 import type { CartItem } from "@/features/catalog/types";
@@ -23,7 +24,7 @@ export const CartItemRow = ({
 					{item.name}
 				</p>
 				<p className="text-xs text-gray-500">
-					{formatCurrency(item.unitPrice)} c/u
+					{locations.catalog.unitPrice(formatCurrency(item.unitPrice))}
 				</p>
 			</div>
 			<QuantityStepper

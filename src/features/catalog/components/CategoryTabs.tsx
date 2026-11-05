@@ -1,4 +1,5 @@
 import { Icon, type IconName } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { getCategoryIcon } from "@/features/catalog/lib/categoryIcons";
 import { ALL_CATEGORIES } from "@/features/catalog/lib/filterCatalog";
 import type { CatalogCategoryFilter } from "@/features/catalog/types";
@@ -22,7 +23,7 @@ export const CategoryTabs = ({
 	onSelect,
 }: CategoryTabsProps) => {
 	const options: TabOption[] = [
-		{ value: ALL_CATEGORIES, label: "Todos", icon: "coffee" },
+		{ value: ALL_CATEGORIES, label: locations.status.all, icon: "coffee" },
 		...categories.map((category) => ({
 			value: category,
 			label: category,
@@ -33,7 +34,7 @@ export const CategoryTabs = ({
 	return (
 		<div
 			role="toolbar"
-			aria-label="Categorías"
+			aria-label={locations.catalog.categoriesLabel}
 			className="flex flex-wrap gap-2"
 		>
 			{options.map((option) => {

@@ -1,13 +1,20 @@
 "use client";
-
 import { toast } from "@heroui/react";
-import type { FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextAreaField } from "@/common/components/form/FormTextAreaField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { ImageUploadField } from "@/common/components/form/ImageUploadField";
 import { FormModal } from "@/common/components/overlay/FormModal";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
+import { locations } from "@/common/locations";
+import { apiFetch } from "@/common/utils/api";
+import { logger } from "@/common/utils/logger";
+import {
+	type ProductFormValues,
+	productSchema,
+} from "@/features/products/schema";
 import type { Product } from "@/features/products/types";
 
 type ProductFormModalProps = {
@@ -30,75 +37,131 @@ export const ProductFormModal = ({
 		value: name,
 		label: name,
 	}));
+	const {
+		register,
+		handleSubmit,
+		control,
+		formState: { errors, isSubmitting },
+	} = useForm<ProductFormValues>({
+		resolver: zodResolver(productSchema),
+		defaultValues: {
+			categoryName: product?.categoryName ?? "",
+			name: product?.name ?? "",
+			description: product?.description ?? "",
+			price: product?.price,
+			stock: product?.stock,
+			isActive: product?.isActive ?? true,
+			imageUrl: product?.imageUrl ?? "",
+		},
+	});
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		// TODO: conectar React Hook Form + Zod y el Server Action (crear / actualizar producto)
-		toast.success(
-			isEditing
-				? "Producto actualizado (simulado)"
-				: "Producto creado (simulado)",
-		);
-		onOpenChange(false);
+	const onSubmit = async (data: ProductFormValues) => {
+		try {
+			const method = isEditing ? "PUT" : "POST";
+			const url = isEditing
+				? `/api/products/${product?.id}`
+				: "/api/products";
+
+			const res = await apiFetch<{ success: boolean }>(url, {
+				method,
+				body: data,
+			});
+
+			if (res.success) {
+				toast.success(
+					isEditing
+						? locations.toasts.productUpdated
+						: locations.toasts.productCreated,
+				);
+			} else {
+				toast.danger(locations.toasts.productError);
+			}
+
+			onOpenChange(false);
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "ProductFormModal:onSubmit",
+			});
+			toast.danger(locations.toasts.productError);
+		}
 	};
 
 	return (
 		<FormModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={isEditing ? "Editar Producto" : "Nuevo Producto"}
-			submitLabel={isEditing ? "Guardar Cambios" : "Crear Producto"}
-			onSubmit={handleSubmit}
+			title={
+				isEditing
+					? locations.products.editTitle
+					: locations.products.createTitle
+			}
+			submitLabel={
+				isEditing ? locations.actions.save : locations.products.createSubmit
+			}
+			onSubmit={handleSubmit(onSubmit)}
+			isSubmitting={isSubmitting}
 			size="lg"
 		>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormSelectField
-					label="Categoría"
-					name="categoryName"
+					label={locations.products.categoryLabel}
+					placeholder={locations.products.categoryPlaceholder}
 					options={categoryOptions}
-					defaultValue={product?.categoryName}
+					{...register("categoryName")}
+					errorMessage={errors.categoryName?.message}
 				/>
 				<FormTextField
-					label="Nombre"
-					name="name"
-					placeholder="Ej: Latte Clásico"
-					defaultValue={product?.name}
+					label={locations.form.name}
+					placeholder={locations.products.namePlaceholder}
+					{...register("name")}
+					errorMessage={errors.name?.message}
 				/>
 			</div>
 			<FormTextAreaField
-				label="Descripción"
-				name="description"
-				placeholder="Describe el producto..."
-				defaultValue={product?.description}
+				label={locations.products.descriptionLabel}
+				placeholder={locations.products.descriptionPlaceholder}
+				{...register("description")}
+				errorMessage={errors.description?.message}
 			/>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormTextField
-					label="Precio (COP)"
-					name="price"
+					label={locations.products.priceLabel}
 					type="number"
 					min={0}
-					placeholder="8500"
-					defaultValue={product?.price}
+					step="1"
+					placeholder={locations.products.pricePlaceholder}
+					{...register("price", { valueAsNumber: true })}
+					errorMessage={errors.price?.message}
 				/>
 				<FormTextField
-					label="Stock"
-					name="stock"
+					label={locations.products.stockLabel}
 					type="number"
 					min={0}
-					placeholder="40"
-					defaultValue={product?.stock}
+					step="1"
+					placeholder={locations.products.stockPlaceholder}
+					{...register("stock", { valueAsNumber: true })}
+					errorMessage={errors.stock?.message}
 				/>
 				<FormSelectField
-					label="Estado"
-					name="status"
+					label={locations.form.status}
 					options={STATUS_OPTIONS}
-					defaultValue={product && !product.isActive ? "inactivo" : "activo"}
+					{...register("isActive", booleanSelectOptions)}
+					errorMessage={errors.isActive?.message}
 				/>
 			</div>
-			<ImageUploadField
-				label="Imagen del producto"
+			<Controller
+				control={control}
 				name="imageUrl"
-				defaultImageUrl={product?.imageUrl}
+				render={({ field }) => (
+					<ImageUploadField
+						label={locations.products.imageLabel}
+						name={field.name}
+						value={field.value}
+						onChange={field.onChange}
+						errorMessage={errors.imageUrl?.message}
+					/>
+				)}
 			/>
 		</FormModal>
 	);

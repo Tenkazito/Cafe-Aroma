@@ -2,6 +2,7 @@
 
 import { Modal } from "@heroui/react";
 import type { ReactNode } from "react";
+import { locations } from "@/common/locations";
 
 export type AppModalProps = {
 	isOpen: boolean;
@@ -31,7 +32,7 @@ export const AppModal = ({
 			<Modal.Backdrop>
 				<Modal.Container size={size} scroll="outside">
 					<Modal.Dialog className="overflow-hidden rounded-2xl p-0">
-						<Modal.CloseTrigger aria-label="Cerrar" />
+						<Modal.CloseTrigger aria-label={locations.actions.close} />
 						<Modal.Header className="border-b border-gray-100 px-6 py-4">
 							<Modal.Heading className="pr-8 text-lg font-bold text-navy">
 								{title}

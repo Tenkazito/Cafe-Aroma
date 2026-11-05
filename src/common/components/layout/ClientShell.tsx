@@ -3,6 +3,7 @@
 import { type ReactNode, useState } from "react";
 import { ClientHeader } from "@/common/components/layout/ClientHeader";
 import { ClientSidebar } from "@/common/components/layout/ClientSidebar";
+import { locations } from "@/common/locations";
 import type { NavItem, SessionUser } from "@/common/types/navigation";
 
 type ClientShellProps = {
@@ -44,7 +45,7 @@ export const ClientShell = ({
 					<div className="fixed inset-0 z-40 md:hidden">
 						<button
 							type="button"
-							aria-label="Cerrar menú"
+							aria-label={locations.navigation.closeMenu}
 							onClick={closeSidebar}
 							className="absolute inset-0 bg-navy/40"
 						/>

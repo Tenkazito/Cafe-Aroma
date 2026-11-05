@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/common/components/ui/Icon";
 import { isNavItemActive } from "@/common/lib/navigation";
+import { locations } from "@/common/locations";
 import type { NavItem } from "@/common/types/navigation";
 
 type ClientSidebarProps = {
@@ -23,7 +24,10 @@ export const ClientSidebar = ({
 	const rootHref = items[0]?.href ?? "/";
 
 	return (
-		<nav aria-label="Menú del cliente" className="flex flex-col gap-1">
+		<nav
+			aria-label={locations.navigation.customerMenuLabel}
+			className="flex flex-col gap-1"
+		>
 			<ul className="flex flex-col gap-1">
 				{items.map((item) => {
 					const isActive = isNavItemActive(pathname, item.href, rootHref);
@@ -61,7 +65,7 @@ export const ClientSidebar = ({
 				className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-600 hover:bg-white/50 hover:text-navy"
 			>
 				<Icon name="logOut" />
-				Cerrar sesión
+				{locations.navigation.logout}
 			</Link>
 		</nav>
 	);

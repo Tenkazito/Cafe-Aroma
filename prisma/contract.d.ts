@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'63c2d8ff61b4b4ad40f8f7e3a0e5d7818fad0e10de4bdb601d8a64d478e6c136'>;
+  StorageHashBase<'2af42bebdf3510131ae86167074a68f8619922942226e0a9bd1898e1afc74ab6'>;
 export type ExecutionHash =
   ExecutionHashBase<'31490cace67e0acff3f4194bd11452105da53384c653f35c612d64b8c59507ac'>;
 export type ProfileHash =
@@ -246,18 +246,33 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly titulo: CodecTypes['pg/text@1']['output'];
       readonly url: CodecTypes['pg/text@1']['output'];
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     };
+    readonly notificaciones: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly usuario_id: CodecTypes['pg/int4@1']['output'];
+      readonly titulo: CodecTypes['pg/text@1']['output'];
+      readonly mensaje: CodecTypes['pg/text@1']['output'];
+      readonly leida: CodecTypes['pg/bool@1']['output'];
+      readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly pedido_items: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly pedido_id: CodecTypes['pg/int4@1']['output'];
+      readonly producto_id: CodecTypes['pg/int4@1']['output'];
+      readonly cantidad: CodecTypes['pg/int4@1']['output'];
+      readonly precio_unitario: CodecTypes['pg/int4@1']['output'];
+    };
     readonly pedidos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly usuario_id: CodecTypes['pg/int4@1']['output'];
-      readonly producto_id: CodecTypes['pg/int4@1']['output'];
-      readonly cantidad: CodecTypes['pg/int4@1']['output'];
-      readonly total: CodecTypes['pg/float8@1']['output'];
-      readonly estado: CodecTypes['pg/text@1']['output'];
+      readonly direccion: CodecTypes['pg/text@1']['output'];
+      readonly estado: 'solicitado' | 'pendiente' | 'entregado' | 'cancelado';
+      readonly total: CodecTypes['pg/int4@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
@@ -265,13 +280,14 @@ export type FieldOutputTypes = {
     };
     readonly productos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly categoria_id: CodecTypes['pg/int4@1']['output'];
       readonly titulo: CodecTypes['pg/text@1']['output'];
       readonly descripcion: CodecTypes['pg/text@1']['output'];
       readonly url: CodecTypes['pg/text@1']['output'];
-      readonly precio_compra: CodecTypes['pg/float8@1']['output'];
-      readonly precio_venta: CodecTypes['pg/float8@1']['output'];
+      readonly precio_venta: CodecTypes['pg/int4@1']['output'];
       readonly stock: CodecTypes['pg/int4@1']['output'];
       readonly imagen: CodecTypes['pg/text@1']['output'] | null;
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
@@ -282,9 +298,10 @@ export type FieldOutputTypes = {
       readonly nombre: CodecTypes['pg/text@1']['output'];
       readonly apellido: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
+      readonly usuario: CodecTypes['pg/text@1']['output'] | null;
       readonly contrasena: CodecTypes['pg/text@1']['output'];
-      readonly rol: CodecTypes['pg/text@1']['output'];
-      readonly activo: CodecTypes['pg/bool@1']['output'] | null;
+      readonly rol: 'administrador' | 'cliente';
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
@@ -298,18 +315,33 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly titulo: CodecTypes['pg/text@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['input'] | null;
     };
+    readonly notificaciones: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly usuario_id: CodecTypes['pg/int4@1']['input'];
+      readonly titulo: CodecTypes['pg/text@1']['input'];
+      readonly mensaje: CodecTypes['pg/text@1']['input'];
+      readonly leida: CodecTypes['pg/bool@1']['input'];
+      readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly pedido_items: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly pedido_id: CodecTypes['pg/int4@1']['input'];
+      readonly producto_id: CodecTypes['pg/int4@1']['input'];
+      readonly cantidad: CodecTypes['pg/int4@1']['input'];
+      readonly precio_unitario: CodecTypes['pg/int4@1']['input'];
+    };
     readonly pedidos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly usuario_id: CodecTypes['pg/int4@1']['input'];
-      readonly producto_id: CodecTypes['pg/int4@1']['input'];
-      readonly cantidad: CodecTypes['pg/int4@1']['input'];
-      readonly total: CodecTypes['pg/float8@1']['input'];
-      readonly estado: CodecTypes['pg/text@1']['input'];
+      readonly direccion: CodecTypes['pg/text@1']['input'];
+      readonly estado: 'solicitado' | 'pendiente' | 'entregado' | 'cancelado';
+      readonly total: CodecTypes['pg/int4@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
@@ -317,13 +349,14 @@ export type FieldInputTypes = {
     };
     readonly productos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly categoria_id: CodecTypes['pg/int4@1']['input'];
       readonly titulo: CodecTypes['pg/text@1']['input'];
       readonly descripcion: CodecTypes['pg/text@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
-      readonly precio_compra: CodecTypes['pg/float8@1']['input'];
-      readonly precio_venta: CodecTypes['pg/float8@1']['input'];
+      readonly precio_venta: CodecTypes['pg/int4@1']['input'];
       readonly stock: CodecTypes['pg/int4@1']['input'];
       readonly imagen: CodecTypes['pg/text@1']['input'] | null;
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
@@ -334,9 +367,10 @@ export type FieldInputTypes = {
       readonly nombre: CodecTypes['pg/text@1']['input'];
       readonly apellido: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
+      readonly usuario: CodecTypes['pg/text@1']['input'] | null;
       readonly contrasena: CodecTypes['pg/text@1']['input'];
-      readonly rol: CodecTypes['pg/text@1']['input'];
-      readonly activo: CodecTypes['pg/bool@1']['input'] | null;
+      readonly rol: 'administrador' | 'cliente';
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
@@ -347,6 +381,7 @@ export type FieldInputTypes = {
 export type StorageColumnTypes = {
   readonly public: {
     readonly categorias: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -355,34 +390,49 @@ export type StorageColumnTypes = {
       readonly titulo: CodecTypes['pg/text@1']['output'];
       readonly url: CodecTypes['pg/text@1']['output'];
     };
+    readonly notificaciones: {
+      readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly leida: CodecTypes['pg/bool@1']['output'];
+      readonly mensaje: CodecTypes['pg/text@1']['output'];
+      readonly titulo: CodecTypes['pg/text@1']['output'];
+      readonly usuario_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly pedido_items: {
+      readonly cantidad: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly pedido_id: CodecTypes['pg/int4@1']['output'];
+      readonly precio_unitario: CodecTypes['pg/int4@1']['output'];
+      readonly producto_id: CodecTypes['pg/int4@1']['output'];
+    };
     readonly pedidos: {
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
-      readonly cantidad: CodecTypes['pg/int4@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
-      readonly estado: CodecTypes['pg/text@1']['output'];
+      readonly direccion: CodecTypes['pg/text@1']['output'];
+      readonly estado: 'solicitado' | 'pendiente' | 'entregado' | 'cancelado';
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly producto_id: CodecTypes['pg/int4@1']['output'];
-      readonly total: CodecTypes['pg/float8@1']['output'];
+      readonly total: CodecTypes['pg/int4@1']['output'];
       readonly usuario_id: CodecTypes['pg/int4@1']['output'];
     };
     readonly productos: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
+      readonly categoria_id: CodecTypes['pg/int4@1']['output'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly descripcion: CodecTypes['pg/text@1']['output'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly imagen: CodecTypes['pg/text@1']['output'] | null;
-      readonly precio_compra: CodecTypes['pg/float8@1']['output'];
-      readonly precio_venta: CodecTypes['pg/float8@1']['output'];
+      readonly precio_venta: CodecTypes['pg/int4@1']['output'];
       readonly stock: CodecTypes['pg/int4@1']['output'];
       readonly titulo: CodecTypes['pg/text@1']['output'];
       readonly url: CodecTypes['pg/text@1']['output'];
     };
     readonly usuarios: {
-      readonly activo: CodecTypes['pg/bool@1']['output'] | null;
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
       readonly apellido: CodecTypes['pg/text@1']['output'];
       readonly contrasena: CodecTypes['pg/text@1']['output'];
@@ -392,13 +442,15 @@ export type StorageColumnTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly nombre: CodecTypes['pg/text@1']['output'];
-      readonly rol: CodecTypes['pg/text@1']['output'];
+      readonly rol: 'administrador' | 'cliente';
+      readonly usuario: CodecTypes['pg/text@1']['output'] | null;
     };
   };
 };
 export type StorageColumnInputTypes = {
   readonly public: {
     readonly categorias: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -407,34 +459,49 @@ export type StorageColumnInputTypes = {
       readonly titulo: CodecTypes['pg/text@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
     };
+    readonly notificaciones: {
+      readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly leida: CodecTypes['pg/bool@1']['input'];
+      readonly mensaje: CodecTypes['pg/text@1']['input'];
+      readonly titulo: CodecTypes['pg/text@1']['input'];
+      readonly usuario_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly pedido_items: {
+      readonly cantidad: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly pedido_id: CodecTypes['pg/int4@1']['input'];
+      readonly precio_unitario: CodecTypes['pg/int4@1']['input'];
+      readonly producto_id: CodecTypes['pg/int4@1']['input'];
+    };
     readonly pedidos: {
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['input'] | null;
-      readonly cantidad: CodecTypes['pg/int4@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
-      readonly estado: CodecTypes['pg/text@1']['input'];
+      readonly direccion: CodecTypes['pg/text@1']['input'];
+      readonly estado: 'solicitado' | 'pendiente' | 'entregado' | 'cancelado';
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly producto_id: CodecTypes['pg/int4@1']['input'];
-      readonly total: CodecTypes['pg/float8@1']['input'];
+      readonly total: CodecTypes['pg/int4@1']['input'];
       readonly usuario_id: CodecTypes['pg/int4@1']['input'];
     };
     readonly productos: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['input'] | null;
+      readonly categoria_id: CodecTypes['pg/int4@1']['input'];
       readonly creado_por_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly descripcion: CodecTypes['pg/text@1']['input'];
       readonly fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly imagen: CodecTypes['pg/text@1']['input'] | null;
-      readonly precio_compra: CodecTypes['pg/float8@1']['input'];
-      readonly precio_venta: CodecTypes['pg/float8@1']['input'];
+      readonly precio_venta: CodecTypes['pg/int4@1']['input'];
       readonly stock: CodecTypes['pg/int4@1']['input'];
       readonly titulo: CodecTypes['pg/text@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
     };
     readonly usuarios: {
-      readonly activo: CodecTypes['pg/bool@1']['input'] | null;
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly actualizado_por_id: CodecTypes['pg/int4@1']['input'] | null;
       readonly apellido: CodecTypes['pg/text@1']['input'];
       readonly contrasena: CodecTypes['pg/text@1']['input'];
@@ -444,7 +511,8 @@ export type StorageColumnInputTypes = {
       readonly fecha_creacion: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly nombre: CodecTypes['pg/text@1']['input'];
-      readonly rol: CodecTypes['pg/text@1']['input'];
+      readonly rol: 'administrador' | 'cliente';
+      readonly usuario: CodecTypes['pg/text@1']['input'] | null;
     };
   };
 };
@@ -455,9 +523,10 @@ export namespace Models {
     nombre: CodecTypes['pg/text@1']['output'];
     apellido: CodecTypes['pg/text@1']['output'];
     email: CodecTypes['pg/text@1']['output'];
+    usuario: CodecTypes['pg/text@1']['output'] | null;
     contrasena: CodecTypes['pg/text@1']['output'];
-    rol: CodecTypes['pg/text@1']['output'];
-    activo: CodecTypes['pg/bool@1']['output'] | null;
+    rol: 'administrador' | 'cliente';
+    activo: CodecTypes['pg/bool@1']['output'];
     fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
     fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
     creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
@@ -468,6 +537,7 @@ export namespace Models {
     categorias_creadas: public_categorias[];
     creado_por: public_usuarios | null;
     creados: public_usuarios[];
+    notificaciones: public_notificaciones[];
     pedidos: public_pedidos[];
     pedidos_actualizados: public_pedidos[];
     pedidos_creados: public_pedidos[];
@@ -480,6 +550,7 @@ export namespace Models {
       | 'categorias_creadas'
       | 'creado_por'
       | 'creados'
+      | 'notificaciones'
       | 'pedidos'
       | 'pedidos_actualizados'
       | 'pedidos_creados'
@@ -490,48 +561,71 @@ export namespace Models {
     id: CodecTypes['pg/int4@1']['output'];
     titulo: CodecTypes['pg/text@1']['output'];
     url: CodecTypes['pg/text@1']['output'];
+    activo: CodecTypes['pg/bool@1']['output'];
     fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
     fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
     creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por: public_usuarios | null;
     creado_por: public_usuarios | null;
-    readonly [RelationKeys]?: 'actualizado_por' | 'creado_por';
+    productos: public_productos[];
+    readonly [RelationKeys]?: 'actualizado_por' | 'creado_por' | 'productos';
   };
   export type public_productos = {
     id: CodecTypes['pg/int4@1']['output'];
+    categoria_id: CodecTypes['pg/int4@1']['output'];
     titulo: CodecTypes['pg/text@1']['output'];
     descripcion: CodecTypes['pg/text@1']['output'];
     url: CodecTypes['pg/text@1']['output'];
-    precio_compra: CodecTypes['pg/float8@1']['output'];
-    precio_venta: CodecTypes['pg/float8@1']['output'];
+    precio_venta: CodecTypes['pg/int4@1']['output'];
     stock: CodecTypes['pg/int4@1']['output'];
     imagen: CodecTypes['pg/text@1']['output'] | null;
+    activo: CodecTypes['pg/bool@1']['output'];
     fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
     fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
     creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por: public_usuarios | null;
+    categoria: public_categorias;
     creado_por: public_usuarios | null;
-    pedidos: public_pedidos[];
-    readonly [RelationKeys]?: 'actualizado_por' | 'creado_por' | 'pedidos';
+    items: public_pedido_items[];
+    readonly [RelationKeys]?: 'actualizado_por' | 'categoria' | 'creado_por' | 'items';
   };
   export type public_pedidos = {
     id: CodecTypes['pg/int4@1']['output'];
     usuario_id: CodecTypes['pg/int4@1']['output'];
-    producto_id: CodecTypes['pg/int4@1']['output'];
-    cantidad: CodecTypes['pg/int4@1']['output'];
-    total: CodecTypes['pg/float8@1']['output'];
-    estado: CodecTypes['pg/text@1']['output'];
+    direccion: CodecTypes['pg/text@1']['output'];
+    estado: 'solicitado' | 'pendiente' | 'entregado' | 'cancelado';
+    total: CodecTypes['pg/int4@1']['output'];
     fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
     fecha_actualizacion: CodecTypes['pg/timestamptz-string@1']['output'];
     creado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por_id: CodecTypes['pg/int4@1']['output'] | null;
     actualizado_por: public_usuarios | null;
     creado_por: public_usuarios | null;
-    producto: public_productos;
+    items: public_pedido_items[];
     usuario: public_usuarios;
-    readonly [RelationKeys]?: 'actualizado_por' | 'creado_por' | 'producto' | 'usuario';
+    readonly [RelationKeys]?: 'actualizado_por' | 'creado_por' | 'items' | 'usuario';
+  };
+  export type public_pedido_items = {
+    id: CodecTypes['pg/int4@1']['output'];
+    pedido_id: CodecTypes['pg/int4@1']['output'];
+    producto_id: CodecTypes['pg/int4@1']['output'];
+    cantidad: CodecTypes['pg/int4@1']['output'];
+    precio_unitario: CodecTypes['pg/int4@1']['output'];
+    pedido: public_pedidos;
+    producto: public_productos;
+    readonly [RelationKeys]?: 'pedido' | 'producto';
+  };
+  export type public_notificaciones = {
+    id: CodecTypes['pg/int4@1']['output'];
+    usuario_id: CodecTypes['pg/int4@1']['output'];
+    titulo: CodecTypes['pg/text@1']['output'];
+    mensaje: CodecTypes['pg/text@1']['output'];
+    leida: CodecTypes['pg/bool@1']['output'];
+    fecha_creacion: CodecTypes['pg/timestamptz-string@1']['output'];
+    usuario: public_usuarios;
+    readonly [RelationKeys]?: 'usuario';
   };
 }
 
@@ -541,6 +635,8 @@ export declare const models: {
     categorias: Models.public_categorias;
     productos: Models.public_productos;
     pedidos: Models.public_pedidos;
+    pedido_items: Models.public_pedido_items;
+    notificaciones: Models.public_notificaciones;
   };
 };
 
@@ -582,6 +678,15 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
                 };
                 readonly fecha_creacion: {
                   readonly nativeType: 'timestamptz';
@@ -648,6 +753,148 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly notificaciones: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly usuario_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly titulo: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly mensaje: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly leida: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly fecha_creacion: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'notificaciones_usuario_id_idx_65b6616a';
+                  readonly prefix: 'notificaciones_usuario_id_idx';
+                  readonly columns: readonly ['usuario_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'notificaciones';
+                    readonly columns: readonly ['usuario_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'usuarios';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly pedido_items: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly pedido_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly producto_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly cantidad: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly precio_unitario: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['pedido_id', 'producto_id'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'pedido_items_pedido_id_idx_57130803';
+                  readonly prefix: 'pedido_items_pedido_id_idx';
+                  readonly columns: readonly ['pedido_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'pedido_items_producto_id_idx_52b7577c';
+                  readonly prefix: 'pedido_items_producto_id_idx';
+                  readonly columns: readonly ['producto_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'pedido_items';
+                    readonly columns: readonly ['pedido_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'pedidos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'pedido_items';
+                    readonly columns: readonly ['producto_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'productos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly pedidos: {
               columns: {
                 readonly id: {
@@ -664,24 +911,23 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
-                readonly producto_id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly cantidad: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly total: {
-                  readonly nativeType: 'float8';
-                  readonly codecId: 'pg/float8@1';
+                readonly direccion: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
                 readonly estado: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'solicitado'>;
+                  };
+                };
+                readonly total: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
                 readonly fecha_creacion: {
@@ -716,9 +962,9 @@ type ContractBase = Omit<
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'pedidos_producto_id_idx_52b7577c';
-                  readonly prefix: 'pedidos_producto_id_idx';
-                  readonly columns: readonly ['producto_id'];
+                  readonly name: 'pedidos_estado_idx_c74e5888';
+                  readonly prefix: 'pedidos_estado_idx';
+                  readonly columns: readonly ['estado'];
                   readonly unique: false;
                 },
                 {
@@ -744,18 +990,6 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'usuarios';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'pedidos';
-                    readonly columns: readonly ['producto_id'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'productos';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -796,6 +1030,11 @@ type ContractBase = Omit<
                     readonly expression: 'autoincrement()';
                   };
                 };
+                readonly categoria_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
                 readonly titulo: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -811,14 +1050,9 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly precio_compra: {
-                  readonly nativeType: 'float8';
-                  readonly codecId: 'pg/float8@1';
-                  readonly nullable: false;
-                };
                 readonly precio_venta: {
-                  readonly nativeType: 'float8';
-                  readonly codecId: 'pg/float8@1';
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
                 readonly stock: {
@@ -830,6 +1064,15 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
+                };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
                 };
                 readonly fecha_creacion: {
                   readonly nativeType: 'timestamptz';
@@ -857,6 +1100,12 @@ type ContractBase = Omit<
               uniques: readonly [{ readonly columns: readonly ['url'] }];
               indexes: readonly [
                 {
+                  readonly name: 'productos_categoria_id_idx_6ad70c39';
+                  readonly prefix: 'productos_categoria_id_idx';
+                  readonly columns: readonly ['categoria_id'];
+                  readonly unique: false;
+                },
+                {
                   readonly name: 'productos_creado_por_id_idx_9be71d7d';
                   readonly prefix: 'productos_creado_por_id_idx';
                   readonly columns: readonly ['creado_por_id'];
@@ -870,6 +1119,18 @@ type ContractBase = Omit<
                 },
               ];
               foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'productos';
+                    readonly columns: readonly ['categoria_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'categorias';
+                    readonly columns: readonly ['id'];
+                  };
+                },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
@@ -922,6 +1183,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly usuario: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly contrasena: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -935,7 +1201,7 @@ type ContractBase = Omit<
                 readonly activo: {
                   readonly nativeType: 'bool';
                   readonly codecId: 'pg/bool@1';
-                  readonly nullable: true;
+                  readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/bool@1', true>;
@@ -964,7 +1230,10 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['email'] }];
+              uniques: readonly [
+                { readonly columns: readonly ['email'] },
+                { readonly columns: readonly ['usuario'] },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'usuarios_creado_por_id_idx_9be71d7d';
@@ -1007,6 +1276,16 @@ type ContractBase = Omit<
               ];
             };
           };
+          readonly valueSet: {
+            readonly estado_pedido: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['solicitado', 'pendiente', 'entregado', 'cancelado'];
+            };
+            readonly rol_usuario: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['administrador', 'cliente'];
+            };
+          };
         };
       };
     };
@@ -1024,6 +1303,14 @@ type ContractBase = Omit<
     };
     readonly productos: { readonly namespace: 'public' & NamespaceId; readonly model: 'productos' };
     readonly pedidos: { readonly namespace: 'public' & NamespaceId; readonly model: 'pedidos' };
+    readonly pedido_items: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'pedido_items';
+    };
+    readonly notificaciones: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'notificaciones';
+    };
   };
   readonly domain: {
     readonly namespaces: {
@@ -1043,6 +1330,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
               readonly fecha_creacion: {
                 readonly nullable: false;
                 readonly type: {
@@ -1091,6 +1382,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly productos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'productos';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['categoria_id'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'categorias';
@@ -1099,6 +1401,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly titulo: { readonly column: 'titulo' };
                 readonly url: { readonly column: 'url' };
+                readonly activo: { readonly column: 'activo' };
                 readonly fecha_creacion: { readonly column: 'fecha_creacion' };
                 readonly fecha_actualizacion: { readonly column: 'fecha_actualizacion' };
                 readonly creado_por_id: { readonly column: 'creado_por_id' };
@@ -1106,13 +1409,70 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly pedidos: {
+          readonly notificaciones: {
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly usuario_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly titulo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly mensaje: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly leida: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly fecha_creacion: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly usuario: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'usuarios';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['usuario_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'notificaciones';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly usuario_id: { readonly column: 'usuario_id' };
+                readonly titulo: { readonly column: 'titulo' };
+                readonly mensaje: { readonly column: 'mensaje' };
+                readonly leida: { readonly column: 'leida' };
+                readonly fecha_creacion: { readonly column: 'fecha_creacion' };
+              };
+            };
+          };
+          readonly pedido_items: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly pedido_id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
@@ -1124,59 +1484,21 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly total: {
+              readonly precio_unitario: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/float8@1' };
-              };
-              readonly estado: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly fecha_creacion: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly fecha_actualizacion: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly creado_por_id: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly actualizado_por_id: {
-                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
             };
             readonly relations: {
-              readonly actualizado_por: {
+              readonly pedido: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'usuarios';
+                  readonly model: 'pedidos';
                 };
                 readonly cardinality: 'N:1';
-                readonly nullable: true;
+                readonly nullable: false;
                 readonly on: {
-                  readonly localFields: readonly ['actualizado_por_id'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly creado_por: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'usuarios';
-                };
-                readonly cardinality: 'N:1';
-                readonly nullable: true;
-                readonly on: {
-                  readonly localFields: readonly ['creado_por_id'];
+                  readonly localFields: readonly ['pedido_id'];
                   readonly targetFields: readonly ['id'];
                 };
               };
@@ -1190,6 +1512,100 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['producto_id'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'pedido_items';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly pedido_id: { readonly column: 'pedido_id' };
+                readonly producto_id: { readonly column: 'producto_id' };
+                readonly cantidad: { readonly column: 'cantidad' };
+                readonly precio_unitario: { readonly column: 'precio_unitario' };
+              };
+            };
+          };
+          readonly pedidos: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly usuario_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly direccion: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly estado: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly total: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly fecha_creacion: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly fecha_actualizacion: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly creado_por_id: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly actualizado_por_id: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly actualizado_por: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'usuarios';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['actualizado_por_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly creado_por: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'usuarios';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['creado_por_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly items: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'pedido_items';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['pedido_id'];
                 };
               };
               readonly usuario: {
@@ -1211,10 +1627,9 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly id: { readonly column: 'id' };
                 readonly usuario_id: { readonly column: 'usuario_id' };
-                readonly producto_id: { readonly column: 'producto_id' };
-                readonly cantidad: { readonly column: 'cantidad' };
-                readonly total: { readonly column: 'total' };
+                readonly direccion: { readonly column: 'direccion' };
                 readonly estado: { readonly column: 'estado' };
+                readonly total: { readonly column: 'total' };
                 readonly fecha_creacion: { readonly column: 'fecha_creacion' };
                 readonly fecha_actualizacion: { readonly column: 'fecha_actualizacion' };
                 readonly creado_por_id: { readonly column: 'creado_por_id' };
@@ -1225,6 +1640,10 @@ type ContractBase = Omit<
           readonly productos: {
             readonly fields: {
               readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly categoria_id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
@@ -1240,13 +1659,9 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly precio_compra: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/float8@1' };
-              };
               readonly precio_venta: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/float8@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly stock: {
                 readonly nullable: false;
@@ -1255,6 +1670,10 @@ type ContractBase = Omit<
               readonly imagen: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
               readonly fecha_creacion: {
                 readonly nullable: false;
@@ -1292,6 +1711,18 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly categoria: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'categorias';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['categoria_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly creado_por: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -1304,10 +1735,10 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly pedidos: {
+              readonly items: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'pedidos';
+                  readonly model: 'pedido_items';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -1321,13 +1752,14 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
+                readonly categoria_id: { readonly column: 'categoria_id' };
                 readonly titulo: { readonly column: 'titulo' };
                 readonly descripcion: { readonly column: 'descripcion' };
                 readonly url: { readonly column: 'url' };
-                readonly precio_compra: { readonly column: 'precio_compra' };
                 readonly precio_venta: { readonly column: 'precio_venta' };
                 readonly stock: { readonly column: 'stock' };
                 readonly imagen: { readonly column: 'imagen' };
+                readonly activo: { readonly column: 'activo' };
                 readonly fecha_creacion: { readonly column: 'fecha_creacion' };
                 readonly fecha_actualizacion: { readonly column: 'fecha_actualizacion' };
                 readonly creado_por_id: { readonly column: 'creado_por_id' };
@@ -1353,6 +1785,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly usuario: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly contrasena: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1362,7 +1798,7 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly activo: {
-                readonly nullable: true;
+                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
               readonly fecha_creacion: {
@@ -1457,6 +1893,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['creado_por_id'];
                 };
               };
+              readonly notificaciones: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'notificaciones';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['usuario_id'];
+                };
+              };
               readonly pedidos: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -1521,6 +1968,7 @@ type ContractBase = Omit<
                 readonly nombre: { readonly column: 'nombre' };
                 readonly apellido: { readonly column: 'apellido' };
                 readonly email: { readonly column: 'email' };
+                readonly usuario: { readonly column: 'usuario' };
                 readonly contrasena: { readonly column: 'contrasena' };
                 readonly rol: { readonly column: 'rol' };
                 readonly activo: { readonly column: 'activo' };
@@ -1530,6 +1978,24 @@ type ContractBase = Omit<
                 readonly actualizado_por_id: { readonly column: 'actualizado_por_id' };
               };
             };
+          };
+        };
+        readonly enum: {
+          readonly rol_usuario: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'administrador'; readonly value: 'administrador' },
+              { readonly name: 'cliente'; readonly value: 'cliente' },
+            ];
+          };
+          readonly estado_pedido: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'solicitado'; readonly value: 'solicitado' },
+              { readonly name: 'pendiente'; readonly value: 'pendiente' },
+              { readonly name: 'entregado'; readonly value: 'entregado' },
+              { readonly name: 'cancelado'; readonly value: 'cancelado' },
+            ];
           };
         };
       };

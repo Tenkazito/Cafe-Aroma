@@ -1,10 +1,10 @@
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
 /** Filtra categorías cuyo nombre contenga el texto buscado. */
 export const filterCategories = (
-	categories: Category[],
+	categories: CategorySummary[],
 	search: string,
-): Category[] => {
+): CategorySummary[] => {
 	const normalizedSearch = search.trim().toLowerCase();
 	if (!normalizedSearch) return categories;
 

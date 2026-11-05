@@ -1,19 +1,52 @@
+import { locations } from "@/common/locations";
 import type { NavItem } from "@/common/types/navigation";
 
 export const ADMIN_NAV_ITEMS: NavItem[] = [
-	{ label: "Inicio", href: "/admin", icon: "home" },
-	{ label: "Usuarios", href: "/admin/usuarios", icon: "users" },
-	{ label: "Categorías", href: "/admin/categorias", icon: "grid" },
-	{ label: "Productos", href: "/admin/productos", icon: "package" },
-	{ label: "Pedidos", href: "/admin/pedidos", icon: "clipboardList" },
-	{ label: "Facturación", href: "/admin/facturacion", icon: "receipt" },
+	{ label: locations.navigation.admin.home, href: "/admin", icon: "home" },
+	{
+		label: locations.navigation.admin.users,
+		href: "/admin/usuarios",
+		icon: "users",
+	},
+	{
+		label: locations.navigation.admin.categories,
+		href: "/admin/categorias",
+		icon: "grid",
+	},
+	{
+		label: locations.navigation.admin.products,
+		href: "/admin/productos",
+		icon: "package",
+	},
+	{
+		label: locations.navigation.admin.orders,
+		href: "/admin/pedidos",
+		icon: "clipboardList",
+	},
+	{
+		label: locations.navigation.admin.billing,
+		href: "/admin/facturacion",
+		icon: "receipt",
+	},
 ];
 
 export const CLIENT_NAV_ITEMS: NavItem[] = [
-	{ label: "Inicio", href: "/inicio", icon: "grid" },
-	{ label: "Solicitar", href: "/solicitar", icon: "shoppingBag" },
-	{ label: "Últimos pedidos", href: "/mis-pedidos", icon: "clipboardList" },
-	{ label: "Notificaciones", href: "/notificaciones", icon: "bell" },
+	{ label: locations.navigation.client.home, href: "/inicio", icon: "grid" },
+	{
+		label: locations.navigation.client.request,
+		href: "/solicitar",
+		icon: "shoppingBag",
+	},
+	{
+		label: locations.navigation.client.orders,
+		href: "/mis-pedidos",
+		icon: "clipboardList",
+	},
+	{
+		label: locations.navigation.client.notifications,
+		href: "/notificaciones",
+		icon: "bell",
+	},
 ];
 
 /**

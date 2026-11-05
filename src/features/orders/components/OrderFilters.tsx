@@ -2,6 +2,7 @@ import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import type { FieldVariant } from "@/common/components/form/fieldStyles";
 import { FilterBar } from "@/common/components/ui/FilterBar";
+import { locations } from "@/common/locations";
 import { ORDER_STATUS_FILTER_OPTIONS } from "@/features/orders/lib/orderStatuses";
 import type { OrderFiltersValue } from "@/features/orders/types";
 
@@ -35,7 +36,7 @@ export const OrderFilters = ({
 				return (
 					<FormSelectField
 						key={field}
-						label="Estado"
+						label={locations.orders.filters.status}
 						options={ORDER_STATUS_FILTER_OPTIONS}
 						variant={variant}
 						value={value.status}
@@ -46,7 +47,7 @@ export const OrderFilters = ({
 				return (
 					<FormTextField
 						key={field}
-						label="Fecha"
+						label={locations.orders.filters.date}
 						type="date"
 						variant={variant}
 						value={value.date}
@@ -57,8 +58,8 @@ export const OrderFilters = ({
 				return (
 					<FormTextField
 						key={field}
-						label="Cliente"
-						placeholder="Nombre del cliente"
+						label={locations.orders.filters.customer}
+						placeholder={locations.orders.filters.customerPlaceholder}
 						variant={variant}
 						value={value.customer}
 						onChange={(event) => updateField("customer", event.target.value)}
@@ -68,9 +69,9 @@ export const OrderFilters = ({
 				return (
 					<FormTextField
 						key={field}
-						label="Buscar"
+						label={locations.orders.filters.search}
 						icon="search"
-						placeholder="ID o cliente"
+						placeholder={locations.orders.filters.searchPlaceholder}
 						variant={variant}
 						value={value.search}
 						onChange={(event) => updateField("search", event.target.value)}

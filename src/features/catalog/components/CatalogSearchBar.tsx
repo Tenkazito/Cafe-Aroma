@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import { Icon } from "@/common/components/ui/Icon";
 import { SearchInput } from "@/common/components/ui/SearchInput";
+import { locations } from "@/common/locations";
 
 type CatalogSearchBarProps = {
 	value: string;
@@ -21,14 +22,14 @@ export const CatalogSearchBar = ({
 		<search>
 			<form onSubmit={(event) => event.preventDefault()} className="flex gap-2">
 				<SearchInput
-					aria-label="Buscar productos"
-					placeholder="Buscar productos..."
+					aria-label={locations.catalog.searchLabel}
+					placeholder={locations.catalog.searchPlaceholder}
 					value={value}
 					onChange={(event) => onChange(event.target.value)}
 				/>
 				<Button type="submit" className="h-11">
 					<Icon name="search" size={16} />
-					Buscar
+					{locations.actions.search}
 				</Button>
 			</form>
 		</search>

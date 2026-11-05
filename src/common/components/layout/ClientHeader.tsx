@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { BrandLogo } from "@/common/components/layout/BrandLogo";
 import { UserBadge } from "@/common/components/layout/UserBadge";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import type { SessionUser } from "@/common/types/navigation";
 
 type ClientHeaderProps = {
@@ -23,7 +24,7 @@ export const ClientHeader = ({
 				<button
 					type="button"
 					onClick={onMenuClick}
-					aria-label="Abrir menú"
+					aria-label={locations.navigation.openMenu}
 					className="rounded-lg p-2 text-navy hover:bg-white/50 md:hidden"
 				>
 					<Icon name="menu" />

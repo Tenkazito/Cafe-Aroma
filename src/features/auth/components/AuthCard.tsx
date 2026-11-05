@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { BrandLogo } from "@/common/components/layout/BrandLogo";
+import { locations } from "@/common/locations";
 
 type AuthCardProps = {
 	/**
@@ -35,7 +36,9 @@ export const AuthCard = ({
 					{isAdmin ? (
 						<>
 							<BrandLogo size="lg" iconOnly />
-							<p className="text-2xl font-bold text-navy">Café Aroma</p>
+							<p className="text-2xl font-bold text-navy">
+								{locations.brand.name}
+							</p>
 						</>
 					) : (
 						<BrandLogo />

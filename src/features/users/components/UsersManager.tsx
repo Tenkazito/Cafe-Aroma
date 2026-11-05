@@ -8,9 +8,11 @@ import { Icon } from "@/common/components/ui/Icon";
 import { PageHeader } from "@/common/components/ui/PageHeader";
 import { SearchInput } from "@/common/components/ui/SearchInput";
 import { useCrudModals } from "@/common/hooks/useCrudModals";
+import { locations } from "@/common/locations";
 import { UserFormModal } from "@/features/users/components/UserFormModal";
 import { UsersTable } from "@/features/users/components/UsersTable";
 import { filterUsers } from "@/features/users/lib/filterUsers";
+import { getFullName } from "@/features/users/lib/getFullName";
 import type { User } from "@/features/users/types";
 
 type UsersManagerProps = {
@@ -25,27 +27,32 @@ export const UsersManager = ({ users }: UsersManagerProps) => {
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina el usuario
-		toast.success(`${modals.itemToDelete?.fullName} eliminado (simulado)`);
+		console.log("Eliminar usuario", { id: modals.itemToDelete?.id });
+		toast.success(
+			locations.toasts.userDeleted(
+				modals.itemToDelete ? getFullName(modals.itemToDelete) : "",
+			),
+		);
 	};
 
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Usuarios"
-				description="Gestión del personal del sistema"
+				title={locations.users.title}
+				description={locations.users.description}
 				icon="users"
 				action={
 					<Button onPress={modals.openCreate}>
 						<Icon name="plus" size={18} />
-						Nuevo Usuario
+						{locations.users.newButton}
 					</Button>
 				}
 			/>
 
 			<FilterBar title={null} columns={2}>
 				<SearchInput
-					aria-label="Buscar usuario"
-					placeholder="Buscar por nombre o correo..."
+					aria-label={locations.users.searchLabel}
+					placeholder={locations.users.searchPlaceholder}
 					value={search}
 					onChange={(event) => setSearch(event.target.value)}
 				/>
@@ -67,17 +74,18 @@ export const UsersManager = ({ users }: UsersManagerProps) => {
 			<ConfirmDialog
 				isOpen={modals.isDeleteOpen}
 				onOpenChange={modals.setDeleteOpen}
-				title="Eliminar Usuario"
+				title={locations.users.deleteTitle}
 				tone="danger"
-				confirmLabel="Eliminar"
+				confirmLabel={locations.actions.delete}
 				onConfirm={handleDelete}
 				message={
 					<>
-						¿Estás seguro de que deseas eliminar al usuario{" "}
+						{locations.users.deleteMessage.before}
 						<strong className="text-navy">
-							{modals.itemToDelete?.fullName}
+							{modals.itemToDelete && getFullName(modals.itemToDelete)}
 						</strong>
-						? Esta acción no se puede deshacer.
+						{locations.users.deleteMessage.after}{" "}
+						{locations.confirm.irreversible}
 					</>
 				}
 			/>

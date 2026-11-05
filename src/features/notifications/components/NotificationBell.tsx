@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type NotificationBellProps = {
 	unreadCount: number;
@@ -7,10 +8,7 @@ type NotificationBellProps = {
 
 /** Campana del header del cliente con el número de notificaciones sin leer. */
 export const NotificationBell = ({ unreadCount }: NotificationBellProps) => {
-	const label =
-		unreadCount > 0
-			? `Notificaciones, ${unreadCount} sin leer`
-			: "Notificaciones";
+	const label = locations.notifications.bellLabel(unreadCount);
 
 	return (
 		<Link

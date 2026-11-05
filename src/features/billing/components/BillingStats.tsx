@@ -1,4 +1,5 @@
 import { StatCard } from "@/common/components/ui/StatCard";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 
 type BillingStatsProps = {
@@ -17,21 +18,21 @@ export const BillingStats = ({
 		<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 			<StatCard
 				variant="outlined"
-				label="Facturas del día"
+				label={locations.billing.invoicesOfDay}
 				value={invoiceCount}
 				icon="fileText"
 				tone="success"
 			/>
 			<StatCard
 				variant="outlined"
-				label="Total facturado"
+				label={locations.billing.totalBilled}
 				value={formatCurrency(billedTotal)}
 				icon="dollar"
 				tone="success"
 			/>
 			<StatCard
 				variant="outlined"
-				label="Fecha del reporte"
+				label={locations.billing.reportDate}
 				value={reportDate}
 				icon="calendar"
 				tone="warning"

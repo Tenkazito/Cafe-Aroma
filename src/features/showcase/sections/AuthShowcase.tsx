@@ -14,34 +14,25 @@ export const AuthShowcase = () => {
 			<ShowcaseGroup title="Componentes">
 				<ComponentPreview
 					name="LoginForm"
-					description="Formulario de inicio de sesión configurable. Por ahora no valida: muestra un toast y redirige. Aquí se conectará React Hook Form + Zod."
+					description="Login único (React Hook Form + Zod). Busca el correo en los usuarios de ejemplo y redirige según el rol: administrador → /admin, cliente → /inicio."
 					path="src/features/auth/components/LoginForm.tsx"
 					background="white"
 					props={[
+						{ name: "submitLabel", description: "Texto del botón" },
 						{
-							name: "identifier",
-							description: '"email" (admin) | "username" (cliente)',
-						},
-						{
-							name: "redirectTo",
-							description: "Ruta a la que va después de enviar",
+							name: "showSubmitIcon",
+							description: "Taza de café dentro del botón",
 						},
 						{ name: "fieldVariant", description: '"default" | "soft"' },
 						{ name: "footer", description: "Contenido bajo el botón" },
 					]}
 				>
 					<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+						<LoginForm submitLabel="Ingresar" />
 						<LoginForm
-							identifier="email"
-							submitLabel="Ingresar"
-							redirectTo="/dev/auth"
-						/>
-						<LoginForm
-							identifier="username"
 							submitLabel="Iniciar Sesión"
 							showSubmitIcon
 							fieldVariant="soft"
-							redirectTo="/dev/auth"
 							footer={
 								<p className="text-center text-sm text-gray-500">
 									¿No tienes cuenta?{" "}

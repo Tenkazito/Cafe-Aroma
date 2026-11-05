@@ -1,4 +1,5 @@
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type BrandLogoProps = {
 	/** `sm` para barras de navegación, `lg` para las pantallas de login. */
@@ -27,7 +28,9 @@ export const BrandLogo = ({
 				<Icon name="coffee" size={styles.icon} />
 			</div>
 			{!iconOnly && (
-				<span className={`font-bold text-navy ${styles.text}`}>Café Aroma</span>
+				<span className={`font-bold text-navy ${styles.text}`}>
+					{locations.brand.name}
+				</span>
 			)}
 		</div>
 	);

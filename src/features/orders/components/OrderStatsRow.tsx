@@ -1,4 +1,5 @@
 import { StatCard } from "@/common/components/ui/StatCard";
+import { locations } from "@/common/locations";
 import type { OrderStatusCounts } from "@/features/orders/types";
 
 type OrderStatsRowProps = {
@@ -11,28 +12,28 @@ export const OrderStatsRow = ({ counts }: OrderStatsRowProps) => {
 		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			<StatCard
 				variant="outlined"
-				label="Total Pedidos"
+				label={locations.orders.totalOrders}
 				value={counts.total}
 				icon="shoppingBag"
 				tone="navy"
 			/>
 			<StatCard
 				variant="outlined"
-				label="Entregados"
+				label={locations.orders.delivered}
 				value={counts.entregado}
 				icon="checkCircle"
 				tone="success"
 			/>
 			<StatCard
 				variant="outlined"
-				label="Pendientes"
+				label={locations.orders.pending}
 				value={counts.pendiente}
 				icon="clock"
 				tone="info"
 			/>
 			<StatCard
 				variant="outlined"
-				label="Cancelados"
+				label={locations.orders.cancelled}
 				value={counts.cancelado}
 				icon="xCircle"
 				tone="danger"

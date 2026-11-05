@@ -1,6 +1,6 @@
 /**
  * Ciclo de un pedido: el cliente lo "solicita", el admin lo acepta ("pendiente")
- * o lo rechaza ("cancelado"), y el mensajero lo marca como "entregado".
+ * o lo rechaza ("cancelado"), y al entregarlo pasa a "entregado".
  */
 export type OrderStatus =
 	| "solicitado"

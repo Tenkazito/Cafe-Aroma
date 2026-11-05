@@ -2,6 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type RowActionsProps = {
 	/** Nombre del registro, para que los lectores de pantalla digan "Editar Latte Clásico". */
@@ -18,7 +19,7 @@ export const RowActions = ({ itemName, onEdit, onDelete }: RowActionsProps) => {
 				isIconOnly
 				size="sm"
 				variant="ghost"
-				aria-label={`Editar ${itemName}`}
+				aria-label={locations.actions.editItem(itemName)}
 				onPress={onEdit}
 				className="text-gray-400 hover:text-navy"
 			>
@@ -28,7 +29,7 @@ export const RowActions = ({ itemName, onEdit, onDelete }: RowActionsProps) => {
 				isIconOnly
 				size="sm"
 				variant="ghost"
-				aria-label={`Eliminar ${itemName}`}
+				aria-label={locations.actions.deleteItem(itemName)}
 				onPress={onDelete}
 				className="text-gray-400 hover:text-red-500"
 			>

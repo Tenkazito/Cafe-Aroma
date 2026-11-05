@@ -4,6 +4,7 @@ import { toast } from "@heroui/react";
 import { useState } from "react";
 import { ConfirmDialog } from "@/common/components/overlay/ConfirmDialog";
 import { PageHeader } from "@/common/components/ui/PageHeader";
+import { locations } from "@/common/locations";
 import { OrderDetailModal } from "@/features/orders/components/OrderDetailModal";
 import { OrderFilters } from "@/features/orders/components/OrderFilters";
 import { OrderStatsRow } from "@/features/orders/components/OrderStatsRow";
@@ -45,11 +46,23 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 
 	const orderLabel = selectedOrder ? formatOrderId(selectedOrder.id) : "";
 
+	const handleAccept = () => {
+		// TODO: llamar al Server Action que cambia el estado a "pendiente"
+		console.log("Aceptar pedido", { id: selectedOrder?.id });
+		toast.success(locations.toasts.orderAccepted(orderLabel));
+	};
+
+	const handleReject = () => {
+		// TODO: llamar al Server Action que cambia el estado a "cancelado"
+		console.log("Rechazar pedido", { id: selectedOrder?.id });
+		toast.danger(locations.toasts.orderRejected(orderLabel));
+	};
+
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Pedidos"
-				description="Gestión y seguimiento de pedidos del día"
+				title={locations.orders.title}
+				description={locations.orders.description}
 				icon="clipboardList"
 			/>
 
@@ -71,18 +84,22 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 			<ConfirmDialog
 				isOpen={openModal === "accept"}
 				onOpenChange={handleOpenChange}
-				title="Aceptar Pedido"
-				confirmLabel="Aceptar"
-				// TODO: llamar al Server Action que cambia el estado a "pendiente"
-				onConfirm={() =>
-					toast.success(`Pedido ${orderLabel} aceptado (simulado)`)
-				}
+				title={locations.orders.acceptTitle}
+				confirmLabel={locations.actions.accept}
+				onConfirm={handleAccept}
 				message={
 					<>
-						¿Confirmas que deseas{" "}
-						<strong className="text-teal-strong">aceptar</strong> el pedido{" "}
-						<strong className="text-navy">{orderLabel}</strong>? El estado
-						cambiará a <strong className="text-navy">Pendiente</strong>.
+						{locations.orders.acceptMessage.intro}
+						<strong className="text-teal-strong">
+							{locations.orders.acceptMessage.verb}
+						</strong>
+						{locations.orders.acceptMessage.middle}
+						<strong className="text-navy">{orderLabel}</strong>
+						{locations.orders.acceptMessage.statusIntro}
+						<strong className="text-navy">
+							{locations.orderStatus.pendiente}
+						</strong>
+						{locations.orders.acceptMessage.end}
 					</>
 				}
 			/>
@@ -90,19 +107,23 @@ export const OrdersManager = ({ orders }: OrdersManagerProps) => {
 			<ConfirmDialog
 				isOpen={openModal === "reject"}
 				onOpenChange={handleOpenChange}
-				title="Rechazar Pedido"
+				title={locations.orders.rejectTitle}
 				tone="danger"
-				confirmLabel="Rechazar"
-				// TODO: llamar al Server Action que cambia el estado a "cancelado"
-				onConfirm={() =>
-					toast.danger(`Pedido ${orderLabel} rechazado (simulado)`)
-				}
+				confirmLabel={locations.actions.reject}
+				onConfirm={handleReject}
 				message={
 					<>
-						¿Confirmas que deseas{" "}
-						<strong className="text-red-600">rechazar</strong> el pedido{" "}
-						<strong className="text-navy">{orderLabel}</strong>? El estado
-						cambiará a <strong className="text-navy">Cancelado</strong>.
+						{locations.orders.rejectMessage.intro}
+						<strong className="text-red-600">
+							{locations.orders.rejectMessage.verb}
+						</strong>
+						{locations.orders.rejectMessage.middle}
+						<strong className="text-navy">{orderLabel}</strong>
+						{locations.orders.rejectMessage.statusIntro}
+						<strong className="text-navy">
+							{locations.orderStatus.cancelado}
+						</strong>
+						{locations.orders.rejectMessage.end}
 					</>
 				}
 			/>

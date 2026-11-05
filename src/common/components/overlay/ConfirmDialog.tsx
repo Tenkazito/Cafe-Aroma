@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import type { ReactNode } from "react";
 import { AppModal } from "@/common/components/overlay/AppModal";
+import { locations } from "@/common/locations";
 
 type ConfirmDialogProps = {
 	isOpen: boolean;
@@ -40,7 +41,7 @@ export const ConfirmDialog = ({
 			footer={
 				<>
 					<Button variant="outline" onPress={() => onOpenChange(false)}>
-						Cancelar
+						{locations.actions.cancel}
 					</Button>
 					<Button
 						variant={tone === "danger" ? "danger" : "primary"}

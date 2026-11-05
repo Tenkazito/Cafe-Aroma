@@ -8,44 +8,48 @@ import { Icon } from "@/common/components/ui/Icon";
 import { PageHeader } from "@/common/components/ui/PageHeader";
 import { SearchInput } from "@/common/components/ui/SearchInput";
 import { useCrudModals } from "@/common/hooks/useCrudModals";
+import { locations } from "@/common/locations";
 import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { CategoryFormModal } from "@/features/categories/components/CategoryFormModal";
 import { filterCategories } from "@/features/categories/lib/filterCategories";
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
 type CategoriesManagerProps = {
-	categories: Category[];
+	categories: CategorySummary[];
 };
 
 /** Pantalla Categorías: búsqueda, tabla y modales de crear / editar / eliminar. */
 export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
 	const [search, setSearch] = useState("");
-	const modals = useCrudModals<Category>();
+	const modals = useCrudModals<CategorySummary>();
 	const visibleCategories = filterCategories(categories, search);
 
 	const handleDelete = () => {
 		// TODO: llamar al Server Action que elimina la categoría
-		toast.success(`${modals.itemToDelete?.name} eliminada (simulado)`);
+		console.log("Eliminar categoría", { id: modals.itemToDelete?.id });
+		toast.success(
+			locations.toasts.categoryDeleted(modals.itemToDelete?.name ?? ""),
+		);
 	};
 
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Categorías"
-				description="Organiza los productos por categoría"
+				title={locations.categories.title}
+				description={locations.categories.description}
 				icon="grid"
 				action={
 					<Button onPress={modals.openCreate}>
 						<Icon name="plus" size={18} />
-						Nueva Categoría
+						{locations.categories.newButton}
 					</Button>
 				}
 			/>
 
 			<FilterBar title={null} columns={2}>
 				<SearchInput
-					aria-label="Buscar categoría"
-					placeholder="Buscar categoría..."
+					aria-label={locations.categories.searchLabel}
+					placeholder={locations.categories.searchPlaceholder}
 					value={search}
 					onChange={(event) => setSearch(event.target.value)}
 				/>
@@ -67,15 +71,16 @@ export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
 			<ConfirmDialog
 				isOpen={modals.isDeleteOpen}
 				onOpenChange={modals.setDeleteOpen}
-				title="Eliminar Categoría"
+				title={locations.categories.deleteTitle}
 				tone="danger"
-				confirmLabel="Eliminar"
+				confirmLabel={locations.actions.delete}
 				onConfirm={handleDelete}
 				message={
 					<>
-						¿Estás seguro de que deseas eliminar la categoría{" "}
-						<strong className="text-navy">{modals.itemToDelete?.name}</strong>?
-						Esta acción no se puede deshacer.
+						{locations.categories.deleteMessage.before}
+						<strong className="text-navy">{modals.itemToDelete?.name}</strong>
+						{locations.categories.deleteMessage.after}{" "}
+						{locations.confirm.irreversible}
 					</>
 				}
 			/>

@@ -14,6 +14,8 @@ type FormSelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
 	label: string;
 	options: SelectOption[];
 	errorMessage?: string;
+	/** Primera opción vacía (ej. "Selecciona una categoría"); no se puede volver a elegir. */
+	placeholder?: string;
 	variant?: FieldVariant;
 };
 
@@ -25,6 +27,7 @@ export const FormSelectField = ({
 	label,
 	options,
 	errorMessage,
+	placeholder,
 	variant = "default",
 	id,
 	className = "",
@@ -46,6 +49,11 @@ export const FormSelectField = ({
 				className={`h-11 cursor-pointer ${getFieldClasses(variant, Boolean(errorMessage))}`}
 				{...selectProps}
 			>
+				{placeholder && (
+					<option value="" disabled>
+						{placeholder}
+					</option>
+				)}
 				{options.map((option) => (
 					<option key={option.value} value={option.value}>
 						{option.label}

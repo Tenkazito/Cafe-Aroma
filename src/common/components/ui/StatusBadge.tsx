@@ -1,4 +1,5 @@
 import { Badge } from "@/common/components/ui/Badge";
+import { locations } from "@/common/locations";
 
 type StatusBadgeProps = {
 	isActive: boolean;
@@ -8,7 +9,7 @@ type StatusBadgeProps = {
 export const StatusBadge = ({ isActive }: StatusBadgeProps) => {
 	return (
 		<Badge tone={isActive ? "success" : "neutral"} withDot>
-			{isActive ? "Activo" : "Inactivo"}
+			{isActive ? locations.status.active : locations.status.inactive}
 		</Badge>
 	);
 };

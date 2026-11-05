@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import { AppModal } from "@/common/components/overlay/AppModal";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { formatCurrency } from "@/common/utils/format";
 import { OrderStatusBadge } from "@/features/orders/components/OrderStatusBadge";
 import {
@@ -30,10 +31,10 @@ export const OrderDetailModal = ({
 		<AppModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={`Pedido ${formatOrderId(order.id)}`}
+			title={locations.orders.detailTitle(formatOrderId(order.id))}
 			footer={
 				<Button variant="outline" onPress={() => onOpenChange(false)}>
-					Cerrar
+					{locations.actions.close}
 				</Button>
 			}
 		>
@@ -49,13 +50,13 @@ export const OrderDetailModal = ({
 				<div className="grid grid-cols-1 gap-4 rounded-xl bg-gray-50 p-4 sm:grid-cols-2">
 					<div>
 						<p className="text-xs font-semibold text-gray-400 uppercase">
-							Cliente
+							{locations.orders.customer}
 						</p>
 						<p className="font-semibold text-navy">{order.customerName}</p>
 					</div>
 					<div>
 						<p className="text-xs font-semibold text-gray-400 uppercase">
-							Ubicación
+							{locations.orders.location}
 						</p>
 						<p className="flex items-center gap-1.5 text-sm text-gray-600">
 							<Icon name="mapPin" size={14} className="shrink-0" />
@@ -66,7 +67,7 @@ export const OrderDetailModal = ({
 
 				<div>
 					<p className="mb-2 text-xs font-semibold text-gray-400 uppercase">
-						Productos del pedido
+						{locations.orders.orderProducts}
 					</p>
 					<ul className="divide-y divide-gray-100 rounded-xl border border-gray-100">
 						{order.items.map((item) => (
@@ -89,7 +90,9 @@ export const OrderDetailModal = ({
 				</div>
 
 				<div className="flex items-center justify-between rounded-xl bg-mint/40 p-4">
-					<span className="font-medium text-navy">Total del pedido</span>
+					<span className="font-medium text-navy">
+						{locations.orders.orderTotal}
+					</span>
 					<span className="text-2xl font-bold text-navy">
 						{formatCurrency(getOrderTotal(order))}
 					</span>

@@ -1,13 +1,16 @@
 "use client";
 
 import { toast } from "@heroui/react";
-import type { FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { FormPasswordField } from "@/common/components/form/FormPasswordField";
 import { FormSelectField } from "@/common/components/form/FormSelectField";
 import { FormTextField } from "@/common/components/form/FormTextField";
 import { FormModal } from "@/common/components/overlay/FormModal";
-import { STATUS_OPTIONS } from "@/common/lib/statusOptions";
+import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
+import { locations } from "@/common/locations";
 import { USER_ROLE_OPTIONS } from "@/features/users/lib/userRoles";
+import { type UserFormValues, userSchema } from "@/features/users/schema";
 import type { User } from "@/features/users/types";
 
 type UserFormModalProps = {
@@ -23,14 +26,31 @@ export const UserFormModal = ({
 	user,
 }: UserFormModalProps) => {
 	const isEditing = Boolean(user);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<UserFormValues>({
+		resolver: zodResolver(userSchema(isEditing)),
+		defaultValues: {
+			firstName: user?.firstName ?? "",
+			lastName: user?.lastName ?? "",
+			email: user?.email ?? "",
+			role: user?.role ?? "cliente",
+			isActive: user?.isActive ?? true,
+			password: "",
+			confirmPassword: "",
+		},
+	});
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		// TODO: conectar React Hook Form + Zod y el Server Action (crear / actualizar usuario)
+	const onSubmit = (values: UserFormValues) => {
+		// TODO: llamar al Server Action (createUser / updateUser) con `values`
+		console.log(isEditing ? "Editar usuario" : "Crear usuario", {
+			id: user?.id,
+			...values,
+		});
 		toast.success(
-			isEditing
-				? "Usuario actualizado (simulado)"
-				: "Usuario creado (simulado)",
+			isEditing ? locations.toasts.userUpdated : locations.toasts.userCreated,
 		);
 		onOpenChange(false);
 	};
@@ -39,45 +59,62 @@ export const UserFormModal = ({
 		<FormModal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			title={isEditing ? "Editar Usuario" : "Nuevo Usuario"}
-			submitLabel={isEditing ? "Guardar Cambios" : "Crear Usuario"}
-			onSubmit={handleSubmit}
+			title={
+				isEditing ? locations.users.editTitle : locations.users.createTitle
+			}
+			submitLabel={
+				isEditing ? locations.actions.save : locations.users.createSubmit
+			}
+			onSubmit={handleSubmit(onSubmit)}
 		>
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+				<FormTextField
+					label={locations.users.firstName}
+					placeholder={locations.users.firstNamePlaceholder}
+					{...register("firstName")}
+					errorMessage={errors.firstName?.message}
+				/>
+				<FormTextField
+					label={locations.users.lastName}
+					placeholder={locations.users.lastNamePlaceholder}
+					{...register("lastName")}
+					errorMessage={errors.lastName?.message}
+				/>
+			</div>
 			<FormTextField
-				label="Nombre completo"
-				name="fullName"
-				placeholder="Ej: Juan Pérez"
-				defaultValue={user?.fullName}
-			/>
-			<FormTextField
-				label="Correo electrónico"
-				name="email"
+				label={locations.form.email}
 				type="email"
-				placeholder="usuario@cafearoma.co"
-				defaultValue={user?.email}
+				placeholder={locations.form.emailPlaceholder}
+				{...register("email")}
+				errorMessage={errors.email?.message}
 			/>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FormSelectField
-					label="Rol"
-					name="role"
+					label={locations.users.roleLabel}
 					options={USER_ROLE_OPTIONS}
-					defaultValue={user?.role ?? "administrativo"}
+					{...register("role")}
+					errorMessage={errors.role?.message}
 				/>
 				<FormSelectField
-					label="Estado"
-					name="status"
+					label={locations.form.status}
 					options={STATUS_OPTIONS}
-					defaultValue={user && !user.isActive ? "inactivo" : "activo"}
+					{...register("isActive", booleanSelectOptions)}
+					errorMessage={errors.isActive?.message}
 				/>
 				<FormPasswordField
-					label="Contraseña"
-					name="password"
+					label={locations.form.password}
 					autoComplete="new-password"
+					placeholder={
+						isEditing ? locations.users.passwordEditPlaceholder : undefined
+					}
+					{...register("password")}
+					errorMessage={errors.password?.message}
 				/>
 				<FormPasswordField
-					label="Confirmar contraseña"
-					name="confirmPassword"
+					label={locations.form.confirmPassword}
 					autoComplete="new-password"
+					{...register("confirmPassword")}
+					errorMessage={errors.confirmPassword?.message}
 				/>
 			</div>
 		</FormModal>

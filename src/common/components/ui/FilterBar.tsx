@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type FilterBarProps = {
 	/** Título de la tarjeta. Pasa `null` para ocultarlo. */
@@ -18,7 +19,7 @@ const GRID_COLUMNS = {
 
 /** Tarjeta "Filtros de búsqueda" que acomoda los campos en una grilla. */
 export const FilterBar = ({
-	title = "Filtros de búsqueda",
+	title = locations.form.filtersTitle,
 	columns = 4,
 	children,
 }: FilterBarProps) => {

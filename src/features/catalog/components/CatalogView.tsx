@@ -4,6 +4,7 @@ import { toast } from "@heroui/react";
 import { useState } from "react";
 import { EmptyState } from "@/common/components/ui/EmptyState";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 import { CartSummary } from "@/features/catalog/components/CartSummary";
 import { CatalogProductCard } from "@/features/catalog/components/CatalogProductCard";
 import { CatalogSearchBar } from "@/features/catalog/components/CatalogSearchBar";
@@ -13,6 +14,7 @@ import {
 	ALL_CATEGORIES,
 	filterCatalog,
 } from "@/features/catalog/lib/filterCatalog";
+import type { CheckoutFormValues } from "@/features/catalog/schema";
 import type { CatalogProduct } from "@/features/catalog/types";
 
 type CatalogViewProps = {
@@ -29,9 +31,17 @@ export const CatalogView = ({ products, categories }: CatalogViewProps) => {
 	const featuredProducts = products.filter((product) => product.isFeatured);
 	const visibleProducts = filterCatalog(products, category, search);
 
-	const handleCheckout = () => {
-		// TODO: llamar al Server Action que crea el pedido con los productos del carrito
-		toast.success(`Pedido enviado: ${cart.itemCount} productos (simulado)`);
+	const handleCheckout = ({ address }: CheckoutFormValues) => {
+		// TODO: llamar al Server Action que crea el pedido. Solo se envían id y cantidad:
+		// el precio y el total los calcula el servidor para que no se puedan alterar desde el navegador
+		console.log("Crear pedido", {
+			address,
+			items: cart.items.map(({ productId, quantity }) => ({
+				productId,
+				quantity,
+			})),
+		});
+		toast.success(locations.toasts.orderSent(cart.itemCount));
 		cart.clear();
 	};
 
@@ -48,7 +58,7 @@ export const CatalogView = ({ products, categories }: CatalogViewProps) => {
 				<section className="flex flex-col gap-3">
 					<h2 className="flex items-center gap-1.5 text-sm font-bold text-navy">
 						<Icon name="star" size={16} className="text-amber-400" />
-						Destacados
+						{locations.catalog.featured}
 					</h2>
 					{/* Fila con scroll horizontal para no ocupar más de una línea */}
 					<div className="flex gap-3 overflow-x-auto pb-2">
@@ -65,13 +75,15 @@ export const CatalogView = ({ products, categories }: CatalogViewProps) => {
 				</section>
 
 				<section className="flex flex-col gap-3">
-					<h2 className="text-sm font-bold text-navy">Catálogo</h2>
+					<h2 className="text-sm font-bold text-navy">
+						{locations.catalog.catalog}
+					</h2>
 					{visibleProducts.length === 0 ? (
 						<div className="rounded-2xl bg-white">
 							<EmptyState
 								icon="search"
-								title="No encontramos productos"
-								description="Prueba con otra búsqueda o categoría"
+								title={locations.catalog.noResultsTitle}
+								description={locations.catalog.noResultsDescription}
 							/>
 						</div>
 					) : (

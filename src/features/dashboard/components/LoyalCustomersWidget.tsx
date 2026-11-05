@@ -1,6 +1,7 @@
 import { RankBadge } from "@/common/components/ui/RankBadge";
 import { SectionCard } from "@/common/components/ui/SectionCard";
 import { UserAvatar } from "@/common/components/ui/UserAvatar";
+import { locations } from "@/common/locations";
 import type { LoyalCustomer } from "@/features/dashboard/types";
 
 type LoyalCustomersWidgetProps = {
@@ -12,7 +13,11 @@ export const LoyalCustomersWidget = ({
 	customers,
 }: LoyalCustomersWidgetProps) => {
 	return (
-		<SectionCard title="Clientes fieles" icon="trophy" className="h-full">
+		<SectionCard
+			title={locations.dashboard.loyalCustomers}
+			icon="trophy"
+			className="h-full"
+		>
 			<ol className="flex flex-col gap-4">
 				{customers.map((customer, index) => (
 					<li
@@ -31,7 +36,7 @@ export const LoyalCustomersWidget = ({
 									{customer.name}
 								</span>
 								<span className="text-xs text-gray-400">
-									{customer.orderCount} pedidos en total
+									{locations.dashboard.ordersInTotal(customer.orderCount)}
 								</span>
 							</div>
 						</div>

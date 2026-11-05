@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/common/components/ui/PageHeader";
+import { locations } from "@/common/locations";
 import { BillingStats } from "@/features/billing/components/BillingStats";
 import { InvoiceModal } from "@/features/billing/components/InvoiceModal";
 import { getBilledTotal, getInvoices } from "@/features/billing/lib/invoices";
@@ -39,8 +40,8 @@ export const BillingManager = ({ orders, reportDate }: BillingManagerProps) => {
 	return (
 		<div className="flex flex-col gap-6">
 			<PageHeader
-				title="Facturación"
-				description="Órdenes entregadas y facturas generadas"
+				title={locations.billing.title}
+				description={locations.billing.description}
 				icon="receipt"
 			/>
 
@@ -57,8 +58,8 @@ export const BillingManager = ({ orders, reportDate }: BillingManagerProps) => {
 			<OrdersTable
 				orders={visibleInvoices}
 				onView={openInvoice}
-				viewLabel="Ver detalles"
-				optionsHeader="Detalles"
+				viewLabel={locations.actions.viewDetails}
+				optionsHeader={locations.table.details}
 			/>
 
 			<InvoiceModal

@@ -4,12 +4,16 @@ import Image from "next/image";
 import { type ChangeEvent, useId, useState } from "react";
 import { getFieldClasses } from "@/common/components/form/fieldStyles";
 import { Icon } from "@/common/components/ui/Icon";
+import { locations } from "@/common/locations";
 
 type ImageUploadFieldProps = {
 	label: string;
 	/** Nombre del campo de la URL cuando se envíe el formulario. */
 	name: string;
 	defaultImageUrl?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	errorMessage?: string;
 };
 
 /**
@@ -21,8 +25,16 @@ export const ImageUploadField = ({
 	label,
 	name,
 	defaultImageUrl = "",
+	value,
+	onChange,
+	errorMessage,
 }: ImageUploadFieldProps) => {
-	const [imageUrl, setImageUrl] = useState(defaultImageUrl);
+	const [internalImageUrl, setInternalImageUrl] = useState(defaultImageUrl);
+	const imageUrl = value ?? internalImageUrl;
+	const updateImageUrl = (nextValue: string) => {
+		if (onChange) onChange(nextValue);
+		else setInternalImageUrl(nextValue);
+	};
 	const fileInputId = useId();
 	const urlInputId = useId();
 
@@ -31,7 +43,7 @@ export const ImageUploadField = ({
 		if (!file) return;
 
 		// URL temporal que solo existe en este navegador, suficiente para la vista previa
-		setImageUrl(URL.createObjectURL(file));
+		updateImageUrl(URL.createObjectURL(file));
 	};
 
 	return (
@@ -43,7 +55,7 @@ export const ImageUploadField = ({
 					<div className="relative shrink-0">
 						<Image
 							src={imageUrl}
-							alt="Vista previa del producto"
+							alt={locations.form.imagePreviewAlt}
 							width={88}
 							height={88}
 							unoptimized
@@ -51,8 +63,8 @@ export const ImageUploadField = ({
 						/>
 						<button
 							type="button"
-							onClick={() => setImageUrl("")}
-							aria-label="Quitar imagen"
+							onClick={() => updateImageUrl("")}
+							aria-label={locations.form.removeImage}
 							className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white"
 						>
 							<Icon name="x" size={12} />
@@ -65,7 +77,7 @@ export const ImageUploadField = ({
 					className="flex min-h-22 flex-1 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-200 text-sm text-gray-400 transition-colors hover:border-teal hover:text-teal-strong"
 				>
 					<Icon name="upload" size={20} />
-					Haz clic para subir una imagen
+					{locations.form.uploadImage}
 					<input
 						id={fileInputId}
 						type="file"
@@ -77,17 +89,21 @@ export const ImageUploadField = ({
 			</div>
 
 			<label htmlFor={urlInputId} className="sr-only">
-				URL de la imagen
+				{locations.form.imageUrl}
 			</label>
 			<input
 				id={urlInputId}
 				name={name}
 				type="url"
 				value={imageUrl}
-				onChange={(event) => setImageUrl(event.target.value)}
+				onChange={(event) => updateImageUrl(event.target.value)}
+				aria-invalid={Boolean(errorMessage)}
 				placeholder="https://..."
-				className={`h-10 text-xs ${getFieldClasses("default", false)}`}
+				className={`h-10 text-xs ${getFieldClasses("default", Boolean(errorMessage))}`}
 			/>
+			{errorMessage && (
+				<span className="text-xs text-red-600">{errorMessage}</span>
+			)}
 		</div>
 	);
 };

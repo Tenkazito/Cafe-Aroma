@@ -11,8 +11,8 @@ Para ver cada componente en vivo, corre `pnpm dev` y abre **http://localhost:300
   el **admin** gestiona catálogo, pedidos y facturación.
 - Alcance actual: **maquetación** fiel a las diapositivas, con **datos de ejemplo estáticos**
   (`src/features/*/mocks/`). Los formularios y acciones solo muestran un toast "(simulado)".
-- Pendiente (lo construye el equipo): backend (`queries/` y `actions/` con Prisma),
-  validación con Zod + React Hook Form y pruebas con Vitest. Cada punto a conectar está
+- Pendiente (lo construye el equipo): backend (API REST por capas en `src/app/api/`),
+  conexión de los formularios con la API y pruebas con Vitest. Cada punto a conectar está
   marcado en el código con un comentario `// TODO:`.
 - Solo existe **tema claro** (las diapositivas no definen modo oscuro).
 
@@ -31,14 +31,14 @@ Definidos en `src/app/globals.css` (`:root` + `@theme`), usables como clases de 
 | `teal` | `#75c9b7` | Acentos, llamada a la acción del cliente ("Solicitar ahora", "Finalizar Pedido"), badges |
 | `teal-strong` | `#2a7f6f` | **Texto** y enlaces teal. El teal original sobre blanco no llega al contraste mínimo (≈1.9:1) |
 | `lime` | `#abd699` | Acento secundario (poco uso) |
-| `lemon` | `#ffe26a` | Barra de meta del día, etiqueta "Top", rol Mensajero |
+| `lemon` | `#ffe26a` | Barra de meta del día, etiqueta "Top" |
 | `mint` | `#c7ddcc` | Fondo de las pantallas del cliente |
 
 ### Superficies
 
 | Token | Hex | Uso |
 |---|---|---|
-| `surface-admin` | `#eef4f1` | Fondo del panel de administración y del login admin |
+| `surface-admin` | `#eef4f1` | Fondo del panel de administración |
 | `surface-client` | `#c7ddcc` | Fondo de las pantallas del cliente |
 | `surface-field` | `#e6f0e9` | Campos, filas del carrito y notificaciones no leídas del cliente |
 | blanco | `#ffffff` | Tarjetas, tablas y modales |
@@ -55,8 +55,7 @@ para el mismo estado, aunque en las diapositivas variaban un poco).
 | Pedido **Entregado** | finalizado y facturable | `success` (verde) |
 | Pedido **Cancelado** | rechazado | `danger` (rojo) |
 | Rol **Administrador** | | `navy` (lavanda) |
-| Rol **Administrativo** | | `teal` |
-| Rol **Mensajero** | | `lemon` |
+| Rol **Cliente** | | `teal` |
 | **Activo / Inactivo** | usuarios, categorías, productos | `success` / `neutral`, con punto |
 | **Stock bajo** | stock ≤ 15 (`LOW_STOCK_THRESHOLD`) | texto `orange-500` |
 
@@ -115,9 +114,8 @@ Los enlaces de ambos menús están en `src/common/lib/navigation.ts`.
 ```text
 src/app/
 ├── page.tsx                         /                  → redirige a /login
-├── (auth)/login/page.tsx            /login             Login del cliente (usuario)
+├── (auth)/login/page.tsx            /login             Login único (correo); redirige según el rol
 ├── admin/
-│   ├── login/page.tsx               /admin/login       Login del admin (correo)
 │   └── (panel)/                     (grupo con AdminNavbar)
 │       ├── layout.tsx
 │       ├── page.tsx                 /admin             Dashboard
@@ -157,7 +155,7 @@ src/app/
 | `overlay/` | `AppModal` (base), `FormModal`, `ConfirmDialog` |
 
 Hooks y utilidades: `common/hooks/useCrudModals.ts`, `common/utils/format.ts`,
-`common/lib/navigation.ts`, `common/lib/statusOptions.ts`, `common/lib/env.ts`.
+`common/lib/navigation.ts`, `common/lib/formFields.ts`, `common/lib/env.ts`, `common/locations.ts` (todos los textos).
 
 ### Por feature — `src/features/<feature>/`
 
@@ -215,8 +213,8 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
   </FormModal>
   ```
 
-- El schema de Zod irá en `features/<feature>/schema.ts` y el envío en un Server Action
-  de `features/<feature>/actions/`.
+- El schema de Zod está en `features/<feature>/schema.ts` y el envío se hace a la API
+  (`src/app/api/<recurso>`) con `apiFetch`, dentro de un `try/catch`.
 
 ### Feedback
 
@@ -232,7 +230,7 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
 - El catálogo del cliente se **deriva** de los productos del admin (solo activos, stock 0 = agotado),
   y los totales de pedidos siempre se **calculan** desde sus productos (`getOrderTotal`).
 - Moneda: **COP** en toda la app (`formatCurrency`), aunque la diapositiva del cliente mostraba dólares.
-- Cuando exista el backend, se reemplaza el import del mock por una función de `queries/`.
+- Cuando exista el backend, se reemplaza el import del mock por los datos que devuelve la API.
 
 ---
 
@@ -253,6 +251,8 @@ Todos usan `AppModal`: título + X arriba, contenido, pie gris con botones a la 
 - Código, carpetas y features en **inglés** (`features/orders`, `OrdersTable`).
 - Textos de la interfaz y **URLs en español** (`/admin/pedidos`, `/mis-pedidos`).
 - Admin con prefijo `/admin`; cliente sin prefijo.
+- **Todos los textos de la interfaz viven en `src/common/locations.ts`** (objeto `locations`, separado por temas: `locations.actions`, `locations.errors`, `locations.users`...). Los componentes no llevan texto escrito a mano: si un texto cambia o se repite, se edita en un solo lugar. Los textos con datos son funciones (`locations.errors.manyCharacters(50)`) y los que llevan negrita se guardan en partes (`before`, `after`). Quedan fuera los datos de `mocks/` y los textos de `/dev`.
+- Roles: solo `administrador` y `cliente`.
 
 ---
 

@@ -1,6 +1,6 @@
-import type { Category } from "@/features/categories/types";
+import type { CategorySummary } from "@/features/categories/types";
 
-export const MOCK_CATEGORIES: Category[] = [
+export const MOCK_CATEGORIES: CategorySummary[] = [
 	{ id: 1, name: "Cafés Calientes", isActive: true },
 	{ id: 2, name: "Bebidas Frías", isActive: true },
 	{ id: 3, name: "Postres", isActive: true },
