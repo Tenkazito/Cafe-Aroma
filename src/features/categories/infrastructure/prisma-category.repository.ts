@@ -31,14 +31,14 @@ export class PrismaCategoryRepository implements CategoryRepository {
 		}
 	}
 
-	async getById(id: number): Promise<Category | null> {
+	async getById(id: number): Promise<Category | boolean> {
 		try {
 			const row = await categoriesTable()
 				.select("id", "titulo", "url", "fecha_creacion", "activo")
 				.where({ id })
 				.first();
 
-			if (!row) return null;
+			if (!row) return false;
 
 			return {
 				...row,
@@ -51,7 +51,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
 				error: error as Error,
 				module: "PrismaCategoryRepository:getById",
 			});
-			return null;
+			return false;
 		}
 	}
 
@@ -72,13 +72,13 @@ export class PrismaCategoryRepository implements CategoryRepository {
 		}
 	}
 
-	async update(data: IUpdate) {
+	async update(data: IUpdate): Promise<boolean> {
 		try {
-			await categoriesTable()
+			const row = await categoriesTable()
 				.where({ id: data.id })
-				.update({ titulo: data.name, url: data.slug });
+				.update({ titulo: data.name, url: data.url });
 
-			return true;
+			return !!row?.id;
 		} catch (error) {
 			logger({
 				error: error as Error,
@@ -88,11 +88,13 @@ export class PrismaCategoryRepository implements CategoryRepository {
 		}
 	}
 
-	async delete(id: number) {
+	async delete(id: number): Promise<boolean> {
 		try {
-			await categoriesTable().where({ id }).update({ activo: false });
+			const row = await categoriesTable()
+				.where({ id })
+				.update({ activo: false });
 
-			return true;
+			return !!row?.id;
 		} catch (error) {
 			logger({
 				error: error as Error,

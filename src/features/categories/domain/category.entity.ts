@@ -15,5 +15,5 @@ export interface ICreate {
 export interface IUpdate {
 	id: number;
 	name: string;
-	slug: string;
+	url?: string;
 }

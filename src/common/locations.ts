@@ -1,5 +1,3 @@
-import { notFound } from "next/navigation";
-
 /**
  * Todos los textos de la interfaz de Café Aroma, agrupados por tema.
  *
@@ -162,6 +160,8 @@ export const locations = {
 	messages: {
 		created: "Registro creado correctamente",
 		notCreated: "No se pudo crear el registro",
+		updated: "Registro correctamente actualizado",
+		deleted: "Registro eliminado correctamente",
 	},
 
 	/** Avisos (toasts). El "(simulado)" se quita cuando exista el backend. */

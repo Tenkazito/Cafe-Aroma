@@ -10,7 +10,7 @@ const repo = new PrismaCategoryRepository();
 export const categoryContainer = {
 	createCategory: new CreateUseCase(repo),
 	deleteCategory: new DeleteUseCase(repo),
-	getByIdCategory: new GetByIdUseCase(repo),
+	getCategoryById: new GetByIdUseCase(repo),
 	listCategory: new ListUseCase(repo),
 	updateCategory: new UpdateUseCase(repo),
 };

@@ -50,9 +50,33 @@ export const createCategory = async (request: Request) => {
 	}
 };
 
-export const updateCategory = async (request: Request) => {
+export const updateCategory = async (
+	request: Request,
+	{ params }: IRequestParams,
+) => {
 	try {
-		return NextResponse.json({ data: [] });
+		const { id } = await params;
+		const bodyData = await request.json();
+		const validation = categorySchema.safeParse(bodyData);
+
+		if (!validation.success) {
+			return NextResponse.json({
+				status: 400,
+				message: locations.errors.invalidData,
+			});
+		}
+
+		const data = {
+			id: Number(id),
+			name: validation.data.name,
+			slug: validation.data.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+		};
+
+		const status = await categoryContainer.updateCategory.execute(data);
+
+		if (!status)
+			return NextResponse.json({ message: locations.errors.notFound });
+		return NextResponse.json({ message: locations.messages.updated });
 	} catch (error) {
 		logger({ error: error as Error, module: "updateCategory", request });
 		return NextResponse.json({
@@ -69,6 +93,7 @@ export const getCategoryById = async (
 	try {
 		const { id } = await params;
 		const data = await categoryContainer.getCategoryById.execute(Number(id));
+		if (!data) return NextResponse.json({ message: locations.errors.notFound });
 		return NextResponse.json({ data: data });
 	} catch (error) {
 		logger({ error: error as Error, module: "getCategoryById", request });
@@ -79,9 +104,16 @@ export const getCategoryById = async (
 	}
 };
 
-export const deleteCategory = async (request: Request) => {
+export const deleteCategory = async (
+	request: Request,
+	{ params }: IRequestParams,
+) => {
 	try {
-		return NextResponse.json({ data: [] });
+		const { id } = await params;
+		const status = await categoryContainer.deleteCategory.execute(Number(id));
+		if (!status)
+			return NextResponse.json({ message: locations.errors.notFound });
+		return NextResponse.json({ message: locations.messages.deleted });
 	} catch (error) {
 		logger({ error: error as Error, module: "deleteCategory", request });
 		return NextResponse.json({
