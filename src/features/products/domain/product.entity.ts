@@ -3,26 +3,29 @@ export type Product = {
 	name: string;
 	slug: string;
 	categoryId: number;
-	createdAt: Date;
-	precioVenta: number;
+	createdAt: string;
+	price: number;
 	stock: number;
+	isActive: boolean;
 };
 
 export interface ICreate {
-	titulo: string;
-	url: string;
-	descripcion: string;
+	name: string;
+	slug: string;
+	description: string;
 	categoryId: number;
-	precio_venta: number;
+	price: number;
 	stock: number;
+	isActive?: boolean;
 }
 
 export interface IUpdate {
 	id: number;
-	titulo: string;
-	url: string;
-	descripcion: string;
+	name: string;
+	slug: string;
+	description: string;
 	categoryId: number;
-	precio_venta: number;
+	price: number;
 	stock: number;
+	isActive: boolean;
 }

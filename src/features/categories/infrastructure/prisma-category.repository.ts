@@ -5,7 +5,7 @@ import type {
 	IUpdate,
 } from "@/features/categories/domain/category.entity";
 import type { Category } from "../domain/category.entity";
-import type { CategoryRepository } from "../domain/category.repository";
+import type { CategoryRepository } from "../domain/Category.repository";
 
 const categoriesTable = () => db.orm.public.categorias;
 
