@@ -1,4 +1,4 @@
-import type { CategoryRepository } from "../domain/Category.repository";
+import type { CategoryRepository } from "../domain/category.repository";
 
 export class DeleteUseCase {
 	constructor(private repo: CategoryRepository) {}

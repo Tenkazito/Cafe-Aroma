@@ -1,6 +1,6 @@
 import { createUrl } from "@/common/utils/helpers";
 import type { IUpdate } from "../domain/category.entity";
-import type { CategoryRepository } from "../domain/Category.repository";
+import type { CategoryRepository } from "../domain/category.repository";
 
 export class UpdateUseCase {
 	constructor(private repo: CategoryRepository) {}
