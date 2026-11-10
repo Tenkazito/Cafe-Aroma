@@ -60,7 +60,7 @@ export const CategoriesShowcase = () => {
 					description="Pantalla completa de /admin/categorias."
 					path="src/features/categories/components/CategoriesManager.tsx"
 				>
-					<CategoriesManager categories={MOCK_CATEGORIES} />
+					<CategoriesManager />
 				</ComponentPreview>
 			</ShowcaseGroup>
 

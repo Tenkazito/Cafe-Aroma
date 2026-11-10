@@ -28,6 +28,7 @@ import { RankBadge } from "@/common/components/ui/RankBadge";
 import { RowActions } from "@/common/components/ui/RowActions";
 import { SearchInput } from "@/common/components/ui/SearchInput";
 import { SectionCard } from "@/common/components/ui/SectionCard";
+import { SkeletonTable } from "@/common/components/ui/SkeletonTable";
 import { StatCard, type StatTone } from "@/common/components/ui/StatCard";
 import { StatusBadge } from "@/common/components/ui/StatusBadge";
 import { UserAvatar } from "@/common/components/ui/UserAvatar";
@@ -319,6 +320,25 @@ const UiGroup = () => {
 						columns={[{ key: "name", header: "Sin filas", cell: () => null }]}
 					/>
 				</div>
+			</ComponentPreview>
+
+			<ComponentPreview
+				name="SkeletonTable"
+				description="Tabla falsa que parpadea mientras cargan los datos (ej. el primer fetch con SWR). Usa el mismo contenedor que DataTable para que no salte el layout."
+				path="src/common/components/ui/SkeletonTable.tsx"
+				props={[
+					{
+						name: "columns",
+						description: "Cantidad de columnas (igual que la tabla real)",
+					},
+					{ name: "rows", description: "Filas de relleno (por defecto 5)" },
+					{
+						name: "variant",
+						description: '"card" (con tarjeta) | "plain" (dentro de otra)',
+					},
+				]}
+			>
+				<SkeletonTable columns={4} rows={3} />
 			</ComponentPreview>
 
 			<ComponentPreview

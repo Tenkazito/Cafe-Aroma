@@ -2,34 +2,63 @@
 
 import { Button, toast } from "@heroui/react";
 import { useState } from "react";
+import useSWR from "swr";
 import { ConfirmDialog } from "@/common/components/overlay/ConfirmDialog";
 import { FilterBar } from "@/common/components/ui/FilterBar";
 import { Icon } from "@/common/components/ui/Icon";
 import { PageHeader } from "@/common/components/ui/PageHeader";
 import { SearchInput } from "@/common/components/ui/SearchInput";
+import { SkeletonTable } from "@/common/components/ui/SkeletonTable";
 import { useCrudModals } from "@/common/hooks/useCrudModals";
 import { locations } from "@/common/locations";
+import { apiFetch } from "@/common/utils/api";
+import { logger } from "@/common/utils/logger";
 import { CategoriesTable } from "@/features/categories/components/CategoriesTable";
 import { CategoryFormModal } from "@/features/categories/components/CategoryFormModal";
 import { filterCategories } from "@/features/categories/lib/filterCategories";
 import type { CategorySummary } from "@/features/categories/types";
 
-type CategoriesManagerProps = {
-	categories: CategorySummary[];
-};
+const CATEGORIES_URL = "/api/categories";
+// ID, Nombre, Estado y Acciones: las mismas columnas que `CategoriesTable`
+const CATEGORY_COLUMNS = 4;
 
 /** Pantalla Categorías: búsqueda, tabla y modales de crear / editar / eliminar. */
-export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
+export const CategoriesManager = () => {
 	const [search, setSearch] = useState("");
 	const modals = useCrudModals<CategorySummary>();
+
+	// SWR guarda la lista en caché con la URL como clave; `mutate()` la vuelve a pedir
+	const { data, error, isLoading, mutate } = useSWR(
+		CATEGORIES_URL,
+		() => apiFetch<{ data: CategorySummary[] }>(CATEGORIES_URL),
+		{
+			revalidateOnFocus: false,
+			revalidateOnReconnect: false,
+		},
+	);
+
+	const categories = data?.data ?? [];
 	const visibleCategories = filterCategories(categories, search);
 
-	const handleDelete = () => {
-		// TODO: llamar al Server Action que elimina la categoría
-		console.log("Eliminar categoría", { id: modals.itemToDelete?.id });
-		toast.success(
-			locations.toasts.categoryDeleted(modals.itemToDelete?.name ?? ""),
-		);
+	const emptyMessage = error
+		? locations.emptyStates.loadError
+		: locations.categories.empty;
+
+	const handleDelete = async () => {
+		const category = modals.itemToDelete;
+		if (!category) return;
+
+		try {
+			await apiFetch(`${CATEGORIES_URL}/${category.id}`, { method: "DELETE" });
+			toast.success(locations.toasts.categoryDeleted(category.name));
+			await mutate();
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "CategoriesManager:handleDelete",
+			});
+			toast.danger(locations.toasts.categoryDeleteError);
+		}
 	};
 
 	return (
@@ -55,17 +84,24 @@ export const CategoriesManager = ({ categories }: CategoriesManagerProps) => {
 				/>
 			</FilterBar>
 
-			<CategoriesTable
-				categories={visibleCategories}
-				onEdit={modals.openEdit}
-				onDelete={modals.openDelete}
-			/>
+			{/* `isLoading` solo es true en la 1ª carga; al recargar con mutate() la tabla sigue visible */}
+			{isLoading ? (
+				<SkeletonTable columns={CATEGORY_COLUMNS} />
+			) : (
+				<CategoriesTable
+					categories={visibleCategories}
+					emptyMessage={emptyMessage}
+					onEdit={modals.openEdit}
+					onDelete={modals.openDelete}
+				/>
+			)}
 
 			<CategoryFormModal
 				key={modals.formKey}
 				isOpen={modals.isFormOpen}
 				onOpenChange={modals.setFormOpen}
 				category={modals.editingItem}
+				onSaved={() => mutate()}
 			/>
 
 			<ConfirmDialog

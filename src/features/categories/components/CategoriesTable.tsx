@@ -11,12 +11,15 @@ type CategoriesTableProps = {
 	categories: CategorySummary[];
 	onEdit: (category: CategorySummary) => void;
 	onDelete: (category: CategorySummary) => void;
+	/** Texto cuando no hay filas (cargando, error o búsqueda sin resultados). */
+	emptyMessage?: string;
 };
 
 export const CategoriesTable = ({
 	categories,
 	onEdit,
 	onDelete,
+	emptyMessage = locations.categories.empty,
 }: CategoriesTableProps) => {
 	const columns: DataTableColumn<CategorySummary>[] = [
 		{
@@ -57,7 +60,7 @@ export const CategoriesTable = ({
 			columns={columns}
 			rows={categories}
 			getRowKey={(category) => category.id}
-			emptyMessage={locations.categories.empty}
+			emptyMessage={emptyMessage}
 		/>
 	);
 };

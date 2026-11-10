@@ -20,12 +20,15 @@ type CategoryFormModalProps = {
 	onOpenChange: (isOpen: boolean) => void;
 	/** Si llega una categoría el modal edita; si no, crea una nueva. */
 	category?: CategorySummary;
+	/** Se llama después de guardar bien, para que el listado se recargue. */
+	onSaved?: () => void;
 };
 
 export const CategoryFormModal = ({
 	isOpen,
 	onOpenChange,
 	category,
+	onSaved,
 }: CategoryFormModalProps) => {
 	const isEditing = Boolean(category);
 
@@ -50,21 +53,18 @@ export const CategoryFormModal = ({
 				? `/api/categories/${category?.id}`
 				: "/api/categories";
 
-			const res = await apiFetch<{ success: boolean }>(url, {
+			// `apiFetch` lanza un error si la API responde 4xx/5xx; si llega aquí, se guardó
+			await apiFetch(url, {
 				method,
 				body: data,
 			});
 
-			if (res.success) {
-				toast.success(
-					isEditing
-						? locations.toasts.categoryUpdated
-						: locations.toasts.categoryCreated,
-				);
-			} else {
-				toast.danger(locations.toasts.categoryError);
-			}
-
+			toast.success(
+				isEditing
+					? locations.toasts.categoryUpdated
+					: locations.toasts.categoryCreated,
+			);
+			onSaved?.();
 			onOpenChange(false);
 		} catch (error) {
 			logger({
@@ -97,12 +97,14 @@ export const CategoryFormModal = ({
 				{...register("name")}
 				errorMessage={errors.name?.message}
 			/>
-			<FormSelectField
-				label={locations.form.status}
-				options={STATUS_OPTIONS}
-				{...register("isActive", booleanSelectOptions)}
-				errorMessage={errors.isActive?.message}
-			/>
+			{isEditing && (
+				<FormSelectField
+					label={locations.form.status}
+					options={STATUS_OPTIONS}
+					{...register("isActive", booleanSelectOptions)}
+					errorMessage={errors.isActive?.message}
+				/>
+			)}
 		</FormModal>
 	);
 };

@@ -10,6 +10,7 @@ export class UpdateUseCase {
 			id: data.id,
 			name: data.name,
 			url: createUrl(data.name),
+			isActive: data.isActive,
 		};
 		return this.repo.update(dataToUpdate);
 	}

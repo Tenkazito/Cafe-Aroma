@@ -5,18 +5,25 @@ import { logger } from "@/common/utils/logger";
 import { categorySchema } from "@/features/categories/schema";
 import { categoryContainer } from "../categories.container";
 
+// El código HTTP va en el 2º argumento: así `apiFetch` detecta el error (`response.ok`)
+const internalError = () =>
+	NextResponse.json({ message: locations.errors.internal }, { status: 500 });
+
+const invalidData = () =>
+	NextResponse.json({ message: locations.errors.invalidData }, { status: 400 });
+
+const notFound = () =>
+	NextResponse.json({ message: locations.errors.notFound }, { status: 404 });
+
 export const listCategories = async (request: Request) => {
 	try {
 		const data = await categoryContainer.listCategory.execute();
 
-		if (!data) return NextResponse.json({ message: locations.errors.notFound });
+		if (!data) return notFound();
 		return NextResponse.json({ data: data });
 	} catch (error) {
 		logger({ error: error as Error, module: "listCategories", request });
-		return NextResponse.json({
-			status: 500,
-			message: locations.errors.internal,
-		});
+		return internalError();
 	}
 };
 
@@ -25,28 +32,25 @@ export const createCategory = async (request: Request) => {
 		const bodyData = await request.json();
 		const validation = categorySchema.safeParse(bodyData);
 
-		if (!validation.success) {
-			return NextResponse.json({
-				status: 400,
-				message: locations.errors.invalidData,
-			});
-		}
+		if (!validation.success) return invalidData();
 
 		const status = await categoryContainer.createCategory.execute(
 			validation.data.name,
 		);
 
-		return NextResponse.json({
-			response: status
-				? locations.messages.created
-				: locations.messages.notCreated,
-		});
+		if (!status) {
+			return NextResponse.json(
+				{ message: locations.messages.notCreated },
+				{ status: 500 },
+			);
+		}
+		return NextResponse.json(
+			{ message: locations.messages.created },
+			{ status: 201 },
+		);
 	} catch (error) {
 		logger({ error: error as Error, module: "createCategory", request });
-		return NextResponse.json({
-			status: 500,
-			message: locations.errors.internal,
-		});
+		return internalError();
 	}
 };
 
@@ -59,30 +63,22 @@ export const updateCategory = async (
 		const bodyData = await request.json();
 		const validation = categorySchema.safeParse(bodyData);
 
-		if (!validation.success) {
-			return NextResponse.json({
-				status: 400,
-				message: locations.errors.invalidData,
-			});
-		}
+		if (!validation.success) return invalidData();
 
+		// La `url` la genera el caso de uso a partir del nombre
 		const data = {
 			id: Number(id),
 			name: validation.data.name,
-			slug: validation.data.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+			isActive: validation.data.isActive,
 		};
 
 		const status = await categoryContainer.updateCategory.execute(data);
 
-		if (!status)
-			return NextResponse.json({ message: locations.errors.notFound });
+		if (!status) return notFound();
 		return NextResponse.json({ message: locations.messages.updated });
 	} catch (error) {
 		logger({ error: error as Error, module: "updateCategory", request });
-		return NextResponse.json({
-			status: 500,
-			message: locations.errors.internal,
-		});
+		return internalError();
 	}
 };
 
@@ -93,14 +89,11 @@ export const getCategoryById = async (
 	try {
 		const { id } = await params;
 		const data = await categoryContainer.getCategoryById.execute(Number(id));
-		if (!data) return NextResponse.json({ message: locations.errors.notFound });
+		if (!data) return notFound();
 		return NextResponse.json({ data: data });
 	} catch (error) {
 		logger({ error: error as Error, module: "getCategoryById", request });
-		return NextResponse.json({
-			status: 500,
-			message: locations.errors.internal,
-		});
+		return internalError();
 	}
 };
 
@@ -111,14 +104,10 @@ export const deleteCategory = async (
 	try {
 		const { id } = await params;
 		const status = await categoryContainer.deleteCategory.execute(Number(id));
-		if (!status)
-			return NextResponse.json({ message: locations.errors.notFound });
+		if (!status) return notFound();
 		return NextResponse.json({ message: locations.messages.deleted });
 	} catch (error) {
 		logger({ error: error as Error, module: "deleteCategory", request });
-		return NextResponse.json({
-			status: 500,
-			message: locations.errors.internal,
-		});
+		return internalError();
 	}
 };

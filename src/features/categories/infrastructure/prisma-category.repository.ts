@@ -19,7 +19,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
 			return query.map((item) => ({
 				...item,
 				name: item.titulo,
-				isActive: item.activo ? "Activo" : "Inactivo",
+				isActive: item.activo,
 				createdAt: item.fecha_creacion,
 			}));
 		} catch (error) {
@@ -43,7 +43,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
 			return {
 				...row,
 				name: row.titulo,
-				isActive: row.activo ? "Activo" : "Inactivo",
+				isActive: row.activo,
 				createdAt: row.fecha_creacion,
 			};
 		} catch (error) {
@@ -76,7 +76,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
 		try {
 			const row = await categoriesTable()
 				.where({ id: data.id })
-				.update({ titulo: data.name, url: data.url });
+				.update({ titulo: data.name, url: data.url, activo: data.isActive });
 
 			return !!row?.id;
 		} catch (error) {

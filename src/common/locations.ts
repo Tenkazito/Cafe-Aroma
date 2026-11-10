@@ -174,6 +174,7 @@ export const locations = {
 		categoryUpdated: "Categoría actualizada (simulado)",
 		categoryDeleted: (name: string) => `${name} eliminada (simulado)`,
 		categoryError: "No se pudo guardar la categoría",
+		categoryDeleteError: "No se pudo eliminar la categoría",
 		productCreated: "Producto creado (simulado)",
 		productUpdated: "Producto actualizado (simulado)",
 		productError: "No se pudo guardar el producto",
@@ -194,6 +195,8 @@ export const locations = {
 
 	emptyStates: {
 		noRecords: "No hay registros para mostrar.",
+		loading: "Cargando...",
+		loadError: "No se pudieron cargar los registros.",
 	},
 
 	auth: {
