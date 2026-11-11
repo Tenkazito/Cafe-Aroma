@@ -14,9 +14,16 @@ type UsersTableProps = {
 	users: User[];
 	onEdit: (user: User) => void;
 	onDelete: (user: User) => void;
+	/** Texto cuando no hay filas (error al cargar o búsqueda sin resultados). */
+	emptyMessage?: string;
 };
 
-export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
+export const UsersTable = ({
+	users,
+	onEdit,
+	onDelete,
+	emptyMessage = locations.users.empty,
+}: UsersTableProps) => {
 	const columns: DataTableColumn<User>[] = [
 		{
 			key: "id",
@@ -74,7 +81,7 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
 			columns={columns}
 			rows={users}
 			getRowKey={(user) => user.id}
-			emptyMessage={locations.users.empty}
+			emptyMessage={emptyMessage}
 		/>
 	);
 };

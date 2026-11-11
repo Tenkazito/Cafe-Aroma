@@ -6,6 +6,7 @@ const unsplash = (photoId: string) =>
 export const MOCK_PRODUCTS: Product[] = [
 	{
 		id: 1,
+		categoryId: 1,
 		categoryName: "Cafés Calientes",
 		name: "Latte Clásico",
 		description: "Espresso suave con leche vaporizada y arte en la espuma.",
@@ -16,6 +17,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 2,
+		categoryId: 1,
 		categoryName: "Cafés Calientes",
 		name: "Cappuccino Italiano",
 		description: "Equilibrio perfecto entre espresso, leche y espuma.",
@@ -26,6 +28,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 3,
+		categoryId: 1,
 		categoryName: "Cafés Calientes",
 		name: "Espresso Doble",
 		description: "Dos shots de espresso intenso y aromático.",
@@ -36,6 +39,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 4,
+		categoryId: 1,
 		categoryName: "Cafés Calientes",
 		name: "Matcha Latte",
 		description: "Té verde matcha con leche cremosa.",
@@ -46,6 +50,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 5,
+		categoryId: 2,
 		categoryName: "Bebidas Frías",
 		name: "Frappuccino Caramelo",
 		description: "Café frío batido con hielo, caramelo y crema.",
@@ -56,6 +61,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 6,
+		categoryId: 2,
 		categoryName: "Bebidas Frías",
 		name: "Cold Brew Vainilla",
 		description: "Café infusionado en frío por 18 horas con vainilla.",
@@ -66,6 +72,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 7,
+		categoryId: 3,
 		categoryName: "Postres",
 		name: "Muffin de Arándanos",
 		description: "Muffin esponjoso con arándanos frescos.",
@@ -76,6 +83,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 8,
+		categoryId: 3,
 		categoryName: "Postres",
 		name: "Cheesecake de Frutos Rojos",
 		description: "Cheesecake cremoso con salsa de frutos rojos.",
@@ -86,6 +94,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 9,
+		categoryId: 3,
 		categoryName: "Postres",
 		name: "Brownie de Chocolate",
 		description: "Brownie húmedo de chocolate semiamargo.",
@@ -96,6 +105,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 10,
+		categoryId: 4,
 		categoryName: "Panadería",
 		name: "Croissant de Mantequilla",
 		description: "Croissant hojaldrado horneado cada mañana.",
@@ -106,6 +116,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 11,
+		categoryId: 5,
 		categoryName: "Snacks",
 		name: "Cookies de Chocolate",
 		description: "Galletas crocantes con chips de chocolate.",
@@ -116,6 +127,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 12,
+		categoryId: 5,
 		categoryName: "Snacks",
 		name: "Donuts Glaseadas",
 		description: "Donas suaves con glaseado de colores.",
@@ -126,6 +138,7 @@ export const MOCK_PRODUCTS: Product[] = [
 	},
 	{
 		id: 13,
+		categoryId: 3,
 		categoryName: "Postres",
 		name: "Cupcake de Caramelo",
 		description: "Cupcake con buttercream de caramelo salado.",

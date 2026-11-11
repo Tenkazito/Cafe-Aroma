@@ -12,8 +12,6 @@ import { ShowcaseGroup } from "@/features/showcase/components/ShowcaseGroup";
 import { ShowcasePage } from "@/features/showcase/components/ShowcasePage";
 import { getShowcaseSection } from "@/features/showcase/lib/sections";
 
-const CATEGORY_NAMES = MOCK_CATEGORIES.map((category) => category.name);
-
 export const ProductsShowcase = () => {
 	return (
 		<ShowcasePage section={getShowcaseSection("products")}>
@@ -36,8 +34,8 @@ export const ProductsShowcase = () => {
 					path="src/features/products/components/ProductFormModal.tsx"
 					props={[
 						{
-							name: "categoryNames",
-							description: "Opciones del select Categoría",
+							name: "categories",
+							description: "Categorías del select (el valor es su id)",
 						},
 					]}
 				>
@@ -48,7 +46,7 @@ export const ProductsShowcase = () => {
 								<ProductFormModal
 									isOpen={isOpen}
 									onOpenChange={onOpenChange}
-									categoryNames={CATEGORY_NAMES}
+									categories={MOCK_CATEGORIES}
 								/>
 							)}
 						/>
@@ -58,7 +56,7 @@ export const ProductsShowcase = () => {
 								<ProductFormModal
 									isOpen={isOpen}
 									onOpenChange={onOpenChange}
-									categoryNames={CATEGORY_NAMES}
+									categories={MOCK_CATEGORIES}
 									product={MOCK_PRODUCTS[0]}
 								/>
 							)}
@@ -71,10 +69,7 @@ export const ProductsShowcase = () => {
 					description="Pantalla completa de /admin/productos (incluye la confirmación 'Eliminar Producto')."
 					path="src/features/products/components/ProductsManager.tsx"
 				>
-					<ProductsManager
-						products={MOCK_PRODUCTS}
-						categoryNames={CATEGORY_NAMES}
-					/>
+					<ProductsManager />
 				</ComponentPreview>
 			</ShowcaseGroup>
 

@@ -14,12 +14,15 @@ type ProductsTableProps = {
 	products: Product[];
 	onEdit: (product: Product) => void;
 	onDelete: (product: Product) => void;
+	/** Texto cuando no hay filas (error al cargar o búsqueda sin resultados). */
+	emptyMessage?: string;
 };
 
 export const ProductsTable = ({
 	products,
 	onEdit,
 	onDelete,
+	emptyMessage = locations.products.empty,
 }: ProductsTableProps) => {
 	const columns: DataTableColumn<Product>[] = [
 		{
@@ -93,7 +96,7 @@ export const ProductsTable = ({
 			columns={columns}
 			rows={products}
 			getRowKey={(product) => product.id}
-			emptyMessage={locations.products.empty}
+			emptyMessage={emptyMessage}
 		/>
 	);
 };

@@ -25,8 +25,8 @@ const password = z
  * Formulario de usuario → tabla `usuarios`.
  * Al editar, la contraseña puede quedar vacía ("no cambiarla"); si se escribe
  * algo, debe cumplir las mismas reglas que al crear.
- * Que el correo no esté repetido (`email @unique`) lo valida la base al guardar,
- * no Zod: el Server Action traduce ese error (P2002) a `locations.errors.duplicateEmail`.
+ * Que el correo no esté repetido (`email @unique`) no lo valida Zod: lo revisa el
+ * caso de uso contra la base y la API responde 409 con `locations.errors.duplicateEmail`.
  */
 export const userSchema = (isEditing: boolean) =>
 	z

@@ -2,37 +2,63 @@
 
 import { Button, toast } from "@heroui/react";
 import { useState } from "react";
+import useSWR from "swr";
 import { ConfirmDialog } from "@/common/components/overlay/ConfirmDialog";
 import { FilterBar } from "@/common/components/ui/FilterBar";
 import { Icon } from "@/common/components/ui/Icon";
 import { PageHeader } from "@/common/components/ui/PageHeader";
 import { SearchInput } from "@/common/components/ui/SearchInput";
+import { SkeletonTable } from "@/common/components/ui/SkeletonTable";
 import { useCrudModals } from "@/common/hooks/useCrudModals";
 import { locations } from "@/common/locations";
+import { apiFetch } from "@/common/utils/api";
+import { logger } from "@/common/utils/logger";
 import { UserFormModal } from "@/features/users/components/UserFormModal";
 import { UsersTable } from "@/features/users/components/UsersTable";
 import { filterUsers } from "@/features/users/lib/filterUsers";
 import { getFullName } from "@/features/users/lib/getFullName";
 import type { User } from "@/features/users/types";
 
-type UsersManagerProps = {
-	users: User[];
-};
+const USERS_URL = "/api/users";
+// ID, Nombre, Email, Rol, Estado y Acciones: las columnas de `UsersTable`
+const USER_COLUMNS = 6;
 
 /** Pantalla Usuarios: búsqueda, tabla y modales de crear / editar / eliminar. */
-export const UsersManager = ({ users }: UsersManagerProps) => {
+export const UsersManager = () => {
 	const [search, setSearch] = useState("");
 	const modals = useCrudModals<User>();
+
+	const { data, error, isLoading, mutate } = useSWR(
+		USERS_URL,
+		() => apiFetch<{ data: User[] }>(USERS_URL),
+		{
+			revalidateOnFocus: false,
+			revalidateOnReconnect: false,
+		},
+	);
+
+	const users = data?.data ?? [];
 	const visibleUsers = filterUsers(users, search);
 
-	const handleDelete = () => {
-		// TODO: llamar al Server Action que elimina el usuario
-		console.log("Eliminar usuario", { id: modals.itemToDelete?.id });
-		toast.success(
-			locations.toasts.userDeleted(
-				modals.itemToDelete ? getFullName(modals.itemToDelete) : "",
-			),
-		);
+	const emptyMessage = error
+		? locations.emptyStates.loadError
+		: locations.users.empty;
+
+	const handleDelete = async () => {
+		const user = modals.itemToDelete;
+		if (!user) return;
+
+		try {
+			await apiFetch(`${USERS_URL}/${user.id}`, { method: "DELETE" });
+			toast.success(locations.toasts.userDeleted(getFullName(user)));
+			await mutate();
+		} catch (error) {
+			logger({
+				error: error as Error,
+				module: "UsersManager:handleDelete",
+			});
+			toast.danger(locations.toasts.userDeleteError);
+		}
 	};
 
 	return (
@@ -58,17 +84,23 @@ export const UsersManager = ({ users }: UsersManagerProps) => {
 				/>
 			</FilterBar>
 
-			<UsersTable
-				users={visibleUsers}
-				onEdit={modals.openEdit}
-				onDelete={modals.openDelete}
-			/>
+			{isLoading ? (
+				<SkeletonTable columns={USER_COLUMNS} />
+			) : (
+				<UsersTable
+					users={visibleUsers}
+					emptyMessage={emptyMessage}
+					onEdit={modals.openEdit}
+					onDelete={modals.openDelete}
+				/>
+			)}
 
 			<UserFormModal
 				key={modals.formKey}
 				isOpen={modals.isFormOpen}
 				onOpenChange={modals.setFormOpen}
 				user={modals.editingItem}
+				onSaved={() => mutate()}
 			/>
 
 			<ConfirmDialog

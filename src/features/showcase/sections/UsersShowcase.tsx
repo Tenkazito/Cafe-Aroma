@@ -77,7 +77,7 @@ export const UsersShowcase = () => {
 					description="Pantalla completa de /admin/usuarios: encabezado, búsqueda, tabla y modales. Es el único componente cliente con estado; los demás solo pintan."
 					path="src/features/users/components/UsersManager.tsx"
 				>
-					<UsersManager users={MOCK_USERS} />
+					<UsersManager />
 				</ComponentPreview>
 			</ShowcaseGroup>
 

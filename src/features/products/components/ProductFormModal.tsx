@@ -11,6 +11,7 @@ import { booleanSelectOptions, STATUS_OPTIONS } from "@/common/lib/formFields";
 import { locations } from "@/common/locations";
 import { apiFetch } from "@/common/utils/api";
 import { logger } from "@/common/utils/logger";
+import type { CategorySummary } from "@/features/categories/types";
 import {
 	type ProductFormValues,
 	productSchema,
@@ -20,23 +21,29 @@ import type { Product } from "@/features/products/types";
 type ProductFormModalProps = {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
-	/** Nombres de las categorías disponibles para el select. */
-	categoryNames: string[];
+	/** Categorías para el select (se usa su id como valor). */
+	categories: CategorySummary[];
 	/** Si llega un producto el modal edita; si no, crea uno nuevo. */
 	product?: Product;
+	/** Se llama después de guardar bien, para que el listado se recargue. */
+	onSaved?: () => void;
 };
 
 export const ProductFormModal = ({
 	isOpen,
 	onOpenChange,
-	categoryNames,
+	categories,
 	product,
+	onSaved,
 }: ProductFormModalProps) => {
 	const isEditing = Boolean(product);
-	const categoryOptions = categoryNames.map((name) => ({
-		value: name,
-		label: name,
-	}));
+	// Las inactivas no se ofrecen, salvo la que ya tiene el producto que se edita
+	const categoryOptions = categories
+		.filter(
+			(category) => category.isActive || category.id === product?.categoryId,
+		)
+		.map((category) => ({ value: String(category.id), label: category.name }));
+
 	const {
 		register,
 		handleSubmit,
@@ -45,7 +52,7 @@ export const ProductFormModal = ({
 	} = useForm<ProductFormValues>({
 		resolver: zodResolver(productSchema),
 		defaultValues: {
-			categoryName: product?.categoryName ?? "",
+			categoryId: product?.categoryId,
 			name: product?.name ?? "",
 			description: product?.description ?? "",
 			price: product?.price,
@@ -58,25 +65,16 @@ export const ProductFormModal = ({
 	const onSubmit = async (data: ProductFormValues) => {
 		try {
 			const method = isEditing ? "PUT" : "POST";
-			const url = isEditing
-				? `/api/products/${product?.id}`
-				: "/api/products";
+			const url = isEditing ? `/api/products/${product?.id}` : "/api/products";
 
-			const res = await apiFetch<{ success: boolean }>(url, {
-				method,
-				body: data,
-			});
+			await apiFetch(url, { method, body: data });
 
-			if (res.success) {
-				toast.success(
-					isEditing
-						? locations.toasts.productUpdated
-						: locations.toasts.productCreated,
-				);
-			} else {
-				toast.danger(locations.toasts.productError);
-			}
-
+			toast.success(
+				isEditing
+					? locations.toasts.productUpdated
+					: locations.toasts.productCreated,
+			);
+			onSaved?.();
 			onOpenChange(false);
 		} catch (error) {
 			logger({
@@ -108,8 +106,8 @@ export const ProductFormModal = ({
 					label={locations.products.categoryLabel}
 					placeholder={locations.products.categoryPlaceholder}
 					options={categoryOptions}
-					{...register("categoryName")}
-					errorMessage={errors.categoryName?.message}
+					{...register("categoryId", { valueAsNumber: true })}
+					errorMessage={errors.categoryId?.message}
 				/>
 				<FormTextField
 					label={locations.form.name}

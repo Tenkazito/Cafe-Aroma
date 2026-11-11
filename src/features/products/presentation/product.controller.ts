@@ -1,77 +1,60 @@
 import { NextResponse } from "next/server";
 import type { IRequestParams } from "@/common/interfaces";
-import { db } from "@/common/lib/db";
 import { locations } from "@/common/locations";
 import { logger } from "@/common/utils/logger";
 import { productSchema } from "@/features/products/schema";
 import { productContainer } from "../products.container";
 
-const findCategoryIdByName = async (categoryName: string) => {
-	const matches = await db.orm.public.categorias
-		.select("id")
-		.where({ titulo: categoryName, activo: true })
-		.all();
+const internalError = () =>
+	NextResponse.json({ message: locations.errors.internal }, { status: 500 });
 
-	// No elegir arbitrariamente si hay categorías activas con el mismo título.
-	return matches.length === 1 ? matches[0].id : null;
+const invalidData = () =>
+	NextResponse.json({ message: locations.errors.invalidData }, { status: 400 });
+
+const notFound = () =>
+	NextResponse.json({ message: locations.errors.notFound }, { status: 404 });
+
+/** Valida el body con `productSchema` y quita la imagen, que por ahora no se guarda. */
+const parseProductBody = async (request: Request) => {
+	const validation = productSchema.safeParse(await request.json());
+	if (!validation.success) return null;
+
+	const { imageUrl: _imageUrl, ...data } = validation.data;
+	return data;
 };
 
 export const listProduct = async (request: Request) => {
 	try {
 		const data = await productContainer.listProduct.execute();
-		if (!data) {
-			return NextResponse.json({ message: locations.errors.notFound });
-		}
 
+		if (!data) return notFound();
 		return NextResponse.json({ data });
 	} catch (error) {
 		logger({ error: error as Error, module: "listProduct", request });
-		return NextResponse.json(
-			{ message: locations.errors.internal },
-			{ status: 500 },
-		);
+		return internalError();
 	}
 };
 
 export const createProduct = async (request: Request) => {
 	try {
-		const bodyData = await request.json();
-		const validation = productSchema.safeParse(bodyData);
+		const data = await parseProductBody(request);
+		if (!data) return invalidData();
 
-		if (!validation.success) {
+		const status = await productContainer.createProduct.execute(data);
+
+		if (!status) {
 			return NextResponse.json(
-				{ message: locations.errors.invalidData },
-				{ status: 400 },
+				{ message: locations.messages.notCreated },
+				{ status: 500 },
 			);
 		}
-
-		const categoryId = await findCategoryIdByName(validation.data.categoryName);
-		if (categoryId === null) {
-			return NextResponse.json(
-				{ message: locations.errors.invalidData },
-				{ status: 400 },
-			);
-		}
-
-		const { categoryName: _categoryName, imageUrl: _imageUrl, ...data } =
-			validation.data;
-		const success = await productContainer.createProduct.execute({
-			...data,
-			categoryId,
-		});
-
-		return NextResponse.json({
-			success,
-			response: success
-				? locations.messages.created
-				: locations.messages.notCreated,
-		});
+		return NextResponse.json(
+			{ message: locations.messages.created },
+			{ status: 201 },
+		);
 	} catch (error) {
 		logger({ error: error as Error, module: "createProduct", request });
-		return NextResponse.json(
-			{ message: locations.errors.internal },
-			{ status: 500 },
-		);
+		return internalError();
 	}
 };
 
@@ -81,49 +64,19 @@ export const updateProduct = async (
 ) => {
 	try {
 		const { id } = await params;
-		const bodyData = await request.json();
-		const validation = productSchema.safeParse(bodyData);
+		const data = await parseProductBody(request);
+		if (!data) return invalidData();
 
-		if (!validation.success) {
-			return NextResponse.json(
-				{ message: locations.errors.invalidData },
-				{ status: 400 },
-			);
-		}
-
-		const categoryId = await findCategoryIdByName(validation.data.categoryName);
-		if (categoryId === null) {
-			return NextResponse.json(
-				{ message: locations.errors.invalidData },
-				{ status: 400 },
-			);
-		}
-
-		const { categoryName: _categoryName, imageUrl: _imageUrl, ...data } =
-			validation.data;
-		const success = await productContainer.updateProduct.execute({
+		const status = await productContainer.updateProduct.execute({
 			id: Number(id),
 			...data,
-			categoryId,
 		});
 
-		if (!success) {
-			return NextResponse.json(
-				{ message: locations.errors.notFound },
-				{ status: 404 },
-			);
-		}
-
-		return NextResponse.json({
-			success: true,
-			message: locations.messages.updated,
-		});
+		if (!status) return notFound();
+		return NextResponse.json({ message: locations.messages.updated });
 	} catch (error) {
 		logger({ error: error as Error, module: "updateProduct", request });
-		return NextResponse.json(
-			{ message: locations.errors.internal },
-			{ status: 500 },
-		);
+		return internalError();
 	}
 };
 
@@ -135,20 +88,11 @@ export const getProductById = async (
 		const { id } = await params;
 		const data = await productContainer.getProductById.execute(Number(id));
 
-		if (!data) {
-			return NextResponse.json(
-				{ message: locations.errors.notFound },
-				{ status: 404 },
-			);
-		}
-
+		if (!data) return notFound();
 		return NextResponse.json({ data });
 	} catch (error) {
 		logger({ error: error as Error, module: "getProductById", request });
-		return NextResponse.json(
-			{ message: locations.errors.internal },
-			{ status: 500 },
-		);
+		return internalError();
 	}
 };
 
@@ -158,24 +102,12 @@ export const deleteProduct = async (
 ) => {
 	try {
 		const { id } = await params;
-		const success = await productContainer.deleteProduct.execute(Number(id));
+		const status = await productContainer.deleteProduct.execute(Number(id));
 
-		if (!success) {
-			return NextResponse.json(
-				{ message: locations.errors.notFound },
-				{ status: 404 },
-			);
-		}
-
-		return NextResponse.json({
-			success: true,
-			message: locations.messages.deleted,
-		});
+		if (!status) return notFound();
+		return NextResponse.json({ message: locations.messages.deleted });
 	} catch (error) {
 		logger({ error: error as Error, module: "deleteProduct", request });
-		return NextResponse.json(
-			{ message: locations.errors.internal },
-			{ status: 500 },
-		);
+		return internalError();
 	}
 };

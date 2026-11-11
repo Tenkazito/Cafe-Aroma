@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { BrandLogo } from "@/common/components/layout/BrandLogo";
 import { isDevelopment } from "@/common/lib/env";
 import { DevSidebar } from "@/features/showcase/components/DevSidebar";
+import { MockApiProvider } from "@/features/showcase/components/MockApiProvider";
 
 export const metadata: Metadata = { title: "Componentes · Café Aroma (dev)" };
 
@@ -30,7 +31,9 @@ const DevLayout = ({ children }: DevLayoutProps) => {
 				<aside className="shrink-0 border-b border-gray-200 bg-white p-4 md:min-h-[calc(100vh-3.5rem)] md:w-60 md:border-r md:border-b-0">
 					<DevSidebar />
 				</aside>
-				<main className="min-w-0 flex-1 p-4 sm:p-8">{children}</main>
+				<main className="min-w-0 flex-1 p-4 sm:p-8">
+					<MockApiProvider>{children}</MockApiProvider>
+				</main>
 			</div>
 		</div>
 	);

@@ -17,11 +17,13 @@ export class PrismaProductRepository implements ProductRepository {
 					"id",
 					"titulo",
 					"url",
+					"descripcion",
 					"categoria_id",
 					"fecha_creacion",
 					"precio_venta",
 					"stock",
 					"activo",
+					"imagen",
 				)
 				.all();
 
@@ -29,10 +31,12 @@ export class PrismaProductRepository implements ProductRepository {
 				...item,
 				name: item.titulo,
 				slug: item.url,
+				description: item.descripcion,
 				categoryId: item.categoria_id,
 				createdAt: item.fecha_creacion,
 				price: item.precio_venta,
 				isActive: item.activo,
+				imageUrl: item.imagen,
 			}));
 		} catch (error) {
 			logger({
@@ -50,11 +54,13 @@ export class PrismaProductRepository implements ProductRepository {
 					"id",
 					"titulo",
 					"url",
+					"descripcion",
 					"categoria_id",
 					"fecha_creacion",
 					"precio_venta",
 					"stock",
 					"activo",
+					"imagen",
 				)
 				.where({ id })
 				.first();
@@ -65,10 +71,12 @@ export class PrismaProductRepository implements ProductRepository {
 				...row,
 				name: row.titulo,
 				slug: row.url,
+				description: row.descripcion,
 				categoryId: row.categoria_id,
 				createdAt: row.fecha_creacion,
 				price: row.precio_venta,
 				isActive: row.activo,
+				imageUrl: row.imagen,
 			};
 		} catch (error) {
 			logger({
@@ -103,17 +111,15 @@ export class PrismaProductRepository implements ProductRepository {
 
 	async update(data: IUpdate): Promise<boolean> {
 		try {
-			const row = await productsTable()
-				.where({ id: data.id })
-				.update({
-					titulo: data.name,
-					url: data.slug,
-					descripcion: data.description,
-					categoria_id: data.categoryId,
-					precio_venta: data.price,
-					stock: data.stock,
-					activo: data.isActive,
-				});
+			const row = await productsTable().where({ id: data.id }).update({
+				titulo: data.name,
+				url: data.slug,
+				descripcion: data.description,
+				categoria_id: data.categoryId,
+				precio_venta: data.price,
+				stock: data.stock,
+				activo: data.isActive,
+			});
 
 			return !!row?.id;
 		} catch (error) {
@@ -127,9 +133,7 @@ export class PrismaProductRepository implements ProductRepository {
 
 	async delete(id: number): Promise<boolean> {
 		try {
-			const row = await productsTable()
-				.where({ id })
-				.update({ activo: false });
+			const row = await productsTable().where({ id }).update({ activo: false });
 
 			return !!row?.id;
 		} catch (error) {

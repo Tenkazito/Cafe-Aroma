@@ -7,21 +7,11 @@
  * correr las veces que se quiera sin duplicar. No lo corras contra una base
  * con datos reales.
  */
-import { randomBytes, scryptSync } from "node:crypto";
 import { db } from "../src/common/lib/db";
+import { hashPassword } from "../src/common/utils/password";
 
 // Contraseña de todos los usuarios de prueba
 const SEED_PASSWORD = "CafeAroma123";
-
-/**
- * Hashea una contraseña con scrypt (incluido en Node, sin dependencias).
- * Formato: "scrypt$<salt>$<hash>". El login tendrá que verificar con el mismo formato.
- */
-const hashPassword = (password: string): string => {
-	const salt = randomBytes(16).toString("hex");
-	const hash = scryptSync(password, salt, 64).toString("hex");
-	return `scrypt$${salt}$${hash}`;
-};
 
 /** "Cafés Calientes" → "cafes-calientes" (para las columnas `url`). */
 const slugify = (text: string): string =>

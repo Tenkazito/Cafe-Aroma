@@ -18,8 +18,11 @@ const wholeNumber = (min: number) =>
  * La `url` no se pide: el backend la genera a partir del nombre.
  */
 export const productSchema = z.object({
-	// Relación obligatoria con `categorias` (`categoria_id`)
-	categoryName: z.string().min(1, locations.errors.required),
+	// `categoria_id Int`: el select envía el id. Vacío llega como NaN, por eso el `error`
+	categoryId: z
+		.number({ error: locations.errors.required })
+		.int()
+		.min(1, locations.errors.required),
 	// `titulo String`
 	name: requiredText(3, 80),
 	// `descripcion String`: obligatoria; 300 caracteres caben bien en la tarjeta del catálogo
