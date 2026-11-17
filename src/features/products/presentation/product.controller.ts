@@ -14,13 +14,27 @@ const invalidData = () =>
 const notFound = () =>
 	NextResponse.json({ message: locations.errors.notFound }, { status: 404 });
 
-/** Valida el body con `productSchema` y quita la imagen, que por ahora no se guarda. */
+/**
+ * Lee el `multipart/form-data` del formulario y lo valida con `productSchema`.
+ * La imagen (si viene) se entrega como `File`; el caso de uso la sube a Vercel Blob.
+ */
 const parseProductBody = async (request: Request) => {
-	const validation = productSchema.safeParse(await request.json());
+	const formData = await request.formData();
+	const image = formData.get("image");
+
+	// FormData solo trae texto o archivos: se convierten los números y el booleano
+	const validation = productSchema.safeParse({
+		categoryId: Number(formData.get("categoryId")),
+		name: formData.get("name"),
+		description: formData.get("description"),
+		price: Number(formData.get("price")),
+		stock: Number(formData.get("stock")),
+		isActive: formData.get("isActive") === "true",
+		image: image instanceof File && image.size > 0 ? image : undefined,
+	});
 	if (!validation.success) return null;
 
-	const { imageUrl: _imageUrl, ...data } = validation.data;
-	return data;
+	return validation.data;
 };
 
 export const listProduct = async (request: Request) => {

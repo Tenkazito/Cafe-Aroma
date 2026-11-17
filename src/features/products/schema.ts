@@ -33,8 +33,9 @@ export const productSchema = z.object({
 	stock: wholeNumber(0),
 	// `activo Boolean`
 	isActive: isActiveField,
-	// `imagen String?`: opcional, así que se acepta vacío o una URL válida
-	imageUrl: z.union([z.literal(""), z.url(locations.errors.invalidUrl)]),
+	// Archivo nuevo que sube el usuario. Opcional: al editar se puede dejar la imagen actual.
+	// La URL que se guarda en `imagen String?` la genera el backend al subir el archivo.
+	image: z.instanceof(File).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;

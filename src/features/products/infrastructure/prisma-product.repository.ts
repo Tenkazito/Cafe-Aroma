@@ -97,6 +97,7 @@ export class PrismaProductRepository implements ProductRepository {
 				precio_venta: data.price,
 				stock: data.stock,
 				activo: data.isActive ?? true,
+				imagen: data.imageUrl ?? null,
 			});
 
 			return !!query?.id;
@@ -119,6 +120,8 @@ export class PrismaProductRepository implements ProductRepository {
 				precio_venta: data.price,
 				stock: data.stock,
 				activo: data.isActive,
+				// Solo se cambia la imagen si se subió una nueva
+				...(data.imageUrl ? { imagen: data.imageUrl } : {}),
 			});
 
 			return !!row?.id;

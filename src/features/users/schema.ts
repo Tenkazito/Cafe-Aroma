@@ -17,7 +17,6 @@ const USER_ROLE_VALUES = [
 // No usa `requiredText` porque ese hace `trim()`, y un espacio en una contraseña es válido
 const password = z
 	.string()
-	.min(1, locations.errors.required)
 	.min(8, locations.errors.minCharacters(8))
 	.max(64, locations.errors.manyCharacters(64));
 

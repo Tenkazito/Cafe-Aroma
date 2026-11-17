@@ -58,16 +58,25 @@ export const ProductFormModal = ({
 			price: product?.price,
 			stock: product?.stock,
 			isActive: product?.isActive ?? true,
-			imageUrl: product?.imageUrl ?? "",
+			image: undefined,
 		},
 	});
 
-	const onSubmit = async (data: ProductFormValues) => {
+	const onSubmit = async ({ image, ...fields }: ProductFormValues) => {
 		try {
 			const method = isEditing ? "PUT" : "POST";
 			const url = isEditing ? `/api/products/${product?.id}` : "/api/products";
 
-			await apiFetch(url, { method, body: data });
+			const imageFile = image instanceof FileList ? image[0] : image;
+			// Un archivo no viaja en JSON: se manda todo como multipart/form-data
+			const body = new FormData();
+			for (const [key, value] of Object.entries(fields)) {
+				body.append(key, String(value));
+			}
+			if (imageFile instanceof File)
+				body.append("image", imageFile, imageFile.name);
+
+			await apiFetch(url, { method, body });
 
 			toast.success(
 				isEditing
@@ -150,14 +159,15 @@ export const ProductFormModal = ({
 			</div>
 			<Controller
 				control={control}
-				name="imageUrl"
+				name="image"
 				render={({ field }) => (
 					<ImageUploadField
 						label={locations.products.imageLabel}
 						name={field.name}
+						defaultImageUrl={product?.imageUrl}
 						value={field.value}
 						onChange={field.onChange}
-						errorMessage={errors.imageUrl?.message}
+						errorMessage={errors.image?.message}
 					/>
 				)}
 			/>

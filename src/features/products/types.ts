@@ -9,5 +9,6 @@ export type Product = {
 	price: number;
 	stock: number;
 	isActive: boolean;
+	/** URL de la imagen que devuelve la API (`imagen String?`); vacío si no tiene. */
 	imageUrl: string;
 };

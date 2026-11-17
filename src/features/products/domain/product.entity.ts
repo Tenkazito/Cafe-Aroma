@@ -20,6 +20,8 @@ export interface ICreate {
 	price: number;
 	stock: number;
 	isActive?: boolean;
+	image?: File | null;
+	imageUrl?: string;
 }
 
 export interface IUpdate {
@@ -31,4 +33,7 @@ export interface IUpdate {
 	price: number;
 	stock: number;
 	isActive: boolean;
+	image?: File | null;
+	/** Solo llega cuando se subió una imagen nueva; si no, se conserva la actual. */
+	imageUrl?: string;
 }

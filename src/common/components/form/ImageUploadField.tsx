@@ -1,25 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { type ChangeEvent, useId, useState } from "react";
-import { getFieldClasses } from "@/common/components/form/fieldStyles";
+import { type ChangeEvent, useEffect, useId, useState } from "react";
 import { Icon } from "@/common/components/ui/Icon";
 import { locations } from "@/common/locations";
 
 type ImageUploadFieldProps = {
 	label: string;
-	/** Nombre del campo de la URL cuando se envíe el formulario. */
+	/** Nombre del campo del archivo cuando se envíe el formulario. */
 	name: string;
+	/** Imagen que ya tiene guardada (ej. al editar un producto). */
 	defaultImageUrl?: string;
-	value?: string;
-	onChange?: (value: string) => void;
+	/** Archivo nuevo elegido por el usuario. */
+	value?: File;
+	onChange?: (file: File | undefined) => void;
 	errorMessage?: string;
 };
 
 /**
- * Imagen del producto: vista previa, zona para subir un archivo y campo con la URL.
- * El archivo solo se previsualiza en el navegador; subirlo a un storage será
- * parte del backend.
+ * Imagen del producto: vista previa y zona para subir un archivo.
+ * Entrega el `File` elegido; la subida a un storage la hace el backend.
  */
 export const ImageUploadField = ({
 	label,
@@ -29,21 +29,35 @@ export const ImageUploadField = ({
 	onChange,
 	errorMessage,
 }: ImageUploadFieldProps) => {
-	const [internalImageUrl, setInternalImageUrl] = useState(defaultImageUrl);
-	const imageUrl = value ?? internalImageUrl;
-	const updateImageUrl = (nextValue: string) => {
-		if (onChange) onChange(nextValue);
-		else setInternalImageUrl(nextValue);
-	};
 	const fileInputId = useId();
-	const urlInputId = useId();
+	const [savedImageUrl, setSavedImageUrl] = useState(defaultImageUrl);
+	const [filePreviewUrl, setFilePreviewUrl] = useState("");
+
+	// URL temporal del archivo elegido; se libera al cambiarlo para no dejar memoria colgada
+	useEffect(() => {
+		if (!value) {
+			setFilePreviewUrl("");
+			return;
+		}
+		const objectUrl = URL.createObjectURL(value);
+		setFilePreviewUrl(objectUrl);
+		return () => URL.revokeObjectURL(objectUrl);
+	}, [value]);
+
+	const previewUrl = filePreviewUrl || savedImageUrl;
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
+		onChange?.(file);
+		// Sin `onChange` (uso sin formulario) la vista previa sale de aquí
+		if (!onChange) setFilePreviewUrl(URL.createObjectURL(file));
+	};
 
-		// URL temporal que solo existe en este navegador, suficiente para la vista previa
-		updateImageUrl(URL.createObjectURL(file));
+	const handleRemove = () => {
+		setSavedImageUrl("");
+		setFilePreviewUrl("");
+		onChange?.(undefined);
 	};
 
 	return (
@@ -51,10 +65,10 @@ export const ImageUploadField = ({
 			<span className="text-sm font-medium text-navy">{label}</span>
 
 			<div className="flex gap-3">
-				{imageUrl && (
+				{previewUrl && (
 					<div className="relative shrink-0">
 						<Image
-							src={imageUrl}
+							src={previewUrl}
 							alt={locations.form.imagePreviewAlt}
 							width={88}
 							height={88}
@@ -63,7 +77,7 @@ export const ImageUploadField = ({
 						/>
 						<button
 							type="button"
-							onClick={() => updateImageUrl("")}
+							onClick={handleRemove}
 							aria-label={locations.form.removeImage}
 							className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white"
 						>
@@ -80,27 +94,16 @@ export const ImageUploadField = ({
 					{locations.form.uploadImage}
 					<input
 						id={fileInputId}
+						name={name}
 						type="file"
 						accept="image/*"
+						aria-invalid={Boolean(errorMessage)}
 						className="sr-only"
 						onChange={handleFileChange}
 					/>
 				</label>
 			</div>
 
-			<label htmlFor={urlInputId} className="sr-only">
-				{locations.form.imageUrl}
-			</label>
-			<input
-				id={urlInputId}
-				name={name}
-				type="url"
-				value={imageUrl}
-				onChange={(event) => updateImageUrl(event.target.value)}
-				aria-invalid={Boolean(errorMessage)}
-				placeholder="https://..."
-				className={`h-10 text-xs ${getFieldClasses("default", Boolean(errorMessage))}`}
-			/>
 			{errorMessage && (
 				<span className="text-xs text-red-600">{errorMessage}</span>
 			)}
